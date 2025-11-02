@@ -1,0 +1,56 @@
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.required {
+  color: #e74c3c;
+  margin-left: 2px;
+}
+
+.form-group input,
+.form-group ng-select {
+  width: 100%;
+}
+
+.error-message {
+  display: block;
+  color: #e74c3c;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.form-group input.ng-invalid.ng-dirty,
+.form-group ng-select.ng-invalid.ng-dirty ::ng-deep .ng-select-container {
+  border-color: #e74c3c;
+}
+
+.form-group ng-select ::ng-deep .ng-select-container {
+  min-height: 2.5rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.cancel-button {
+  color: #e74c3c !important;
+}
+
+.cancel-button:hover {
+  background-color: rgba(231, 76, 60, 0.1) !important;
+  color: #c0392b !important;
+}
+
+

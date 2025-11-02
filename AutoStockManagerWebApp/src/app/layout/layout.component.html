@@ -1,0 +1,22 @@
+<div class="layout-container">
+  <header class="layout-header">
+    <div class="header-content">
+      <h1 class="app-title">{{ title }}</h1>
+      <nav class="main-nav">
+        <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          Home
+        </a>
+        <!-- Add more navigation links as needed -->
+      </nav>
+    </div>
+  </header>
+
+  <main class="layout-main">
+    <router-outlet />
+  </main>
+
+  <footer class="layout-footer">
+    <p>&copy; {{ currentYear }} Auto Stock Manager. All rights reserved.</p>
+  </footer>
+</div>
+

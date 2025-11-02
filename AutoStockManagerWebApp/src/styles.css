@@ -3,6 +3,9 @@
 /* PrimeIcons */
 @import 'primeicons/primeicons.css';
 
+/* Ng-Select Styles */
+@import '@ng-select/ng-select/themes/default.theme.css';
+
 /* Angular Material Theme */
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 

@@ -1,0 +1,85 @@
+<p-dialog
+  [(visible)]="visible"
+  (visibleChange)="onDialogHide()"
+  [modal]="true"
+  [style]="{ width: '500px' }"
+  [draggable]="false"
+  [resizable]="false"
+  header="User Information">
+  
+  <form [formGroup]="userForm" (ngSubmit)="handleSubmit()">
+    <div class="form-group">
+      <label for="name">Name <span class="required">*</span></label>
+      <input
+        id="name"
+        type="text"
+        pInputText
+        formControlName="name"
+        placeholder="Enter name"
+        [class.ng-invalid]="userForm.get('name')?.invalid && userForm.get('name')?.touched"
+        [class.ng-dirty]="userForm.get('name')?.dirty" />
+      <small
+        class="error-message"
+        *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched">
+        <span *ngIf="userForm.get('name')?.errors?.['required']">Name is required</span>
+        <span *ngIf="userForm.get('name')?.errors?.['minlength']">Name must be at least 2 characters</span>
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="role">Role <span class="required">*</span></label>
+      <ng-select
+        id="role"
+        formControlName="role"
+        [items]="roleOptions"
+        bindLabel="label"
+        bindValue="value"
+        placeholder="Select a role"
+        [clearable]="true"
+        [class.ng-invalid]="userForm.get('role')?.invalid && userForm.get('role')?.touched"
+        [class.ng-dirty]="userForm.get('role')?.dirty">
+      </ng-select>
+      <small
+        class="error-message"
+        *ngIf="userForm.get('role')?.invalid && userForm.get('role')?.touched">
+        Role is required
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email <span class="required">*</span></label>
+      <input
+        id="email"
+        type="email"
+        pInputText
+        formControlName="email"
+        placeholder="Enter email"
+        [class.ng-invalid]="userForm.get('email')?.invalid && userForm.get('email')?.touched"
+        [class.ng-dirty]="userForm.get('email')?.dirty" />
+      <small
+        class="error-message"
+        *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+        <span *ngIf="userForm.get('email')?.errors?.['required']">Email is required</span>
+        <span *ngIf="userForm.get('email')?.errors?.['email']">Please enter a valid email</span>
+      </small>
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="button"
+        pButton
+        label="Cancel"
+        icon="pi pi-times"
+        (click)="handleCancel()"
+        class="p-button-danger p-button-text cancel-button"></button>
+      <button
+        type="submit"
+        pButton
+        label="Submit"
+        icon="pi pi-check"
+        [disabled]="userForm.invalid"
+        class="p-button-primary"></button>
+    </div>
+  </form>
+</p-dialog>
+

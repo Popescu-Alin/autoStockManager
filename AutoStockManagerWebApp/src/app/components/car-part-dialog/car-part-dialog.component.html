@@ -1,0 +1,164 @@
+<p-dialog
+  [(visible)]="visible"
+  (visibleChange)="onDialogHide()"
+  [modal]="true"
+  [style]="{ width: '600px' }"
+  [draggable]="false"
+  [resizable]="false"
+  header="Add Car Part">
+  
+  <form [formGroup]="carPartForm" (ngSubmit)="handleSubmit()">
+    <div class="form-group">
+      <label for="car">Car <span class="required">*</span></label>
+      <ng-select
+        id="car"
+        formControlName="car"
+        [items]="cars"
+        bindLabel="label"
+        bindValue="value"
+        placeholder="Select a car"
+        [clearable]="true"
+        [class.ng-invalid]="carPartForm.get('car')?.invalid && carPartForm.get('car')?.touched"
+        [class.ng-dirty]="carPartForm.get('car')?.dirty">
+      </ng-select>
+      <small
+        class="error-message"
+        *ngIf="carPartForm.get('car')?.invalid && carPartForm.get('car')?.touched">
+        Car is required
+      </small>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name">Name <span class="required">*</span></label>
+        <input
+          id="name"
+          type="text"
+          pInputText
+          formControlName="name"
+          placeholder="Enter part name"
+          [class.ng-invalid]="carPartForm.get('name')?.invalid && carPartForm.get('name')?.touched"
+          [class.ng-dirty]="carPartForm.get('name')?.dirty" />
+        <small
+          class="error-message"
+          *ngIf="carPartForm.get('name')?.invalid && carPartForm.get('name')?.touched">
+          <span *ngIf="carPartForm.get('name')?.errors?.['required']">Name is required</span>
+          <span *ngIf="carPartForm.get('name')?.errors?.['minlength']">Name must be at least 2 characters</span>
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="price">Price <span class="required">*</span></label>
+        <input
+          id="price"
+          type="text"
+          pInputText
+          formControlName="price"
+          placeholder="Enter price"
+          [class.ng-invalid]="carPartForm.get('price')?.invalid && carPartForm.get('price')?.touched"
+          [class.ng-dirty]="carPartForm.get('price')?.dirty" />
+        <small
+          class="error-message"
+          *ngIf="carPartForm.get('price')?.invalid && carPartForm.get('price')?.touched">
+          <span *ngIf="carPartForm.get('price')?.errors?.['required']">Price is required</span>
+          <span *ngIf="carPartForm.get('price')?.errors?.['min']">Price must be greater than or equal to 0</span>
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="status">Status <span class="required">*</span></label>
+      <ng-select
+        id="status"
+        formControlName="status"
+        [items]="statusOptions"
+        bindLabel="label"
+        bindValue="value"
+        placeholder="Select status"
+        [clearable]="true"
+        (change)="onStatusChange()"
+        [class.ng-invalid]="carPartForm.get('status')?.invalid && carPartForm.get('status')?.touched"
+        [class.ng-dirty]="carPartForm.get('status')?.dirty">
+      </ng-select>
+      <small
+        class="error-message"
+        *ngIf="carPartForm.get('status')?.invalid && carPartForm.get('status')?.touched">
+        Status is required
+      </small>
+    </div>
+
+    <div class="form-group" *ngIf="carPartForm.get('status')?.value === 'sold'">
+      <label for="buyer">Buyer <span class="required">*</span></label>
+      <input
+        id="buyer"
+        type="text"
+        pInputText
+        formControlName="buyer"
+        placeholder="Enter buyer name"
+        [class.ng-invalid]="carPartForm.get('buyer')?.invalid && carPartForm.get('buyer')?.touched"
+        [class.ng-dirty]="carPartForm.get('buyer')?.dirty" />
+      <small
+        class="error-message"
+        *ngIf="carPartForm.get('buyer')?.invalid && carPartForm.get('buyer')?.touched">
+        Buyer is required when status is "Sold"
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="images">Images</label>
+      <div class="file-input-wrapper">
+        <input
+          id="images"
+          type="file"
+          accept="image/*"
+          multiple
+          (change)="onImageFilesSelect($event)"
+          [class.ng-dirty]="imageFiles.length > 0"
+          style="display: none;" />
+        <button
+          type="button"
+          pButton
+          label="Choose Images"
+          icon="pi pi-upload"
+          (click)="triggerFileInput('images')"
+          class="p-button-outlined file-upload-button">
+        </button>
+        <button
+          type="button"
+          pButton
+          icon="pi pi-times"
+          (click)="onImageFilesRemove()"
+          *ngIf="imageFiles.length > 0"
+          class="p-button-text p-button-danger remove-file-button"
+          title="Clear all images">
+        </button>
+      </div>
+      <small
+        class="file-info"
+        *ngIf="imageFiles.length > 0">
+        Selected: {{ imageFiles.length }} file(s)
+        <span *ngFor="let file of imageFiles">
+          <br />- {{ file.name }} ({{ (file.size / 1024).toFixed(2) }} KB)
+        </span>
+      </small>
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="button"
+        pButton
+        label="Cancel"
+        icon="pi pi-times"
+        (click)="handleCancel()"
+        class="p-button-danger p-button-text cancel-button"></button>
+      <button
+        type="submit"
+        pButton
+        label="Submit"
+        icon="pi pi-check"
+        [disabled]="carPartForm.invalid"
+        class="p-button-primary"></button>
+    </div>
+  </form>
+</p-dialog>
+

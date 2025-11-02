@@ -31,6 +31,8 @@
     "@angular/material": "^20.2.11",
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
+    "@ng-select/ng-select": "^15.0.0",
+    "@primeng/themes": "^20.3.0",
     "primeicons": "^7.0.0",
     "primeng": "^20.3.0",
     "rxjs": "~7.8.0",

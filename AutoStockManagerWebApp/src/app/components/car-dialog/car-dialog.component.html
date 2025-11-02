@@ -1,0 +1,210 @@
+<p-dialog
+  [(visible)]="visible"
+  (visibleChange)="onDialogHide()"
+  [modal]="true"
+  [style]="{ width: '600px' }"
+  [draggable]="false"
+  [resizable]="false"
+  header="Add Car">
+  
+  <form [formGroup]="carForm" (ngSubmit)="handleSubmit()">
+    <div class="form-group">
+      <label for="supplier">Supplier <span class="required">*</span></label>
+      <ng-select
+        id="supplier"
+        formControlName="supplier"
+        [items]="suppliers"
+        bindLabel="label"
+        bindValue="value"
+        placeholder="Select a supplier"
+        [clearable]="true"
+        [class.ng-invalid]="carForm.get('supplier')?.invalid && carForm.get('supplier')?.touched"
+        [class.ng-dirty]="carForm.get('supplier')?.dirty">
+      </ng-select>
+      <small
+        class="error-message"
+        *ngIf="carForm.get('supplier')?.invalid && carForm.get('supplier')?.touched">
+        Supplier is required
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="purchaseDate">Purchase Date <span class="required">*</span></label>
+      <input
+        id="purchaseDate"
+        type="date"
+        pInputText
+        formControlName="purchaseDate"
+        [max]="maxDateString"
+        [class.ng-invalid]="carForm.get('purchaseDate')?.invalid && carForm.get('purchaseDate')?.touched"
+        [class.ng-dirty]="carForm.get('purchaseDate')?.dirty" />
+      <small
+        class="error-message"
+        *ngIf="carForm.get('purchaseDate')?.invalid && carForm.get('purchaseDate')?.touched">
+        Purchase date is required
+      </small>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="brand">Brand <span class="required">*</span></label>
+        <input
+          id="brand"
+          type="text"
+          pInputText
+          formControlName="brand"
+          placeholder="Enter brand"
+          [class.ng-invalid]="carForm.get('brand')?.invalid && carForm.get('brand')?.touched"
+          [class.ng-dirty]="carForm.get('brand')?.dirty" />
+        <small
+          class="error-message"
+          *ngIf="carForm.get('brand')?.invalid && carForm.get('brand')?.touched">
+          <span *ngIf="carForm.get('brand')?.errors?.['required']">Brand is required</span>
+          <span *ngIf="carForm.get('brand')?.errors?.['minlength']">Brand must be at least 2 characters</span>
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="model">Model <span class="required">*</span></label>
+        <input
+          id="model"
+          type="text"
+          pInputText
+          formControlName="model"
+          placeholder="Enter model"
+          [class.ng-invalid]="carForm.get('model')?.invalid && carForm.get('model')?.touched"
+          [class.ng-dirty]="carForm.get('model')?.dirty" />
+        <small
+          class="error-message"
+          *ngIf="carForm.get('model')?.invalid && carForm.get('model')?.touched">
+          <span *ngIf="carForm.get('model')?.errors?.['required']">Model is required</span>
+          <span *ngIf="carForm.get('model')?.errors?.['minlength']">Model must be at least 2 characters</span>
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="manufactureYear">Manufacture Year <span class="required">*</span></label>
+      <input
+        id="manufactureYear"
+        type="text"
+        pInputText
+        formControlName="manufactureYear"
+        placeholder="Enter manufacture year"
+        [class.ng-invalid]="carForm.get('manufactureYear')?.invalid && carForm.get('manufactureYear')?.touched"
+        [class.ng-dirty]="carForm.get('manufactureYear')?.dirty" />
+      <small
+        class="error-message"
+        *ngIf="carForm.get('manufactureYear')?.invalid && carForm.get('manufactureYear')?.touched">
+        <span *ngIf="carForm.get('manufactureYear')?.errors?.['required']">Manufacture year is required</span>
+        <span *ngIf="carForm.get('manufactureYear')?.errors?.['min'] || carForm.get('manufactureYear')?.errors?.['max']">
+          Year must be between 1900 and {{ currentYear + 1 }}
+        </span>
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="registrationCertificate">Registration Certificate <span class="required">*</span></label>
+      <div class="file-input-wrapper">
+        <input
+          id="registrationCertificate"
+          type="file"
+          accept=".pdf,.jpg,.jpeg,.png"
+          (change)="onRegistrationFileSelect($event)"
+          [class.ng-invalid]="!registrationFile && carForm.get('registrationCertificate')?.touched"
+          [class.ng-dirty]="registrationFile !== null"
+          style="display: none;" />
+        <button
+          type="button"
+          pButton
+          label="Choose File"
+          icon="pi pi-upload"
+          (click)="triggerFileInput('registrationCertificate')"
+          class="p-button-outlined file-upload-button">
+        </button>
+        <button
+          type="button"
+          pButton
+          icon="pi pi-times"
+          (click)="onRegistrationFileRemove()"
+          *ngIf="registrationFile"
+          class="p-button-text p-button-danger remove-file-button"
+          [title]="'Remove ' + registrationFile.name">
+        </button>
+      </div>
+      <small
+        class="error-message"
+        *ngIf="!registrationFile && carForm.get('registrationCertificate')?.touched">
+        Registration certificate is required (PDF or Image)
+      </small>
+      <small
+        class="file-info"
+        *ngIf="registrationFile">
+        Selected: {{ registrationFile.name }} ({{ (registrationFile.size / 1024).toFixed(2) }} KB)
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="images">Images <span class="required">*</span></label>
+      <div class="file-input-wrapper">
+        <input
+          id="images"
+          type="file"
+          accept="image/*"
+          multiple
+          (change)="onImageFilesSelect($event)"
+          [class.ng-invalid]="imageFiles.length === 0 && carForm.get('images')?.touched"
+          [class.ng-dirty]="imageFiles.length > 0"
+          style="display: none;" />
+        <button
+          type="button"
+          pButton
+          label="Choose Images"
+          icon="pi pi-upload"
+          (click)="triggerFileInput('images')"
+          class="p-button-outlined file-upload-button">
+        </button>
+        <button
+          type="button"
+          pButton
+          icon="pi pi-times"
+          (click)="onImageFilesRemove()"
+          *ngIf="imageFiles.length > 0"
+          class="p-button-text p-button-danger remove-file-button"
+          title="Clear all images">
+        </button>
+      </div>
+      <small
+        class="error-message"
+        *ngIf="imageFiles.length === 0 && carForm.get('images')?.touched">
+        At least one image is required
+      </small>
+      <small
+        class="file-info"
+        *ngIf="imageFiles.length > 0">
+        Selected: {{ imageFiles.length }} file(s)
+        <span *ngFor="let file of imageFiles">
+          <br />- {{ file.name }} ({{ (file.size / 1024).toFixed(2) }} KB)
+        </span>
+      </small>
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="button"
+        pButton
+        label="Cancel"
+        icon="pi pi-times"
+        (click)="handleCancel()"
+        class="p-button-danger p-button-text cancel-button"></button>
+      <button
+        type="submit"
+        pButton
+        label="Submit"
+        icon="pi pi-check"
+        [disabled]="carForm.invalid || !registrationFile || imageFiles.length === 0"
+        class="p-button-primary"></button>
+    </div>
+  </form>
+</p-dialog>
+
