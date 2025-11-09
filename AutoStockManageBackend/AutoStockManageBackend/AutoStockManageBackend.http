@@ -1,0 +1,6 @@
+@AutoStockManageBackend_HostAddress = http://localhost:5181
+
+GET {{AutoStockManageBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

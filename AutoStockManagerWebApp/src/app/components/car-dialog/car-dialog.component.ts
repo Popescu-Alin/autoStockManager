@@ -28,7 +28,6 @@ export interface CarFormData {
     InputTextModule,
     NgSelectModule,
     ButtonModule,
-    SupplierDialogComponent
   ],
   templateUrl: './car-dialog.component.html',
   styleUrl: './car-dialog.component.css'
