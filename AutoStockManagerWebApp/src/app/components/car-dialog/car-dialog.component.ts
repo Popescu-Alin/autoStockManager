@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { SupplierDialogComponent, SupplierFormData } from '../supplier-dialog/supplier-dialog.component';
 
 export interface CarFormData {
   supplier: string;
@@ -12,6 +13,7 @@ export interface CarFormData {
   brand: string;
   model: string;
   manufactureYear: number | null;
+  price: string; // Now string for text input
   registrationCertificate: File | null;
   images: File[];
 }
@@ -25,7 +27,8 @@ export interface CarFormData {
     DialogModule,
     InputTextModule,
     NgSelectModule,
-    ButtonModule
+    ButtonModule,
+    SupplierDialogComponent
   ],
   templateUrl: './car-dialog.component.html',
   styleUrl: './car-dialog.component.css'
@@ -40,6 +43,7 @@ export class CarDialogComponent {
   registrationFile: File | null = null;
   imageFiles: File[] = [];
   maxDate: Date = new Date();
+  showAddSupplier = false;
   
   get maxDateString(): string {
     return this.maxDate.toISOString().split('T')[0];
@@ -51,12 +55,20 @@ export class CarDialogComponent {
       purchaseDate: [null, [Validators.required]],
       brand: ['', [Validators.required, Validators.minLength(2)]],
       model: ['', [Validators.required, Validators.minLength(2)]],
-      manufactureYear: [null, [Validators.required, Validators.min(1900), Validators.max(new Date().getFullYear() + 1)]]
+      manufactureYear: [null, [Validators.required, Validators.min(1900), Validators.max(new Date().getFullYear() + 1)]],
+      price: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      name: ['', [ Validators.required, Validators.minLength(2)]],
+      phone: ['', [ Validators.required, Validators.pattern(/^\(\d{3}\) \d{3}-\d{4}$/)]],
+      ssn: ['', [ Validators.required, Validators.pattern(/^[1-8][0-9]{12}$/)]]
     });
   }
 
   onDialogHide() {
+    this.carForm.reset();
+    this.registrationFile = null;
+    this.imageFiles = [];
     this.visibleChange.emit(false);
+    this.showAddSupplier = false;
   }
 
   onRegistrationFileSelect(event: Event) {
@@ -96,6 +108,7 @@ export class CarDialogComponent {
         brand: this.carForm.value.brand,
         model: this.carForm.value.model,
         manufactureYear: this.carForm.value.manufactureYear,
+        price: this.carForm.value.price,
         registrationCertificate: this.registrationFile,
         images: this.imageFiles
       };
@@ -118,6 +131,45 @@ export class CarDialogComponent {
     this.registrationFile = null;
     this.imageFiles = [];
     this.visibleChange.emit(false);
+  }
+
+  onAddSupplierClick() {
+    this.showAddSupplier = true;
+  }
+
+  onAddSupplierDialogHide() {
+    this.showAddSupplier = false;
+  }
+
+  handleSupplierDialogSubmit(newSupplier: SupplierFormData) {
+    // Add to supplier select list (convert to {label,value}) and select it
+    const added = { label: newSupplier.name, value: newSupplier.name };
+    this.suppliers = [...this.suppliers, added];
+    this.carForm.patchValue({ supplier: added.value });
+    this.showAddSupplier = false;
+  }
+
+  formatPhoneInline(event: Event) {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/\D/g, '');
+    if (value.length > 10) value = value.substring(0, 10);
+    if (value.length > 6) {
+      value = `(${value.substring(0, 3)}) ${value.substring(3, 6)}-${value.substring(6)}`;
+    } else if (value.length > 3) {
+      value = `(${value.substring(0, 3)}) ${value.substring(3)}`;
+    } else if (value.length > 0) {
+      value = `(${value}`;
+    }
+    input.value = value;
+    this.carForm.patchValue({ phone: value });
+  }
+
+  formatCnpInline(event: Event) {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/\D/g, '');
+    if (value.length > 13) value = value.substring(0, 13);
+    input.value = value;
+    this.carForm.patchValue({ ssn: value });
   }
 
   get currentYear(): number {

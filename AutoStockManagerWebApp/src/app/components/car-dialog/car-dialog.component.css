@@ -86,3 +86,12 @@
   color: #c0392b !important;
 }
 
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+
+.icon-button {
+  margin-left: 0.5rem !important;
+  cursor: pointer !important;
+}
+

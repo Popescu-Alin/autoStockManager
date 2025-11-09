@@ -54,6 +54,8 @@ export class CarPartDialogComponent {
   }
 
   onDialogHide() {
+    this.carPartForm.reset();
+    this.imageFiles = [];
     this.visibleChange.emit(false);
   }
 

@@ -35,28 +35,19 @@ export class SupplierDialogComponent {
     this.supplierForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       phone: ['', [Validators.required, Validators.pattern(/^\(\d{3}\) \d{3}-\d{4}$/)]],
-      ssn: ['', [Validators.required, Validators.pattern(/^\d{3}-\d{2}-\d{4}$/)]]
+      ssn: ['', [Validators.required, Validators.pattern(/^[1-8][0-9]{12}$/)]] // CNP, Romanian format
     });
   }
 
   onDialogHide() {
+    this.supplierForm.reset();
     this.visibleChange.emit(false);
   }
 
   formatSSN(event: Event) {
     const input = event.target as HTMLInputElement;
-    let value = input.value.replace(/\D/g, ''); // Remove non-digits
-    
-    if (value.length > 9) {
-      value = value.substring(0, 9);
-    }
-    
-    if (value.length > 5) {
-      value = `${value.substring(0, 3)}-${value.substring(3, 5)}-${value.substring(5)}`;
-    } else if (value.length > 3) {
-      value = `${value.substring(0, 3)}-${value.substring(3)}`;
-    }
-    
+    let value = input.value.replace(/\D/g, ''); // Only digits
+    if (value.length > 13) value = value.substring(0, 13);
     input.value = value;
     this.supplierForm.patchValue({ ssn: value });
   }

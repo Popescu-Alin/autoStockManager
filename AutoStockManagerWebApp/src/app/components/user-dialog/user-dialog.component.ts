@@ -49,6 +49,7 @@ export class UserDialogComponent {
   }
 
   onDialogHide() {
+    this.userForm.reset();
     this.visibleChange.emit(false);
   }
 
