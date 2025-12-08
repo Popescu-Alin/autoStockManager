@@ -1,15 +1,79 @@
 <div class="layout-container">
   <header class="layout-header">
     <div class="header-content">
-      <h1 class="app-title">{{ title }}</h1>
-      <nav class="main-nav">
+      <div class="header-left">
+        <button
+          *ngIf="isMobile"
+          pButton
+          type="button"
+          icon="pi pi-bars"
+          (click)="toggleSideNav()"
+          class="p-button-text p-button-plain menu-toggle"
+          aria-label="Toggle menu">
+        </button>
+        <h1 class="app-title">{{ title }}</h1>
+      </div>
+      <nav class="main-nav" *ngIf="!isMobile">
         <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
           Home
         </a>
-        <!-- Add more navigation links as needed -->
+        <a routerLink="/users" routerLinkActive="active">
+          Users
+        </a>
+        <a routerLink="/suppliers" routerLinkActive="active">
+          Suppliers
+        </a>
+        <a routerLink="/customers" routerLinkActive="active">
+          Customers
+        </a>
       </nav>
     </div>
   </header>
+
+  <!-- Side Navigation Overlay (Mobile) -->
+  <div
+    class="side-nav-overlay"
+    *ngIf="isMobile && sideNavOpen"
+    (click)="closeSideNav()">
+  </div>
+
+  <!-- Side Navigation (Mobile) -->
+  <aside
+    class="side-nav"
+    [class.open]="sideNavOpen"
+    *ngIf="isMobile">
+    <nav class="side-nav-content">
+      <a
+        routerLink="/home"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact: true}"
+        (click)="closeSideNav()">
+        <i class="pi pi-home"></i>
+        <span>Home</span>
+      </a>
+      <a
+        routerLink="/users"
+        routerLinkActive="active"
+        (click)="closeSideNav()">
+        <i class="pi pi-users"></i>
+        <span>Users</span>
+      </a>
+      <a
+        routerLink="/suppliers"
+        routerLinkActive="active"
+        (click)="closeSideNav()">
+        <i class="pi pi-building"></i>
+        <span>Suppliers</span>
+      </a>
+      <a
+        routerLink="/customers"
+        routerLinkActive="active"
+        (click)="closeSideNav()">
+        <i class="pi pi-user"></i>
+        <span>Customers</span>
+      </a>
+    </nav>
+  </aside>
 
   <main class="layout-main">
     <router-outlet />

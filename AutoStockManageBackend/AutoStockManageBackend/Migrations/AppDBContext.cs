@@ -23,7 +23,12 @@ namespace AutoStockManageBackend.DBContext
         public  DbSet<AspNetRole> AspNetRoles { get; set; }
         public DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
         public DbSet<User> Users { get; set; }
-
+        public DbSet<Car> Cars { get; set; }
+        public DbSet<CarPart> CarParts { get; set; }
+        public DbSet<CarPartImage> CarPartImages { get; set; }
+        public DbSet<CarImage> CarImages { get; set; }
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

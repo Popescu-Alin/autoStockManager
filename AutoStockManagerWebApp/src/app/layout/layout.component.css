@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  position: relative;
 }
 
 .layout-header {
@@ -9,6 +10,9 @@
   color: white;
   padding: 1rem 2rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .header-content {
@@ -17,6 +21,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.menu-toggle {
+  color: white !important;
+  padding: 0.5rem !important;
+}
+
+.menu-toggle ::ng-deep .p-button-icon {
+  color: white;
 }
 
 .app-title {
@@ -48,6 +67,71 @@
   font-weight: 500;
 }
 
+/* Side Navigation (Mobile) */
+.side-nav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  transition: opacity 0.3s ease;
+}
+
+.side-nav {
+  position: fixed;
+  top: 0;
+  left: -280px;
+  width: 280px;
+  height: 100vh;
+  background-color: white;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+  transition: left 0.3s ease;
+  overflow-y: auto;
+}
+
+.side-nav.open {
+  left: 0;
+}
+
+.side-nav-content {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+}
+
+.side-nav-content a {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.side-nav-content a:hover {
+  background-color: #f5f5f5;
+}
+
+.side-nav-content a.active {
+  background-color: #e3f2fd;
+  border-left-color: #1976d2;
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.side-nav-content a i {
+  font-size: 1.25rem;
+}
+
+.side-nav-content a span {
+  font-size: 1rem;
+}
+
 .layout-main {
   flex: 1;
   padding: 2rem;
@@ -68,5 +152,24 @@
 .layout-footer p {
   margin: 0;
   font-size: 0.875rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 799px) {
+  .layout-header {
+    padding: 1rem;
+  }
+
+  .app-title {
+    font-size: 1.25rem;
+  }
+
+  .layout-main {
+    padding: 1rem;
+  }
+
+  .layout-footer {
+    padding: 1rem;
+  }
 }
 

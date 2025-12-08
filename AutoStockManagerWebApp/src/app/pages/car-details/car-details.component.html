@@ -1,0 +1,103 @@
+<div class="car-details-container">
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-with-text">
+      <div class="loading-spinner"></div>
+      <span class="loading-text">Loading car details...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && car" class="car-details-content">
+    <div class="header-actions">
+      <a routerLink="/home" class="back-button">
+        <i class="pi pi-arrow-left"></i>
+        Back
+      </a>
+    </div>
+
+    <div class="car-header">
+      <h1>{{ car.brand }} {{ car.model }}</h1>
+      <p class="car-year">{{ car.manufactureYear }}</p>
+    </div>
+
+    <div class="car-main-content">
+      <div class="car-images-section">
+        <div *ngIf="car.images && car.images.length > 0" class="car-images">
+          <div *ngFor="let image of car.images" class="car-image">
+            <img [src]="image" [alt]="car.brand + ' ' + car.model" />
+          </div>
+        </div>
+        <div *ngIf="!car.images || car.images.length === 0" class="no-images">
+          <i class="pi pi-image"></i>
+          <p>No images available</p>
+        </div>
+      </div>
+
+      <div class="car-info-section">
+        <div class="info-card">
+          <h2>Car Information</h2>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Brand:</span>
+              <span class="info-value">{{ car.brand }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Model:</span>
+              <span class="info-value">{{ car.model }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Year:</span>
+              <span class="info-value">{{ car.manufactureYear }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Price:</span>
+              <span class="info-value">{{ formatCurrency(car.price) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Purchase Date:</span>
+              <span class="info-value">{{ formatDate(car.purchaseDate) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Supplier:</span>
+              <span class="info-value">{{ car.supplierName || car.supplier }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="car.registrationCertificate" class="info-card">
+          <h2>Registration Certificate</h2>
+          <div class="certificate-info">
+            <a [href]="car.registrationCertificate" target="_blank" class="certificate-link">
+              <i class="pi pi-file-pdf"></i>
+              View Registration Certificate
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="car-parts-section">
+      <h2>Car Parts ({{ carParts.length }})</h2>
+      <div *ngIf="carParts.length === 0" class="no-parts">
+        <p>No car parts available for this car.</p>
+      </div>
+      <div *ngIf="carParts.length > 0" class="parts-grid">
+        <div *ngFor="let part of carParts" class="part-card">
+          <div class="part-header">
+            <h3>{{ part.name }}</h3>
+            <span class="part-status" [class.available]="part.status === 'available'" [class.sold]="part.status === 'sold'">
+              {{ part.status }}
+            </span>
+          </div>
+          <div class="part-info">
+            <p class="part-price">{{ formatCurrency(part.price) }}</p>
+            <p *ngIf="part.buyer" class="part-buyer">Buyer: {{ part.buyer }}</p>
+          </div>
+          <div *ngIf="part.images && part.images.length > 0" class="part-images">
+            <img *ngFor="let image of part.images.slice(0, 3)" [src]="image" [alt]="part.name" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

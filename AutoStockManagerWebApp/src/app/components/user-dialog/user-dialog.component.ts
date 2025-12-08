@@ -35,9 +35,7 @@ export class UserDialogComponent {
   
   roleOptions = [
     { label: 'Admin', value: 'admin' },
-    { label: 'Manager', value: 'manager' },
     { label: 'User', value: 'user' },
-    { label: 'Guest', value: 'guest' }
   ];
 
   constructor(private fb: FormBuilder) {

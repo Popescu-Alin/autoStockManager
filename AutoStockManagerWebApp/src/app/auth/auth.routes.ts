@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
-import { RegisterComponent } from './pages/register/register.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 
 
 export const authRoutes: Routes = [
@@ -10,9 +10,9 @@ export const authRoutes: Routes = [
     title: 'Login'
   },
   {
-    path: 'register',
-    component: RegisterComponent,
-    title: 'Register'
+    path: 'set-password',
+    component: ResetPasswordComponent,
+    title: 'Set Password'
   },
   {
     path: '',

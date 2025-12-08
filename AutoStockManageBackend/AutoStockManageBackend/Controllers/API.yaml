@@ -1,0 +1,389 @@
+openapi: 3.1.0
+x-stoplight:
+  id: lhpv4thyehyhb
+info:
+  title: AutoStockManagerApp
+  version: "1.0"
+servers:
+  - url: "http://localhost:7245"
+paths:
+  "/users/{userId}":
+    parameters:
+      - schema:
+          type: integer
+        name: userId
+        in: path
+        required: true
+        description: Id of an existing user.
+    get:
+      summary: Get User Info by User ID
+      tags: []
+      responses:
+        "200":
+          description: User Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+              examples:
+                Get User Alice Smith:
+                  value:
+                    id: 142
+                    firstName: Alice
+                    lastName: Smith
+                    email: alice.smith@gmail.com
+                    dateOfBirth: "1997-10-31"
+                    emailVerified: true
+                    signUpDate: "2019-08-24"
+        "404":
+          description: User Not Found
+      operationId: get-users-userId
+      description: Retrieve the information of the user with the matching user ID.
+      x-stoplight:
+        id: yqy610wk284ln
+    patch:
+      summary: Update User Information
+      operationId: patch-users-userId
+      responses:
+        "200":
+          description: User Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+              examples:
+                Updated User Rebecca Baker:
+                  value:
+                    id: 13
+                    firstName: Rebecca
+                    lastName: Baker
+                    email: rebecca@gmail.com
+                    dateOfBirth: "1985-10-02"
+                    emailVerified: false
+                    createDate: "2019-08-24"
+        "404":
+          description: User Not Found
+        "409":
+          description: Email Already Taken
+      description: Update the information of an existing user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                  description: "If a new email is given, the user's email verified property will be set to false."
+                dateOfBirth:
+                  type: string
+            examples:
+              Update First Name:
+                value:
+                  firstName: Rebecca
+              Update Email:
+                value:
+                  email: rebecca@gmail.com
+              Update Last Name & Date of Birth:
+                value:
+                  lastName: Baker
+                  dateOfBirth: "1985-10-02"
+      x-stoplight:
+        id: 1yg8e7slrghn8
+  /users:
+    post:
+      summary: Create New User
+      operationId: post-user
+      responses:
+        "200":
+          description: User Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+              examples:
+                New User Bob Fellow:
+                  value:
+                    id: 12
+                    firstName: Bob
+                    lastName: Fellow
+                    email: bob.fellow@gmail.com
+                    dateOfBirth: "1996-08-24"
+                    emailVerified: false
+                    createDate: "2020-11-18"
+        "400":
+          description: Missing Required Information
+        "409":
+          description: Email Already Taken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                dateOfBirth:
+                  type: string
+                  format: date
+              required:
+                - firstName
+                - lastName
+                - email
+                - dateOfBirth
+            examples:
+              Create User Bob Fellow:
+                value:
+                  firstName: Bob
+                  lastName: Fellow
+                  email: bob.fellow@gmail.com
+                  dateOfBirth: "1996-08-24"
+      description: Create a new user.
+      x-stoplight:
+        id: c0fae6iq2fo7b
+    get:
+      summary: Get All Users
+      operationId: get-users
+      description: Returns a list of all existing users.
+      responses:
+        "200":
+          description: List of Users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+  /cars:
+    get:
+      summary: Get All Cars
+      operationId: get-cars
+      description: Returns a list of all cars.
+      responses:
+        "200":
+          description: List of Cars
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CarDto"
+  /parts:
+    get:
+      summary: Get All Car Parts
+      operationId: get-parts
+      description: Returns a list of all car parts.
+      responses:
+        "200":
+          description: List of Car Parts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CarPartDto"
+  /login:
+    post:
+      summary: User Login
+      description: Authenticate a user using email and password.
+      operationId: post-login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+              required:
+                - email
+                - password
+      responses:
+        "200":
+          description: Login Successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+              examples:
+                Successful Login:
+                  value:
+                    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                    expiresAt: "2025-11-18T12:45:00Z"
+                    user:
+                      id: 142
+                      firstName: Alice
+                      lastName: Smith
+                      email: alice.smith@gmail.com
+                      emailVerified: true
+                      createDate: "2019-08-24"
+        "400":
+          description: Missing Credentials
+        "401":
+          description: Invalid Email or Password
+components:
+  schemas:
+    User:
+      title: User
+      type: object
+      x-stoplight:
+        id: gifebwwo1c1j1
+      examples:
+        - {}
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          format: email
+        createDate:
+          type: string
+          format: date
+        identityUserId:
+          type: string
+        role:
+          type: integer
+        inviteToken:
+          type: string
+        inviteTokenExpirationDate:
+          type: string
+          format: date-time
+    Car:
+      type: object
+      properties:
+        id:
+          type: integer
+        supplierId:
+          type: integer
+        purchaseDate:
+          type: string
+          format: date-time
+        brand:
+          type: string
+        model:
+          type: string
+        manufactureYear:
+          type: integer
+        vehicleRegistrationCertificate:
+          type: string
+        purchasePrice:
+          type: number
+    Client:
+      type: object
+      properties:
+        clientId:
+          type: integer
+        name:
+          type: string
+        phone:
+          type: string
+    CarPart:
+      type: object
+      properties:
+        id:
+          type: integer
+        carId:
+          type: integer
+        purchaseDate:
+          type: string
+          format: date-time
+        price:
+          type: number
+        name:
+          type: string
+        status:
+          type: integer
+        clientId:
+          type: integer
+    CarImage:
+      type: object
+      properties:
+        id:
+          type: integer
+        carId:
+          type: integer
+        image:
+          type: string
+    CarPartImage:
+      type: object
+      properties:
+        id:
+          type: integer
+        carPartId:
+          type: integer
+        image:
+          type: string
+    Supplier:
+      title: Supplier
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        ssn:
+          type: string
+        phoneNumber:
+          type: string
+    CarDto:
+      title: CarDto
+      type: object
+      properties:
+        car:
+          $ref: "#/components/schemas/Car"
+          x-stoplight:
+            id: thc4bacz8kjoy
+        images:
+          type: array
+          x-stoplight:
+            id: clhs85n3z2844
+          items:
+            x-stoplight:
+              id: hdgrclsvhp7bn
+            type: string
+    CarPartDto:
+      title: CarPartDto
+      type: object
+      properties:
+        carPart:
+          $ref: "#/components/schemas/CarPart"
+          x-stoplight:
+            id: 0ywu728jh4rfs
+        images:
+          x-stoplight:
+            id: svrnt54oxvt8k
+          type: array
+          items:
+            x-stoplight:
+              id: 8vajqjnt43104
+            type: string
+    LoginResponse:
+      title: LoginResponse
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT or session token
+        expiresAt:
+          type: string
+          format: date-time
+          description: Token expiration timestamp
+        user:
+          $ref: "#/components/schemas/User"
+      required:
+        - token
+        - expiresAt
+        - user
