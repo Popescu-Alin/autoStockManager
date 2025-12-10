@@ -1,0 +1,38 @@
+<p-dialog
+  [(visible)]="visible"
+  (visibleChange)="onDialogHide()"
+  [modal]="true"
+  [style]="{ width: '90vw', maxWidth: '800px' }"
+  [draggable]="false"
+  [resizable]="false"
+  [header]="imageTitle"
+  [closable]="true">
+  
+  <div class="image-preview-container">
+    <img [src]="imageUrl" [alt]="imageTitle" class="preview-image" *ngIf="imageUrl" />
+    <div class="no-image" *ngIf="!imageUrl">
+      <p>No image available</p>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      type="button"
+      label="Download"
+      icon="pi pi-download"
+      (click)="downloadImage()"
+      [disabled]="!imageUrl"
+      class="p-button-primary">
+    </button>
+    <button
+      pButton
+      type="button"
+      label="Close"
+      icon="pi pi-times"
+      (click)="onDialogHide()"
+      class="p-button-secondary">
+    </button>
+  </ng-template>
+</p-dialog>
+

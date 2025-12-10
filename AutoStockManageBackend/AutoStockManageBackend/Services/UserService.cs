@@ -1,4 +1,5 @@
-﻿using AutoStockManageBackend.Services.Repository;
+﻿using AutoStockManageBackend;
+using AutoStockManageBackend.Services.Repository;
 
 namespace AutoStockManageBackend.Services
 {

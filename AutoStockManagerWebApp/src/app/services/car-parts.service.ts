@@ -1,5 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { ApiClient, CarPartDto } from '../../api/src/api/api-client';
 
 export interface CarPart {
   id: string;
@@ -18,30 +19,35 @@ export interface CarPart {
   providedIn: 'root',
 })
 export class CarPartsService {
-  constructor(private http: HttpClient) {}
+  constructor(private apiClient: ApiClient) {}
 
-  getAll(): Promise<CarPart[]> {
-    return Promise.resolve([]);
+  async getAll(): Promise<CarPartDto[]> {
+     return await firstValueFrom(this.apiClient.getParts());
   }
 
-  getById(id: string): Promise<CarPart | null> {
-    return Promise.resolve(null);
+  async getById(id: string): Promise<CarPartDto | null> {
+    throw new Error('Create car part endpoint not available in API client');
+
   }
 
-  getByCarId(carId: string): Promise<CarPart[]> {
-    return Promise.resolve([]);
+  async getByCarId(carId: number): Promise<CarPartDto[]> {
+    return await firstValueFrom(this.apiClient.getCarsCarIdParts(carId));
+
   }
 
   create(carPart: Omit<CarPart, 'id'>): Promise<CarPart> {
-    return Promise.resolve({ id: '1', ...carPart });
+    // TODO: Implement when API endpoint is available
+    throw new Error('Create car part endpoint not available in API client');
   }
 
   update(id: string, carPart: Partial<CarPart>): Promise<CarPart> {
-    return Promise.resolve({ id, ...carPart } as CarPart);
+    // TODO: Implement when API endpoint is available
+    throw new Error('Update car part endpoint not available in API client');
   }
 
   delete(id: string): Promise<boolean> {
-    return Promise.resolve(true);
+    // TODO: Implement when API endpoint is available
+    throw new Error('Delete car part endpoint not available in API client');
   }
-}
 
+}

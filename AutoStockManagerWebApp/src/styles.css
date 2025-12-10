@@ -1,5 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 
+/* Bootstrap */
+/* Bootstrap CSS is loaded via angular.json */
+@import "bootstrap/dist/css/bootstrap.min.css";
+
 /* PrimeIcons */
 @import 'primeicons/primeicons.css';
 
@@ -9,14 +13,21 @@
 /* Angular Material Theme */
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 
-/* Global Styles */
 html, body {
   height: 100%;
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-/* Loading Animation */
+.overflow-y{
+  overflow-y: scroll;
+  scrollbar-width: thin;
+}
+
+.clikable{
+  cursor: pointer;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -26,16 +37,7 @@ html, body {
   }
 }
 
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
 
-/* Generic Loading Spinner */
 .loading-spinner {
   display: inline-block;
   width: 40px;
@@ -46,42 +48,6 @@ html, body {
   animation: spin 1s linear infinite;
 }
 
-.loading-spinner.small {
-  width: 20px;
-  height: 20px;
-  border-width: 2px;
-}
-
-.loading-spinner.medium {
-  width: 40px;
-  height: 40px;
-  border-width: 4px;
-}
-
-.loading-spinner.large {
-  width: 60px;
-  height: 60px;
-  border-width: 6px;
-}
-
-/* Loading Spinner with Custom Color */
-.loading-spinner.primary {
-  border-top-color: #1976d2;
-}
-
-.loading-spinner.success {
-  border-top-color: #4caf50;
-}
-
-.loading-spinner.warning {
-  border-top-color: #ff9800;
-}
-
-.loading-spinner.danger {
-  border-top-color: #f44336;
-}
-
-/* Loading Container (centered) */
 .loading-container {
   display: flex;
   justify-content: center;
@@ -99,7 +65,6 @@ html, body {
   z-index: 9999;
 }
 
-/* Loading with Text */
 .loading-with-text {
   display: flex;
   flex-direction: column;
@@ -111,81 +76,4 @@ html, body {
   color: #666;
   font-size: 0.875rem;
   margin-top: 0.5rem;
-}
-
-/* Pulse Loading Animation */
-.loading-pulse {
-  display: inline-block;
-  width: 40px;
-  height: 40px;
-  background-color: #1976d2;
-  border-radius: 50%;
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-.loading-pulse.small {
-  width: 20px;
-  height: 20px;
-}
-
-.loading-pulse.medium {
-  width: 40px;
-  height: 40px;
-}
-
-.loading-pulse.large {
-  width: 60px;
-  height: 60px;
-}
-
-/* Dots Loading Animation */
-@keyframes dots {
-  0%, 20% {
-    content: '.';
-  }
-  40% {
-    content: '..';
-  }
-  60%, 100% {
-    content: '...';
-  }
-}
-
-.loading-dots::after {
-  content: '...';
-  animation: dots 1.5s steps(4, end) infinite;
-}
-
-/* Skeleton Loading (for content placeholders) */
-@keyframes skeleton-loading {
-  0% {
-    background-position: -200px 0;
-  }
-  100% {
-    background-position: calc(200px + 100%) 0;
-  }
-}
-
-.skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200px 100%;
-  animation: skeleton-loading 1.5s ease-in-out infinite;
-  border-radius: 4px;
-}
-
-.skeleton-text {
-  height: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.skeleton-title {
-  height: 1.5rem;
-  width: 60%;
-  margin-bottom: 1rem;
-}
-
-.skeleton-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
 }

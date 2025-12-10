@@ -1,14 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoStockManageBackend.DBContext;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace AutoStockManageBackend.Services.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly DbContext _context;
+        private readonly AppDBContext _context;
         private readonly DbSet<T> _dbSet;
 
-        public Repository(DbContext context)
+        public Repository(AppDBContext context)
         {
             _context = context;
             _dbSet = context.Set<T>();

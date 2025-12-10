@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ApiClient } from '../../api/src/api/api-client';
 
 export interface Customer {
   id: string;
@@ -13,26 +13,32 @@ export interface Customer {
   providedIn: 'root',
 })
 export class CustomersService {
-  constructor(private http: HttpClient) {}
+  // constructor(private apiClient: ApiClient) {}
+  constructor() {}
 
   getAll(): Promise<Customer[]> {
+    // TODO: Implement when API endpoint is available
+    // Note: The API client has a Client interface but no endpoints for clients/customers
     return Promise.resolve([]);
   }
 
   getById(id: string): Promise<Customer | null> {
+    // TODO: Implement when API endpoint is available
     return Promise.resolve(null);
   }
 
   create(customer: Omit<Customer, 'id'>): Promise<Customer> {
-    return Promise.resolve({ id: '1', ...customer });
+    // TODO: Implement when API endpoint is available
+    throw new Error('Create customer endpoint not available in API client');
   }
 
   update(id: string, customer: Partial<Customer>): Promise<Customer> {
-    return Promise.resolve({ id, ...customer } as Customer);
+    // TODO: Implement when API endpoint is available
+    throw new Error('Update customer endpoint not available in API client');
   }
 
   delete(id: string): Promise<boolean> {
-    return Promise.resolve(true);
+    // TODO: Implement when API endpoint is available
+    throw new Error('Delete customer endpoint not available in API client');
   }
 }
-

@@ -5,8 +5,8 @@
   [style]="{ width: '500px' }"
   [draggable]="false"
   [resizable]="false"
-  header="Supplier Information">
-  
+  [header]="editMode ? 'Edit Supplier' : 'Add Supplier'"
+>
   <form [formGroup]="supplierForm" (ngSubmit)="handleSubmit()">
     <div class="form-group">
       <label for="name">Name <span class="required">*</span></label>
@@ -17,12 +17,16 @@
         formControlName="name"
         placeholder="Enter supplier name"
         [class.ng-invalid]="supplierForm.get('name')?.invalid && supplierForm.get('name')?.touched"
-        [class.ng-dirty]="supplierForm.get('name')?.dirty" />
+        [class.ng-dirty]="supplierForm.get('name')?.dirty"
+      />
       <small
         class="error-message"
-        *ngIf="supplierForm.get('name')?.invalid && supplierForm.get('name')?.touched">
+        *ngIf="supplierForm.get('name')?.invalid && supplierForm.get('name')?.touched"
+      >
         <span *ngIf="supplierForm.get('name')?.errors?.['required']">Name is required</span>
-        <span *ngIf="supplierForm.get('name')?.errors?.['minlength']">Name must be at least 2 characters</span>
+        <span *ngIf="supplierForm.get('name')?.errors?.['minlength']"
+          >Name must be at least 2 characters</span
+        >
       </small>
     </div>
 
@@ -35,13 +39,19 @@
         formControlName="phone"
         placeholder="(123) 456-7890"
         (input)="formatPhone($event)"
-        [class.ng-invalid]="supplierForm.get('phone')?.invalid && supplierForm.get('phone')?.touched"
-        [class.ng-dirty]="supplierForm.get('phone')?.dirty" />
+        [class.ng-invalid]="
+          supplierForm.get('phone')?.invalid && supplierForm.get('phone')?.touched
+        "
+        [class.ng-dirty]="supplierForm.get('phone')?.dirty"
+      />
       <small
         class="error-message"
-        *ngIf="supplierForm.get('phone')?.invalid && supplierForm.get('phone')?.touched">
+        *ngIf="supplierForm.get('phone')?.invalid && supplierForm.get('phone')?.touched"
+      >
         <span *ngIf="supplierForm.get('phone')?.errors?.['required']">Phone is required</span>
-        <span *ngIf="supplierForm.get('phone')?.errors?.['pattern']">Please enter a valid phone number</span>
+        <span *ngIf="supplierForm.get('phone')?.errors?.['pattern']"
+          >Please enter a valid phone number</span
+        >
       </small>
     </div>
 
@@ -56,12 +66,16 @@
         maxlength="13"
         (input)="formatSSN($event)"
         [class.ng-invalid]="supplierForm.get('ssn')?.invalid && supplierForm.get('ssn')?.touched"
-        [class.ng-dirty]="supplierForm.get('ssn')?.dirty" />
+        [class.ng-dirty]="supplierForm.get('ssn')?.dirty"
+      />
       <small
         class="error-message"
-        *ngIf="supplierForm.get('ssn')?.invalid && supplierForm.get('ssn')?.touched">
+        *ngIf="supplierForm.get('ssn')?.invalid && supplierForm.get('ssn')?.touched"
+      >
         <span *ngIf="supplierForm.get('ssn')?.errors?.['required']">SSN is required</span>
-        <span *ngIf="supplierForm.get('ssn')?.errors?.['pattern']">SSN must be 13 digits and start with 1-8</span>
+        <span *ngIf="supplierForm.get('ssn')?.errors?.['pattern']"
+          >SSN must be 13 digits and start with 1-8</span
+        >
       </small>
     </div>
 
@@ -72,17 +86,16 @@
         label="Cancel"
         icon="pi pi-times"
         (click)="handleCancel()"
-        class="p-button-danger p-button-text cancel-button"></button>
+        class="p-button-danger p-button-text cancel-button"
+      ></button>
       <button
         type="submit"
         pButton
-        label="Add Supplier"
+        [label]="editMode ? 'Update Supplier' : 'Add Supplier'"
         icon="pi pi-check"
         [disabled]="supplierForm.invalid"
-        class="p-button-primary"></button>
+        class="p-button-primary"
+      ></button>
     </div>
   </form>
 </p-dialog>
-
-
-

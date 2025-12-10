@@ -15,15 +15,15 @@
     </div>
 
     <div class="car-header">
-      <h1>{{ car.brand }} {{ car.model }}</h1>
-      <p class="car-year">{{ car.manufactureYear }}</p>
+      <h1>{{ car?.car?.brand }} {{ car?.car?.model }}</h1>
+      <p class="car-year">{{ car?.car?.manufactureYear }}</p>
     </div>
 
     <div class="car-main-content">
       <div class="car-images-section">
         <div *ngIf="car.images && car.images.length > 0" class="car-images">
           <div *ngFor="let image of car.images" class="car-image">
-            <img [src]="image" [alt]="car.brand + ' ' + car.model" />
+            <img [src]="image" [alt]="car?.car?.brand + ' ' + car?.car?.model" />
           </div>
         </div>
         <div *ngIf="!car.images || car.images.length === 0" class="no-images">
@@ -38,35 +38,35 @@
           <div class="info-grid">
             <div class="info-item">
               <span class="info-label">Brand:</span>
-              <span class="info-value">{{ car.brand }}</span>
+              <span class="info-value">{{ car?.car?.brand }}</span>
             </div>
             <div class="info-item">
               <span class="info-label">Model:</span>
-              <span class="info-value">{{ car.model }}</span>
+              <span class="info-value">{{ car?.car?.model }}</span>
             </div>
             <div class="info-item">
               <span class="info-label">Year:</span>
-              <span class="info-value">{{ car.manufactureYear }}</span>
+              <span class="info-value">{{ car?.car?.manufactureYear }}</span>
             </div>
             <div class="info-item">
               <span class="info-label">Price:</span>
-              <span class="info-value">{{ formatCurrency(car.price) }}</span>
+              <span class="info-value">{{ formatCurrency(car?.car?.price) }}</span>
             </div>
             <div class="info-item">
               <span class="info-label">Purchase Date:</span>
-              <span class="info-value">{{ formatDate(car.purchaseDate) }}</span>
+              <span class="info-value">{{ formatDate(car?.car?.purchaseDate) }}</span>
             </div>
             <div class="info-item">
               <span class="info-label">Supplier:</span>
-              <span class="info-value">{{ car.supplierName || car.supplier }}</span>
+              <span class="info-value">{{ car?.car?.supplierName || car?.car?.supplier }}</span>
             </div>
           </div>
         </div>
 
-        <div *ngIf="car.registrationCertificate" class="info-card">
+        <div *ngIf="car?.car?.vehicleRegistrationCertificate" class="info-card">
           <h2>Registration Certificate</h2>
           <div class="certificate-info">
-            <a [href]="car.registrationCertificate" target="_blank" class="certificate-link">
+            <a [href]="car?.car?.vehicleRegistrationCertificate" target="_blank" class="certificate-link">
               <i class="pi pi-file-pdf"></i>
               View Registration Certificate
             </a>
@@ -83,17 +83,17 @@
       <div *ngIf="carParts.length > 0" class="parts-grid">
         <div *ngFor="let part of carParts" class="part-card">
           <div class="part-header">
-            <h3>{{ part.name }}</h3>
-            <span class="part-status" [class.available]="part.status === 'available'" [class.sold]="part.status === 'sold'">
-              {{ part.status }}
+            <h3>{{ part?.carPart?.name }}</h3>
+            <span class="part-status" [class.available]="part?.carPart?.status === 0" [class.sold]="part?.carPart?.status === 1">
+              {{ part?.carPart?.status }}
             </span>
           </div>
           <div class="part-info">
-            <p class="part-price">{{ formatCurrency(part.price) }}</p>
-            <p *ngIf="part.buyer" class="part-buyer">Buyer: {{ part.buyer }}</p>
+            <p class="part-price">{{ formatCurrency(part?.carPart?.price) }}</p>
+            <p *ngIf="part?.carPart?.buyer" class="part-buyer">Buyer: {{ part?.carPart?.buyer }}</p>
           </div>
-          <div *ngIf="part.images && part.images.length > 0" class="part-images">
-            <img *ngFor="let image of part.images.slice(0, 3)" [src]="image" [alt]="part.name" />
+          <div *ngIf="part?.images && (part?.images?.length ?? 0) > 0" class="part-images">
+            <img *ngFor="let image of part?.images?.slice(0, 3)" [src]="image" [alt]="part?.carPart?.name" />
           </div>
         </div>
       </div>

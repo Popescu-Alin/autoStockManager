@@ -12,15 +12,15 @@ namespace AutoStockManageBackend.Services
             _repository = repository;
         }
 
-        public T? GetByIdAsync(int id) => _repository.GetByIdAsync(id);
+        public T? GetById(int id) => _repository.GetByIdAsync(id);
 
-        public IQueryable<T> GetAllAsync(Expression<Func<T, bool>>? filter) => _repository.GetAllAsync(filter);
+        public IQueryable<T> GetAll(Expression<Func<T, bool>>? filter) => _repository.GetAllAsync(filter);
 
-        public T CreateAsync(T entity) => _repository.AddAsync(entity);
+        public T Create(T entity) => _repository.AddAsync(entity);
 
-        public T UpdateAsync(T entity) => _repository.UpdateAsync(entity);
+        public T Update(T entity) => _repository.UpdateAsync(entity);
 
-        public bool DeleteAsync(int id) => _repository.DeleteAsync(id);
+        public bool Delete(int id) => _repository.DeleteAsync(id);
 
         public T? FindByCondition(Expression<Func<T, bool>> filter) => _repository.FindByCondition(filter);
     }

@@ -1,62 +1,20 @@
 <div class="home-container">
-  <h1>{{ title }}</h1>
-  <p>This is the main application area. Add your pages here and they will automatically use the layout.</p>
-  
-  <div class="actions-container">
-    <button
-      pButton
-      type="button"
-      label="Add User"
-      icon="pi pi-user-plus"
-      (click)="openAddUserDialog()"
-      class="p-button-primary">
-    </button>
-    <button
-      pButton
-      type="button"
-      label="Add Supplier"
-      icon="pi pi-building"
-      (click)="openAddSupplierDialog()"
-      class="p-button-primary">
-    </button>
-    <button
-      pButton
-      type="button"
-      label="Add Car"
-      icon="pi pi-car"
-      (click)="openAddCarDialog()"
-      class="p-button-primary">
-    </button>
-    <button
-      pButton
-      type="button"
-      label="Add Car Part"
-      icon="pi pi-cog"
-      (click)="openAddCarPartDialog()"
-      class="p-button-primary">
-    </button>
+  <div class="hero">
+    <p class="eyebrow">Dashboard</p>
+    <h1>{{ title }}</h1>
+    <p class="subtitle">
+      {{ subtitle }}
+    </p>
+
+    <div class="hero-actions">
+      <a pButton routerLink="/cars" class="p-button-primary" label="View cars" icon="pi pi-car"></a>
+      <a
+        pButton
+        routerLink="/suppliers"
+        class="p-button-secondary"
+        label="Manage suppliers"
+        icon="pi pi-building"
+      ></a>
+    </div>
   </div>
-
-  <app-user-dialog
-    [(visible)]="userDialogVisible"
-    (onSubmit)="onUserSubmit($event)">
-  </app-user-dialog>
-
-  <app-supplier-dialog
-    [(visible)]="supplierDialogVisible"
-    (onSubmit)="onSupplierSubmit($event)">
-  </app-supplier-dialog>
-
-  <app-car-dialog
-    [(visible)]="carDialogVisible"
-    [suppliers]="suppliers"
-    (onSubmit)="onCarSubmit($event)">
-  </app-car-dialog>
-
-  <app-car-part-dialog
-    [(visible)]="carPartDialogVisible"
-    [cars]="cars"
-    (onSubmit)="onCarPartSubmit($event)">
-  </app-car-part-dialog>
 </div>
-

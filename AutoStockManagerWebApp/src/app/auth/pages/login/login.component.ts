@@ -6,6 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { AuthService } from '../../../services/auth.service';
 import { SnackbarService } from '../../../services/snakbar.service';
+import { AuthRequest } from '../../../../api/src/api/api-client';
 
 @Component({
   selector: 'app-login',
@@ -32,12 +33,6 @@ export class LoginComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    // Check if user is already authenticated
-    const isAuthenticated = await this.authService.checkAuth();
-    if (isAuthenticated) {
-      const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
-      this.router.navigate([returnUrl]);
-    }
   }
 
   async onSubmit(): Promise<void> {
@@ -51,18 +46,18 @@ export class LoginComponent implements OnInit {
     this.isSubmitting = true;
 
     const formValue = this.loginForm.value;
-    const loginData = {
+    const loginData: AuthRequest = new AuthRequest({
       email: formValue.email,
       password: formValue.password,
-    };
+    });
 
     try {
       const response = await this.authService.login(loginData);
       this.isSubmitting = false;
       if (response && response.token) {
-        // Get returnUrl from query params or default to home
-        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
-        this.router.navigate([returnUrl]);
+        this.authService.setToken(response.token);
+        this.authService.setCurrentUser(response.user!);
+        this.router.navigate(['/home']);
       } else {
         this.snackbarService.genericError();
       }

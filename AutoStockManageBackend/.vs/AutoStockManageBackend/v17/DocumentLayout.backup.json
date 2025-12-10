@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\controllers\\basecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\controllers\\basecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -11,60 +15,68 @@
       "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\controllers\\basecontrolleryaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\identitymodels\\aspnetuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\identitymodels\\aspnetuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\services\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\services\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\constants\\constants.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\constants\\constants.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\utils\\jwttokengenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\utils\\jwttokengenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\services\\repository\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\services\\repository\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\services\\repository\\irepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\services\\repository\\irepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Migrations\\20251210191811_ModelsUpdates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:AutoStockManageBackend\\Migrations\\20251210191811_ModelsUpdates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\identitymodels\\aspnetrole.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\identitymodels\\aspnetrole.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\migrations\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\migrations\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\identitymodels\\aspnetuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\identitymodels\\aspnetuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\identitymodels\\aspnetuserrole.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\identitymodels\\aspnetuserrole.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\controllers\\api.nswag||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\controllers\\api.nswag||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\constants\\constants.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\constants\\constants.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\services\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\services\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\services\\repository\\irepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\services\\repository\\irepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\utils\\hashfunction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\utils\\hashfunction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\services\\repository\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\services\\repository\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|d:\\autostockmanagerapp\\autostockmanagebackend\\autostockmanagebackend\\migrations\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCEC780-AD86-4650-86F1-6B76D2157F95}|AutoStockManageBackend\\AutoStockManageBackend.csproj|solutionrelative:autostockmanagebackend\\migrations\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -74,63 +86,74 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 11,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
+              "Title": "BaseControllerYaml.cs",
+              "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Controllers\\BaseControllerYaml.cs",
+              "RelativeDocumentMoniker": "AutoStockManageBackend\\Controllers\\BaseControllerYaml.cs",
+              "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Controllers\\BaseControllerYaml.cs",
+              "RelativeToolTip": "AutoStockManageBackend\\Controllers\\BaseControllerYaml.cs",
+              "ViewState": "AgIAAN4AAAAAAAAAAAAgwFoAAABYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T19:38:56.189Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "HashFunction.cs",
+              "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Utils\\HashFunction.cs",
+              "RelativeDocumentMoniker": "AutoStockManageBackend\\Utils\\HashFunction.cs",
+              "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Utils\\HashFunction.cs",
+              "RelativeToolTip": "AutoStockManageBackend\\Utils\\HashFunction.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T14:50:07.142Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "AuthService.cs",
               "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Services\\AuthService.cs",
               "RelativeDocumentMoniker": "AutoStockManageBackend\\Services\\AuthService.cs",
               "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Services\\AuthService.cs",
               "RelativeToolTip": "AutoStockManageBackend\\Services\\AuthService.cs",
-              "ViewState": "AgIAACIAAAAAAAAAAAApwBcAAAAmAAAAAAAAAA==",
+              "ViewState": "AgIAABEAAAAAAAAAAAAAwBoAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-16T17:14:44.413Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Constants.cs",
-              "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Constants\\Constants.cs",
-              "RelativeDocumentMoniker": "AutoStockManageBackend\\Constants\\Constants.cs",
-              "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Constants\\Constants.cs",
-              "RelativeToolTip": "AutoStockManageBackend\\Constants\\Constants.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAXAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-16T17:09:41.776Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 4,
               "Title": "JwtTokenGenerator.cs",
               "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Utils\\JwtTokenGenerator.cs",
               "RelativeDocumentMoniker": "AutoStockManageBackend\\Utils\\JwtTokenGenerator.cs",
               "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Utils\\JwtTokenGenerator.cs",
               "RelativeToolTip": "AutoStockManageBackend\\Utils\\JwtTokenGenerator.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABAAAAAAAAAAAAAgwCYAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-16T16:49:58.118Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 13,
               "Title": "Service.cs",
               "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Services\\Service.cs",
               "RelativeDocumentMoniker": "AutoStockManageBackend\\Services\\Service.cs",
               "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Services\\Service.cs",
               "RelativeToolTip": "AutoStockManageBackend\\Services\\Service.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAA7wBgAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAmwBIAAAA5AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-15T19:26:13.091Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-15T19:26:13.091Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 17,
               "Title": "Repository.cs",
               "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Services\\Repository\\Repository.cs",
               "RelativeDocumentMoniker": "AutoStockManageBackend\\Services\\Repository\\Repository.cs",
@@ -138,38 +161,113 @@
               "RelativeToolTip": "AutoStockManageBackend\\Services\\Repository\\Repository.cs",
               "ViewState": "AgIAADIAAAAAAAAAAAAAADgAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-15T19:25:24.023Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-15T19:25:24.023Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 14,
               "Title": "IRepository.cs",
               "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Services\\Repository\\IRepository.cs",
               "RelativeDocumentMoniker": "AutoStockManageBackend\\Services\\Repository\\IRepository.cs",
               "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Services\\Repository\\IRepository.cs",
               "RelativeToolTip": "AutoStockManageBackend\\Services\\Repository\\IRepository.cs",
-              "ViewState": "AgIAAAIAAAAAAAAAAAAiwAsAAAAKAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAcwAgAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-15T19:22:15.12Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-15T19:22:15.12Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "User.cs",
               "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Models\\User.cs",
               "RelativeDocumentMoniker": "AutoStockManageBackend\\Models\\User.cs",
               "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Models\\User.cs",
               "RelativeToolTip": "AutoStockManageBackend\\Models\\User.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAMAAAAZAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-09T18:47:49.58Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Program.cs",
+              "RelativeDocumentMoniker": "AutoStockManageBackend\\Program.cs",
+              "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Program.cs",
+              "RelativeToolTip": "AutoStockManageBackend\\Program.cs",
+              "ViewState": "AgIAAEcAAAAAAAAAAAAuwFQAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-09T13:57:16.243Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "EmailService.cs",
+              "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Services\\EmailService.cs",
+              "RelativeDocumentMoniker": "AutoStockManageBackend\\Services\\EmailService.cs",
+              "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Services\\EmailService.cs",
+              "RelativeToolTip": "AutoStockManageBackend\\Services\\EmailService.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAIwAkAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T14:56:21.053Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "BaseController.cs",
+              "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Controllers\\BaseController.cs",
+              "RelativeDocumentMoniker": "AutoStockManageBackend\\Controllers\\BaseController.cs",
+              "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Controllers\\BaseController.cs",
+              "RelativeToolTip": "AutoStockManageBackend\\Controllers\\BaseController.cs",
+              "ViewState": "AgIAAH4CAAAAAAAAAAAnwJ4CAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T15:55:28.767Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Services\\UserService.cs",
+              "RelativeDocumentMoniker": "AutoStockManageBackend\\Services\\UserService.cs",
+              "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Services\\UserService.cs",
+              "RelativeToolTip": "AutoStockManageBackend\\Services\\UserService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T14:51:21.822Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AspNetRole.cs",
+              "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\IdentityModels\\AspNetRole.cs",
+              "RelativeDocumentMoniker": "AutoStockManageBackend\\IdentityModels\\AspNetRole.cs",
+              "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\IdentityModels\\AspNetRole.cs",
+              "RelativeToolTip": "AutoStockManageBackend\\IdentityModels\\AspNetRole.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T19:15:21.638Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "20251210191811_ModelsUpdates.cs",
+              "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Migrations\\20251210191811_ModelsUpdates.cs",
+              "RelativeDocumentMoniker": "AutoStockManageBackend\\Migrations\\20251210191811_ModelsUpdates.cs",
+              "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Migrations\\20251210191811_ModelsUpdates.cs",
+              "RelativeToolTip": "AutoStockManageBackend\\Migrations\\20251210191811_ModelsUpdates.cs",
+              "ViewState": "AgIAAAsBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T19:18:11.701Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "AspNetUser.cs",
               "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\IdentityModels\\AspNetUser.cs",
               "RelativeDocumentMoniker": "AutoStockManageBackend\\IdentityModels\\AspNetUser.cs",
@@ -182,7 +280,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 18,
               "Title": "AppDBContext.cs",
               "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Migrations\\AppDBContext.cs",
               "RelativeDocumentMoniker": "AutoStockManageBackend\\Migrations\\AppDBContext.cs",
@@ -190,87 +288,11 @@
               "RelativeToolTip": "AutoStockManageBackend\\Migrations\\AppDBContext.cs",
               "ViewState": "AgIAABQAAAAAAAAAAAAAwBgAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-09T18:34:12.727Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-09T18:34:12.727Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Program.cs",
-              "RelativeDocumentMoniker": "AutoStockManageBackend\\Program.cs",
-              "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Program.cs",
-              "RelativeToolTip": "AutoStockManageBackend\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-09T13:57:16.243Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "BaseControllerYaml.cs",
-              "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Controllers\\BaseControllerYaml.cs",
-              "RelativeDocumentMoniker": "AutoStockManageBackend\\Controllers\\BaseControllerYaml.cs",
-              "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Controllers\\BaseControllerYaml.cs",
-              "RelativeToolTip": "AutoStockManageBackend\\Controllers\\BaseControllerYaml.cs",
-              "ViewState": "AgIAAHYAAAAAAAAAAAAowHwAAAArAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-09T13:48:10.419Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "BaseController.cs",
-              "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Controllers\\BaseController.cs",
-              "RelativeDocumentMoniker": "AutoStockManageBackend\\Controllers\\BaseController.cs",
-              "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Controllers\\BaseController.cs",
-              "RelativeToolTip": "AutoStockManageBackend\\Controllers\\BaseController.cs",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAIwDIAAABHAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-09T13:37:28.398Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "AspNetRole.cs",
-              "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\IdentityModels\\AspNetRole.cs",
-              "RelativeDocumentMoniker": "AutoStockManageBackend\\IdentityModels\\AspNetRole.cs",
-              "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\IdentityModels\\AspNetRole.cs",
-              "RelativeToolTip": "AutoStockManageBackend\\IdentityModels\\AspNetRole.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-09T18:43:06.41Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "API.nswag",
-              "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Controllers\\API.nswag",
-              "RelativeDocumentMoniker": "AutoStockManageBackend\\Controllers\\API.nswag",
-              "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Controllers\\API.nswag",
-              "RelativeToolTip": "AutoStockManageBackend\\Controllers\\API.nswag",
-              "ViewState": "AgIAABwAAAAAAAAAAAAgwCUAAAAsAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-11-09T19:23:16.838Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "AspNetUserRole.cs",
-              "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\IdentityModels\\AspNetUserRole.cs",
-              "RelativeDocumentMoniker": "AutoStockManageBackend\\IdentityModels\\AspNetUserRole.cs",
-              "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\IdentityModels\\AspNetUserRole.cs",
-              "RelativeToolTip": "AutoStockManageBackend\\IdentityModels\\AspNetUserRole.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-09T18:44:32.397Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 16,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\appsettings.json",
               "RelativeDocumentMoniker": "AutoStockManageBackend\\appsettings.json",
@@ -278,7 +300,32 @@
               "RelativeToolTip": "AutoStockManageBackend\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAABNAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-11-09T18:54:06.782Z",
+              "WhenOpened": "2025-11-09T18:54:06.782Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Constants.cs",
+              "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Constants\\Constants.cs",
+              "RelativeDocumentMoniker": "AutoStockManageBackend\\Constants\\Constants.cs",
+              "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\Constants\\Constants.cs",
+              "RelativeToolTip": "AutoStockManageBackend\\Constants\\Constants.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-16T17:09:41.776Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "AspNetUserRole.cs",
+              "DocumentMoniker": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\IdentityModels\\AspNetUserRole.cs",
+              "RelativeDocumentMoniker": "AutoStockManageBackend\\IdentityModels\\AspNetUserRole.cs",
+              "ToolTip": "D:\\AutoStockManagerApp\\AutoStockManageBackend\\AutoStockManageBackend\\IdentityModels\\AspNetUserRole.cs",
+              "RelativeToolTip": "AutoStockManageBackend\\IdentityModels\\AspNetUserRole.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-09T18:44:32.397Z",
               "EditorCaption": ""
             }
           ]

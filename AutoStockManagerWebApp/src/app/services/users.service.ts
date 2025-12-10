@@ -1,39 +1,33 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { ApiClient, User } from '../../api/src/api/api-client';
 
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsersService {
-  constructor(private http: HttpClient) {}
+  constructor(private apiClient: ApiClient) {}
 
-  getAll(): Promise<User[]> {
-    return Promise.resolve([]);
+  async getAll(): Promise<User[]> {
+    return await firstValueFrom(this.apiClient.getUsers());
   }
 
-  getById(id: string): Promise<User | null> {
-    return Promise.resolve(null);
+  async getById(id: string): Promise<User | null> {
+    return await firstValueFrom(this.apiClient.getUsersUserId(parseInt(id, 10)));
   }
 
-  create(user: Omit<User, 'id'>): Promise<User> {
-    return Promise.resolve({ id: '1', ...user });
+  async create(user: User): Promise<User> {
+    return await firstValueFrom(this.apiClient.postUser(user));
   }
 
-  update(id: string, user: Partial<User>): Promise<User> {
-    return Promise.resolve({ id, ...user } as User);
+  async update(id: string, user: User): Promise<User> {
+    return await firstValueFrom(this.apiClient.patchUsersUserId(user, parseInt(id, 10)));
   }
 
-  delete(id: string): Promise<boolean> {
-    return Promise.resolve(true);
+  async delete(id: number): Promise<void> {
+     await firstValueFrom(this.apiClient.deleteUsersUserId(id));
   }
+
+
 }
-

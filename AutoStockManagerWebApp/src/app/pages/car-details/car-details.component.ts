@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { CarsService, Car } from '../../services/cars.service';
-import { CarPartsService, CarPart } from '../../services/car-parts.service';
+import { CarPart, CarPartsService } from '../../services/car-parts.service';
+import { CarsService } from '../../services/cars.service';
+import { CarDto, CarPartDto } from '../../../api/src/api/api-client';
 
 @Component({
   selector: 'app-car-details',
@@ -12,8 +13,8 @@ import { CarPartsService, CarPart } from '../../services/car-parts.service';
   styleUrl: './car-details.component.css',
 })
 export class CarDetailsComponent implements OnInit {
-  car: Car | null = null;
-  carParts: CarPart[] = [];
+  car: CarDto | undefined = undefined;
+  carParts: CarPartDto[] = [];
   isLoading: boolean = true;
   carId: string | null = null;
 
@@ -26,7 +27,7 @@ export class CarDetailsComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.carId = this.route.snapshot.paramMap.get('id');
-    
+
     if (!this.carId) {
       this.router.navigate(['/home']);
       return;
@@ -37,16 +38,16 @@ export class CarDetailsComponent implements OnInit {
 
   async loadCarDetails(): Promise<void> {
     this.isLoading = true;
-    
+
     try {
-      const car = await this.carsService.getById(this.carId!);
+      const car = await this.carsService.getById(parseInt(this.carId!, 10));
       if (!car) {
         this.router.navigate(['/home']);
         return;
       }
-      
+
       this.car = car;
-      this.carParts = await this.carPartsService.getByCarId(this.carId!);
+      this.carParts = await this.carPartsService.getByCarId(parseInt(this.carId!, 10));
     } catch (error) {
       console.error('Error loading car details:', error);
     } finally {
@@ -68,4 +69,3 @@ export class CarDetailsComponent implements OnInit {
     }).format(amount);
   }
 }
-

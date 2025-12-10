@@ -1,13 +1,14 @@
 import { Routes } from '@angular/router';
 import { authRoutes } from './auth/auth.routes';
+import { AdminGuard } from './guards/admin.guard';
+import { AuthGuard } from './guards/auth.guard';
 import { LayoutComponent } from './layout/layout.component';
-import { HomeComponent } from './pages/home/home.component';
-import { UsersComponent } from './pages/users/users.component';
-import { SuppliersComponent } from './pages/suppliers/suppliers.component';
-import { CustomersComponent } from './pages/customers/customers.component';
 import { CarDetailsComponent } from './pages/car-details/car-details.component';
-import { authGuard } from './guards/auth.guard';
-import { adminGuard } from './guards/admin.guard';
+import { CarsComponent } from './pages/cars/cars.component';
+import { CustomersComponent } from './pages/customers/customers.component';
+import { HomeComponent } from './pages/home/home.component';
+import { SuppliersComponent } from './pages/suppliers/suppliers.component';
+import { UsersComponent } from './pages/users/users.component';
 
 export const routes: Routes = [
   {
@@ -17,7 +18,7 @@ export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-    canActivate: [authGuard],
+    canActivate: [AuthGuard],
     children: [
       {
         path: '',
@@ -30,10 +31,15 @@ export const routes: Routes = [
         title: 'Home'
       },
       {
+        path: 'cars',
+        component: CarsComponent,
+        title: 'Cars'
+      },
+      {
         path: 'users',
         component: UsersComponent,
         title: 'Users',
-        canActivate: [adminGuard]
+        // canActivate: [AdminGuard]
       },
       {
         path: 'suppliers',

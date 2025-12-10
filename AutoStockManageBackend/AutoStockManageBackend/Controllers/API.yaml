@@ -200,17 +200,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-                password:
-                  type: string
-                  format: password
-              required:
-                - email
-                - password
+              $ref: "#/components/schemas/AuthRequest"
       responses:
         "200":
           description: Login Successful
@@ -256,11 +246,10 @@ components:
           type: string
         role:
           type: integer
-        inviteToken:
+        name:
           type: string
-        inviteTokenExpirationDate:
-          type: string
-          format: date-time
+          x-stoplight:
+            id: twnu4vem10voa
     Car:
       type: object
       properties:
@@ -387,3 +376,19 @@ components:
         - token
         - expiresAt
         - user
+    AuthRequest:
+      title: AuthRequest
+      x-stoplight:
+        id: xx25qqo6nuoqi
+      type: object
+      properties:
+        email:
+          type: string
+          x-stoplight:
+            id: fw256t6awjhu5
+          format: email
+        password:
+          type: string
+          x-stoplight:
+            id: rgmc1hcm2i337
+          format: password

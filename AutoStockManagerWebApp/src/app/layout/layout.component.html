@@ -17,6 +17,9 @@
         <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
           Home
         </a>
+        <a routerLink="/cars" routerLinkActive="active">
+          Cars
+        </a>
         <a routerLink="/users" routerLinkActive="active">
           Users
         </a>
@@ -50,6 +53,13 @@
         (click)="closeSideNav()">
         <i class="pi pi-home"></i>
         <span>Home</span>
+      </a>
+      <a
+        routerLink="/cars"
+        routerLinkActive="active"
+        (click)="closeSideNav()">
+        <i class="pi pi-car"></i>
+        <span>Cars</span>
       </a>
       <a
         routerLink="/users"

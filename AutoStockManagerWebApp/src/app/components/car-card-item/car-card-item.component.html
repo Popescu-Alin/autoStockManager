@@ -1,0 +1,35 @@
+<p-card [style]="{ width: '100%', margin: '1rem' }">
+  <ng-template pTemplate="header">
+    <p-carousel
+      [value]="carImages"
+      [numVisible]="1"
+      [numScroll]="1"
+      [circular]="true"
+      [autoplayInterval]="3000"
+      [responsiveOptions]="carouselResponsiveOptions"
+      [showIndicators]="true"
+      [showNavigators]="true">
+      <ng-template let-image pTemplate="item">
+        <div class="car-image-container">
+          <img [src]="image" [alt]="car.brand + ' ' + car.model" class="car-image" />
+        </div>
+      </ng-template>
+    </p-carousel>
+  </ng-template>
+
+  <div class="car-info clickable" (click)="navigateToDetails(car.id)">
+    <h3 class="car-title">{{ car.brand }} {{ car.model }}</h3>
+    <div class="car-details">
+      <p class="car-year">
+        <i class="pi pi-calendar"></i>
+        {{ car.manufactureYear }}
+      </p>
+      <p class="car-price">
+        <i class="pi pi-dollar"></i>
+        {{ car.price | number: '1.2-2' }}
+      </p>
+    </div>
+    <p-tag *ngIf="car.supplierName" [value]="car.supplierName" severity="info"></p-tag>
+  </div>
+</p-card>
+

@@ -1,5 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { ApiClient, CarDto } from '../../api/src/api/api-client';
 
 export interface Car {
   id: string;
@@ -20,26 +21,14 @@ export interface Car {
   providedIn: 'root',
 })
 export class CarsService {
-  constructor(private http: HttpClient) {}
+  constructor(private apiClient: ApiClient) {}
 
-  getAll(): Promise<Car[]> {
-    return Promise.resolve([]);
+  async getAll(): Promise<CarDto[]> {
+      return await firstValueFrom(this.apiClient.getCars());    
   }
 
-  getById(id: string): Promise<Car | null> {
-    return Promise.resolve(null);
+  async getById(id: number): Promise<CarDto | undefined> {
+    return await firstValueFrom(this.apiClient.getCarsCarId(id));
   }
 
-  create(car: Omit<Car, 'id'>): Promise<Car> {
-    return Promise.resolve({ id: '1', ...car });
-  }
-
-  update(id: string, car: Partial<Car>): Promise<Car> {
-    return Promise.resolve({ id, ...car } as Car);
-  }
-
-  delete(id: string): Promise<boolean> {
-    return Promise.resolve(true);
-  }
 }
-

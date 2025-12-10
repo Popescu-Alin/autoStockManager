@@ -1,0 +1,59 @@
+<div class="cars-container">
+  <header class="cars-header">
+    <div>
+      <p class="eyebrow">Inventory</p>
+      <h1>{{ title }}</h1>
+      <p class="subtitle">
+        Manage your fleet, add new vehicles, and keep parts organized.
+      </p>
+    </div>
+    <div class="actions">
+      <button
+        pButton
+        type="button"
+        label="Add Car"
+        icon="pi pi-car"
+        (click)="openAddCarDialog()"
+        class="p-button-primary"
+      ></button>
+      <button
+        pButton
+        type="button"
+        label="Add Car Part"
+        icon="pi pi-cog"
+        (click)="openAddCarPartDialog()"
+        class="p-button-secondary"
+      ></button>
+    </div>
+  </header>
+
+  <section class="cars-section">
+    <div class="cars-section__header">
+      <div>
+        <p class="eyebrow">Highlights</p>
+        <h2>Featured Cars</h2>
+        <p class="subtitle">A quick look at vehicles currently in stock.</p>
+      </div>
+    </div>
+
+    <div class="cars-grid">
+      <app-car-card-item *ngFor="let car of carCards" [car]="car"> </app-car-card-item>
+    </div>
+  </section>
+
+  <app-car-dialog
+    [(visible)]="carDialogVisible"
+    [suppliers]="suppliers"
+    (onSubmit)="onCarSubmit($event)"
+  >
+  </app-car-dialog>
+
+  <app-car-part-dialog
+    [(visible)]="carPartDialogVisible"
+    [cars]="cars"
+    (onSubmit)="onCarPartSubmit($event)"
+  >
+  </app-car-part-dialog>
+</div>
+
+
