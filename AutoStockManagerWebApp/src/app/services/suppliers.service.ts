@@ -22,14 +22,14 @@ export class SuppliersService {
     return await firstValueFrom(this.apiClient.getSuppliersSupplierId(parseInt(id, 10)));
   }
 
-  async create(supplier: Omit<Supplier, 'id' | 'phoneNumber'>): Promise<Supplier> {
+  async create(supplier: Omit<Supplier, 'id' | 'phoneNumber'>): Promise<Supplier | null> {
     const request = new CreateSupplierRequest({
       name: supplier.name!,
       phone: supplier.phone!,
       ssn: supplier.ssn!,
       email: supplier.email,
     });
-    return await firstValueFrom(this.apiClient.postSuppliers(request));
+    return await firstValueFrom(this.apiClient.postSuppliers(request).pipe(defaultIfEmpty(null)));
   }
 
   async update(id: number, supplier: Partial<Supplier>): Promise<Supplier> {

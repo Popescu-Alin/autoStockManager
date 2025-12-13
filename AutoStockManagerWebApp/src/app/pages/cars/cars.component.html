@@ -5,7 +5,7 @@
       <h1>{{ title }}</h1>
       <p class="subtitle">Manage your fleet, add new vehicles, and keep parts organized.</p>
     </div>
-    <div class="actions">
+    <div class="actions" *ngIf="isAdmin">
       <button
         pButton
         type="button"

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { defaultIfEmpty, firstValueFrom } from 'rxjs';
 import {
   ApiClient,
   CarPartDto,
@@ -46,19 +46,20 @@ export class CarPartsService {
     buyer?: string,
     clientId?: number,
     images?: string[]
-  ): Promise<CarPartDto> {
+  ): Promise<CarPartDto | null> {
     return await firstValueFrom(
-      this.apiClient.postParts(carId, price, name, status, images)
+      this.apiClient.postParts(carId, price, name, status, images).pipe(defaultIfEmpty(null))
     );
   }
 
-  async update(id: string, carPart: Partial<CarPart>): Promise<CarPartDto> {
+  async update(id: string, carPart: Partial<CarPart & { clientId?: number }>): Promise<CarPartDto> {
     const request = new UpdateCarPartRequest({
       carId: carPart.car ? parseInt(carPart.car, 10) : undefined,
       price: carPart.price,
       name: carPart.name,
       status: carPart.status === 'available' ? 0 : carPart.status === 'sold' ? 1 : undefined,
       buyer: carPart.buyer,
+      clientId: carPart.clientId,
       images: carPart.images,
     });
     return await firstValueFrom(this.apiClient.patchPartsPartId(request, parseInt(id, 10)));

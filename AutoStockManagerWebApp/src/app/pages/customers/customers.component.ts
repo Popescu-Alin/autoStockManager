@@ -13,8 +13,13 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { CustomersService } from '../../services/customers.service';
 import { Customer } from '../../../api/src/api/api-client';
+import {
+  CustomerDialogComponent,
+  CustomerFormData,
+} from '../../components/customer-dialog/customer-dialog.component';
+import { EditCustomerDialogComponent } from '../../components/edit-customer-dialog/edit-customer-dialog.component';
+import { CustomersService } from '../../services/customers.service';
 import { SnackbarService } from '../../services/snakbar.service';
 
 export interface CustomerTableData {
@@ -43,6 +48,8 @@ export interface CustomerTableData {
     MatDividerModule,
     ButtonModule,
     InputTextModule,
+    CustomerDialogComponent,
+    EditCustomerDialogComponent,
   ],
   templateUrl: './customers.component.html',
   styleUrl: './customers.component.css',
@@ -55,6 +62,12 @@ export class CustomersComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<CustomerTableData>();
   searchValue: string = '';
   isLoading = false;
+
+  customerDialogVisible = false;
+  customerDialogLoading = false;
+  editCustomerDialogVisible = false;
+  editCustomerDialogLoading = false;
+  editingCustomer: CustomerTableData | null = null;
 
   private customers: CustomerTableData[] = [];
 
@@ -103,7 +116,8 @@ export class CustomersComponent implements OnInit, AfterViewInit {
       data.name.toLowerCase().includes(searchTerm) ||
       data.email.toLowerCase().includes(searchTerm) ||
       data.phone.toLowerCase().includes(searchTerm) ||
-      (data.address?.toLowerCase().includes(searchTerm) || false)
+      data.address?.toLowerCase().includes(searchTerm) ||
+      false
     );
   };
 
@@ -114,6 +128,77 @@ export class CustomersComponent implements OnInit, AfterViewInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  openAddCustomerDialog() {
+    this.editingCustomer = null;
+    this.customerDialogVisible = true;
+  }
+
+  openEditCustomerDialog(customer: CustomerTableData) {
+    this.editingCustomer = customer;
+    this.editCustomerDialogVisible = true;
+  }
+
+  async onCustomerSubmit(customerData: CustomerFormData) {
+    this.customerDialogLoading = true;
+    try {
+      const customer = await this.customersService.create(new Customer({
+        name: customerData.name,
+        email: customerData.email,
+        phone: customerData.phone,
+        address: customerData.address,
+      }));
+      this.snackbarService.successCreate('Customer');
+      this.customerDialogVisible = false;
+      this.customerDialogLoading = false;
+      await this.loadCustomers();
+    } catch (error: any) {
+      console.error('Error adding customer:', error);
+      this.customerDialogLoading = false;
+      if (error.status === 409) {
+        this.snackbarService.emailAlreadyTaken();
+      } else {
+        this.snackbarService.genericError();
+      }
+    }
+  }
+
+  async onEditCustomerSubmit(customerData: CustomerFormData) {
+    if (!this.editingCustomer) return;
+
+    this.editCustomerDialogLoading = true;
+    try {
+      await this.customersService.update(this.editingCustomer.id, {
+        name: customerData.name,
+        email: customerData.email,
+        phone: customerData.phone,
+        address: customerData.address,
+      });
+      this.snackbarService.successUpdate('Customer');
+      this.editCustomerDialogVisible = false;
+      this.editCustomerDialogLoading = false;
+      this.editingCustomer = null;
+      await this.loadCustomers();
+    } catch (error: any) {
+      console.error('Error updating customer:', error);
+      this.editCustomerDialogLoading = false;
+      if (error.status === 409) {
+        this.snackbarService.emailAlreadyTaken();
+      } else {
+        this.snackbarService.genericError();
+      }
+    }
+  }
+
+  get editingCustomerData(): CustomerFormData | null {
+    if (!this.editingCustomer) return null;
+    return {
+      name: this.editingCustomer.name,
+      email: this.editingCustomer.email,
+      phone: this.editingCustomer.phone,
+      address: this.editingCustomer.address,
+    };
   }
 
   async deleteCustomer(customer: CustomerTableData) {

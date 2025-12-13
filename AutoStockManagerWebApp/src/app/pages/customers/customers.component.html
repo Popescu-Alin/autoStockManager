@@ -1,6 +1,14 @@
 <div class="page-container">
   <div class="page-header">
     <h1>Customers Management</h1>
+    <button
+      pButton
+      type="button"
+      label="Add Customer"
+      icon="pi pi-plus"
+      (click)="openAddCustomerDialog()"
+      class="p-button-primary"
+    ></button>
   </div>
 
   <div class="search-container">
@@ -49,6 +57,15 @@
         <td mat-cell *matCellDef="let customer">
           <button
             mat-icon-button
+            matTooltip="Edit Customer"
+            (click)="openEditCustomerDialog(customer)"
+            aria-label="Edit customer"
+            class="edit-button"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
             matTooltip="Delete Customer"
             (click)="deleteCustomer(customer)"
             aria-label="Delete customer"
@@ -78,4 +95,19 @@
     <div class="loading-spinner"></div>
     <span class="loading-text">Loading...</span>
   </div>
+
+  <app-customer-dialog
+    [(visible)]="customerDialogVisible"
+    [loading]="customerDialogLoading"
+    (onSubmit)="onCustomerSubmit($event)"
+  >
+  </app-customer-dialog>
+
+  <app-edit-customer-dialog
+    [(visible)]="editCustomerDialogVisible"
+    [loading]="editCustomerDialogLoading"
+    [editingCustomer]="editingCustomerData"
+    (onSubmit)="onEditCustomerSubmit($event)"
+  >
+  </app-edit-customer-dialog>
 </div>

@@ -3,9 +3,9 @@ using AutoStockManageBackend.Services.Repository;
 
 namespace AutoStockManageBackend.Services
 {
-    public class ClientService : Service<Client>
+    public class CustomerService : Service<Customer>
     {
-        public ClientService(IRepository<Client> repository) : base(repository)
+        public CustomerService(IRepository<Customer> repository) : base(repository)
         {
         }
     }

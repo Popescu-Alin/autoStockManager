@@ -77,3 +77,37 @@
   background-color: #1976d2;
 }
 
+@media (max-width: 768px) {
+  .car-image-container {
+    height: 250px;
+  }
+
+  .car-title {
+    font-size: 1.25rem;
+  }
+
+  .car-details {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .car-image-container {
+    height: 200px;
+  }
+
+  .p-card {
+    padding: 0rem !important;
+    margin: 0rem !important;
+  }
+
+  .car-info {
+    padding: 0.75rem;
+  }
+
+  .car-title {
+    font-size: 1.125rem;
+  }
+}
+

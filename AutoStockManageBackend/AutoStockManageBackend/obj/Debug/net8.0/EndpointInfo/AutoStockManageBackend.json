@@ -1460,6 +1460,10 @@
             },
             "nullable": true
           },
+          "buyer": {
+            "type": "string",
+            "nullable": true
+          },
           "additionalProperties": {
             "type": "object",
             "additionalProperties": { },

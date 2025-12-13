@@ -64,7 +64,7 @@ builder.Services.AddTransient<CarService>();
 builder.Services.AddTransient<CarPartService>();
 builder.Services.AddTransient<CarPartImageService>();
 builder.Services.AddTransient<CarImageService>();
-builder.Services.AddTransient<ClientService>();
+builder.Services.AddTransient<CustomerService>();
 builder.Services.AddTransient<SupplierService>();
 builder.Services.AddTransient<AuthService>();
 builder.Services.AddTransient<EmailService>();

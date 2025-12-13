@@ -27,7 +27,7 @@ namespace AutoStockManageBackend.DBContext
         public DbSet<CarPart> CarParts { get; set; }
         public DbSet<CarPartImage> CarPartImages { get; set; }
         public DbSet<CarImage> CarImages { get; set; }
-        public DbSet<Client> Clients { get; set; }
+        public DbSet<Customer> Customers { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -84,10 +84,10 @@ namespace AutoStockManageBackend.DBContext
             });
 
             // Client uses ClientId instead of Id, so configure it separately
-            modelBuilder.Entity<Client>(entity =>
+            modelBuilder.Entity<Customer>(entity =>
             {
-                entity.HasKey(e => e.ClientId);
-                entity.Property(e => e.ClientId)
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id)
                     .ValueGeneratedOnAdd();
             });
         }

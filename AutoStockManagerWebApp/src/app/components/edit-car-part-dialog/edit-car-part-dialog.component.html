@@ -1,0 +1,214 @@
+<p-dialog
+  [(visible)]="visible"
+  (visibleChange)="onDialogHide()"
+  [modal]="true"
+  [style]="{ width: '90vw', maxWidth: '600px' }"
+  [draggable]="false"
+  [resizable]="false"
+  header="Edit Car Part"
+>
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Updating car part...</p>
+  </div>
+
+  <form *ngIf="!loading" [formGroup]="carPartForm" (ngSubmit)="handleSubmit()">
+    <div class="form-group">
+      <label for="carId">Car <span class="required">*</span></label>
+      <ng-select
+        id="carId"
+        formControlName="carId"
+        [items]="cars"
+        bindLabel="label"
+        bindValue="value"
+        placeholder="Select a car"
+        [clearable]="true"
+        [class.ng-invalid]="carPartForm.get('carId')?.invalid && carPartForm.get('carId')?.touched"
+        [class.ng-dirty]="carPartForm.get('carId')?.dirty"
+      >
+      </ng-select>
+      <small
+        class="error-message"
+        *ngIf="carPartForm.get('carId')?.invalid && carPartForm.get('carId')?.touched"
+      >
+        Car is required
+      </small>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name">Name <span class="required">*</span></label>
+        <input
+          id="name"
+          type="text"
+          pInputText
+          formControlName="name"
+          placeholder="Enter part name"
+          [class.ng-invalid]="carPartForm.get('name')?.invalid && carPartForm.get('name')?.touched"
+          [class.ng-dirty]="carPartForm.get('name')?.dirty"
+        />
+        <small
+          class="error-message"
+          *ngIf="carPartForm.get('name')?.invalid && carPartForm.get('name')?.touched"
+        >
+          <span *ngIf="carPartForm.get('name')?.errors?.['required']">Name is required</span>
+          <span *ngIf="carPartForm.get('name')?.errors?.['minlength']"
+            >Name must be at least 2 characters</span
+          >
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="price">Price <span class="required">*</span></label>
+        <input
+          id="price"
+          type="text"
+          pInputText
+          formControlName="price"
+          placeholder="Enter price"
+          [class.ng-invalid]="
+            carPartForm.get('price')?.invalid && carPartForm.get('price')?.touched
+          "
+          [class.ng-dirty]="carPartForm.get('price')?.dirty"
+        />
+        <small
+          class="error-message"
+          *ngIf="carPartForm.get('price')?.invalid && carPartForm.get('price')?.touched"
+        >
+          <span *ngIf="carPartForm.get('price')?.errors?.['required']">Price is required</span>
+          <span *ngIf="carPartForm.get('price')?.errors?.['min']"
+            >Price must be greater than or equal to 0</span
+          >
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="status">Status <span class="required">*</span></label>
+      <ng-select
+        id="status"
+        formControlName="status"
+        [items]="statusOptions"
+        bindLabel="label"
+        bindValue="value"
+        placeholder="Select status"
+        [clearable]="true"
+        (change)="onStatusChange()"
+        [class.ng-invalid]="
+          carPartForm.get('status')?.invalid && carPartForm.get('status')?.touched
+        "
+        [class.ng-dirty]="carPartForm.get('status')?.dirty"
+      >
+      </ng-select>
+      <small
+        class="error-message"
+        *ngIf="carPartForm.get('status')?.invalid && carPartForm.get('status')?.touched"
+      >
+        Status is required
+      </small>
+    </div>
+
+    <div class="form-group" *ngIf="carPartForm.get('status')?.value === 'sold'">
+      <label for="clientId">Customer <span class="required">*</span></label>
+      <ng-select
+        id="clientId"
+        formControlName="clientId"
+        [items]="customers"
+        bindLabel="label"
+        bindValue="value"
+        placeholder="Select a customer"
+        [clearable]="true"
+        [class.ng-invalid]="
+          carPartForm.get('clientId')?.invalid && carPartForm.get('clientId')?.touched
+        "
+        [class.ng-dirty]="carPartForm.get('clientId')?.dirty"
+      >
+      </ng-select>
+      <small
+        class="error-message"
+        *ngIf="carPartForm.get('clientId')?.invalid && carPartForm.get('clientId')?.touched"
+      >
+        Customer is required when status is "Sold"
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="images">Images</label>
+      <div class="file-input-wrapper">
+        <input
+          id="images"
+          type="file"
+          accept="image/*"
+          multiple
+          (change)="onImageFilesSelect($event)"
+          [class.ng-dirty]="imageFiles.length > 0 || existingImages.length > 0"
+          style="display: none"
+        />
+        <button
+          type="button"
+          pButton
+          label="Add Images"
+          icon="pi pi-upload"
+          (click)="triggerFileInput('images')"
+          class="p-button-outlined file-upload-button"
+        ></button>
+      </div>
+
+      <!-- Existing Images Preview -->
+      <div *ngIf="existingImages.length > 0" class="image-preview-container">
+        <h4>Existing Images</h4>
+        <div class="image-preview-grid">
+          <div *ngFor="let image of existingImages; let i = index" class="image-preview-item">
+            <img [src]="image" alt="Existing image {{ i + 1 }}" />
+            <button
+              type="button"
+              pButton
+              icon="pi pi-times"
+              (click)="removeExistingImage(i)"
+              class="p-button-text p-button-danger image-remove-btn"
+              title="Remove image"
+            ></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- New Images Preview -->
+      <div *ngIf="imageFiles.length > 0" class="image-preview-container">
+        <h4>New Images</h4>
+        <div class="image-preview-grid">
+          <div *ngFor="let file of imageFiles; let i = index" class="image-preview-item">
+            <img [src]="getImagePreview(file)" alt="New image {{ i + 1 }}" />
+            <button
+              type="button"
+              pButton
+              icon="pi pi-times"
+              (click)="removeNewImage(i)"
+              class="p-button-text p-button-danger image-remove-btn"
+              title="Remove image"
+            ></button>
+            <small class="image-name">{{ file.name }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="button"
+        pButton
+        label="Cancel"
+        icon="pi pi-times"
+        (click)="handleCancel()"
+        class="p-button-danger p-button-text cancel-button"
+      ></button>
+      <button
+        type="submit"
+        pButton
+        label="Update"
+        icon="pi pi-check"
+        [disabled]="carPartForm.invalid || loading"
+        class="p-button-primary"
+      ></button>
+    </div>
+  </form>
+</p-dialog>

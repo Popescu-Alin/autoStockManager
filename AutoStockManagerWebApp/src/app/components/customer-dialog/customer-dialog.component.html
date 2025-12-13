@@ -1,0 +1,112 @@
+<p-dialog
+  [(visible)]="visible"
+  (visibleChange)="onDialogHide()"
+  [modal]="true"
+  [style]="{ width: '90vw', maxWidth: '500px' }"
+  [draggable]="false"
+  [resizable]="false"
+  header="Add Customer"
+>
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Creating customer...</p>
+  </div>
+
+  <form *ngIf="!loading" [formGroup]="customerForm" (ngSubmit)="handleSubmit()">
+    <div class="form-group">
+      <label for="name">Name <span class="required">*</span></label>
+      <input
+        id="name"
+        type="text"
+        pInputText
+        formControlName="name"
+        placeholder="Enter customer name"
+        [class.ng-invalid]="customerForm.get('name')?.invalid && customerForm.get('name')?.touched"
+        [class.ng-dirty]="customerForm.get('name')?.dirty"
+      />
+      <small
+        class="error-message"
+        *ngIf="customerForm.get('name')?.invalid && customerForm.get('name')?.touched"
+      >
+        <span *ngIf="customerForm.get('name')?.errors?.['required']">Name is required</span>
+        <span *ngIf="customerForm.get('name')?.errors?.['minlength']"
+          >Name must be at least 2 characters</span
+        >
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email <span class="required">*</span></label>
+      <input
+        id="email"
+        type="email"
+        pInputText
+        formControlName="email"
+        placeholder="Enter email address"
+        [class.ng-invalid]="customerForm.get('email')?.invalid && customerForm.get('email')?.touched"
+        [class.ng-dirty]="customerForm.get('email')?.dirty"
+      />
+      <small
+        class="error-message"
+        *ngIf="customerForm.get('email')?.invalid && customerForm.get('email')?.touched"
+      >
+        <span *ngIf="customerForm.get('email')?.errors?.['required']">Email is required</span>
+        <span *ngIf="customerForm.get('email')?.errors?.['email']"
+          >Please enter a valid email address</span
+        >
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone <span class="required">*</span></label>
+      <input
+        id="phone"
+        type="tel"
+        pInputText
+        formControlName="phone"
+        placeholder="(123) 456-7890"
+        (input)="formatPhone($event)"
+        [class.ng-invalid]="customerForm.get('phone')?.invalid && customerForm.get('phone')?.touched"
+        [class.ng-dirty]="customerForm.get('phone')?.dirty"
+      />
+      <small
+        class="error-message"
+        *ngIf="customerForm.get('phone')?.invalid && customerForm.get('phone')?.touched"
+      >
+        <span *ngIf="customerForm.get('phone')?.errors?.['required']">Phone is required</span>
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="address">Address</label>
+      <input
+        id="address"
+        type="text"
+        pInputText
+        formControlName="address"
+        placeholder="Enter address (optional)"
+        [class.ng-dirty]="customerForm.get('address')?.dirty"
+      />
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="button"
+        pButton
+        label="Cancel"
+        icon="pi pi-times"
+        (click)="handleCancel()"
+        class="p-button-danger p-button-text cancel-button"
+      ></button>
+      <button
+        type="submit"
+        pButton
+        label="Add Customer"
+        icon="pi pi-check"
+        [disabled]="customerForm.invalid || loading"
+        class="p-button-primary"
+      ></button>
+    </div>
+  </form>
+</p-dialog>
+

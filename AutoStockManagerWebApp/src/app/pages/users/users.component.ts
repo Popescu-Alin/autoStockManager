@@ -26,6 +26,7 @@ export interface UserTableData {
   id: string;
   firstName: string;
   lastName: string;
+  fullName: string;
   email: string;
   role: string;
   status: 'active' | 'disabled' | 'pending';
@@ -60,7 +61,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  displayedColumns: string[] = ['user', 'status', 'actions'];
+  displayedColumns: string[] = ['user', 'fullName', 'status', 'actions'];
   dataSource = new MatTableDataSource<UserTableData>();
   searchValue: string = '';
   userDialogVisible = false;
@@ -90,10 +91,14 @@ export class UsersComponent implements OnInit, AfterViewInit {
   }
 
   private mapUserToTableData(user: User): UserTableData {
+    const firstName = user.firstName || '';
+    const lastName = user.lastName || '';
+    const fullName = `${firstName} ${lastName}`.trim() || user.name || '';
     return {
       id: user.id?.toString() || '',
-      firstName: user.firstName || '',
-      lastName: user.lastName || '',
+      firstName: firstName,
+      lastName: lastName,
+      fullName: fullName,
       email: user.email || '',
       role: user.role === 1 ? 'admin' : 'user',
       status: this.mapStatus(user.status),
@@ -119,6 +124,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
     return (
       data.firstName.toLowerCase().includes(searchTerm) ||
       data.lastName.toLowerCase().includes(searchTerm) ||
+      data.fullName.toLowerCase().includes(searchTerm) ||
       data.email.toLowerCase().includes(searchTerm) ||
       data.role.toLowerCase().includes(searchTerm) ||
       data.status.toLowerCase().includes(searchTerm)

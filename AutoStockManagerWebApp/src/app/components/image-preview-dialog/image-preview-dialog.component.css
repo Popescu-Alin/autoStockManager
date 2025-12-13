@@ -33,3 +33,27 @@
   padding: 1rem;
 }
 
+@media (max-width: 768px) {
+  .image-preview-container {
+    min-height: 300px;
+    max-height: 60vh;
+    padding: 0.75rem;
+  }
+
+  .preview-image {
+    max-height: 60vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .image-preview-container {
+    min-height: 250px;
+    max-height: 50vh;
+    padding: 0.5rem;
+  }
+
+  .preview-image {
+    max-height: 50vh;
+  }
+}
+

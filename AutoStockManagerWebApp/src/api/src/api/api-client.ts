@@ -2320,6 +2320,7 @@ export interface ICarDto {
 export class CarPartDto implements ICarPartDto {
     carPart?: CarPart;
     images?: string[];
+    buyer?: string;
 
     [key: string]: any;
 
@@ -2344,6 +2345,7 @@ export class CarPartDto implements ICarPartDto {
                 for (let item of _data["images"])
                     this.images!.push(item);
             }
+            this.buyer = _data["buyer"];
         }
     }
 
@@ -2366,6 +2368,7 @@ export class CarPartDto implements ICarPartDto {
             for (let item of this.images)
                 data["images"].push(item);
         }
+        data["buyer"] = this.buyer;
         return data;
     }
 }
@@ -2373,6 +2376,7 @@ export class CarPartDto implements ICarPartDto {
 export interface ICarPartDto {
     carPart?: CarPart;
     images?: string[];
+    buyer?: string;
 
     [key: string]: any;
 }

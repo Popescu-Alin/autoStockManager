@@ -17,8 +17,8 @@ export class UsersService {
     return await firstValueFrom(this.apiClient.getUsersUserId(parseInt(id, 10)));
   }
 
-  async create(user: User): Promise<User> {
-    return await firstValueFrom(this.apiClient.postUser(user));
+  async create(user: User): Promise<User | null> {
+    return await firstValueFrom(this.apiClient.postUser(user).pipe(defaultIfEmpty(null)));
   }
 
   async update(id: string, user: User): Promise<User> {

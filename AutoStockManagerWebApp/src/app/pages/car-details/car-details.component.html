@@ -12,7 +12,15 @@
         <i class="pi pi-arrow-left"></i>
         Back
       </a>
-      <div class="action-buttons">
+      <div class="action-buttons" *ngIf="isAdmin">
+        <button
+          pButton
+          type="button"
+          label="Edit Car"
+          icon="pi pi-pencil"
+          (click)="openEditCarDialog()"
+          class="p-button-secondary"
+        ></button>
         <button
           pButton
           type="button"
@@ -98,12 +106,33 @@
     </div>
 
     <div class="car-parts-section">
-      <h2>Car Parts ({{ carParts.length }})</h2>
-      <div *ngIf="carParts.length === 0" class="no-parts">
-        <p>No car parts available for this car.</p>
+      <div class="parts-header">
+        <h2>Car Parts ({{ filteredCarParts.length }})</h2>
+        <div class="filter-controls">
+          <input
+            type="text"
+            pInputText
+            placeholder="Filter by name..."
+            [(ngModel)]="filterName"
+            (ngModelChange)="filterCarParts()"
+            class="filter-input"
+          />
+          <select
+            [(ngModel)]="filterStatus"
+            (ngModelChange)="filterCarParts()"
+            class="filter-select"
+          >
+            <option value="all">All Status</option>
+            <option value="available">Available</option>
+            <option value="sold">Sold</option>
+          </select>
+        </div>
       </div>
-      <div *ngIf="carParts.length > 0" class="parts-grid">
-        <div *ngFor="let part of carParts" class="part-card">
+      <div *ngIf="filteredCarParts.length === 0" class="no-parts">
+        <p>No car parts match the filter criteria.</p>
+      </div>
+      <div *ngIf="filteredCarParts.length > 0" class="parts-grid">
+        <div *ngFor="let part of filteredCarParts" class="part-card">
           <div class="part-header">
             <h3>{{ part?.carPart?.name }}</h3>
             <span
@@ -111,12 +140,12 @@
               [class.available]="part?.carPart?.status === 0"
               [class.sold]="part?.carPart?.status === 1"
             >
-              {{ part?.carPart?.status }}
+              {{ getStatusText(part?.carPart?.status) }}
             </span>
           </div>
           <div class="part-info">
             <p class="part-price">{{ formatCurrency(part?.carPart?.price) }}</p>
-            <p *ngIf="part?.carPart?.buyer" class="part-buyer">Buyer: {{ part?.carPart?.buyer }}</p>
+            <p *ngIf="part?.buyer" class="part-buyer">Buyer: {{ part?.buyer }}</p>
           </div>
           <div *ngIf="part?.images && (part?.images?.length ?? 0) > 0" class="part-images">
             <img
@@ -124,6 +153,24 @@
               [src]="image"
               [alt]="part?.carPart?.name"
             />
+          </div>
+          <div class="part-actions" *ngIf="isAdmin">
+            <button
+              pButton
+              type="button"
+              icon="pi pi-pencil"
+              (click)="openEditCarPartDialog(part)"
+              class="p-button-text p-button-sm"
+              title="Edit"
+            ></button>
+            <button
+              pButton
+              type="button"
+              icon="pi pi-trash"
+              (click)="deleteCarPart(part)"
+              class="p-button-text p-button-danger p-button-sm"
+              title="Delete"
+            ></button>
           </div>
         </div>
       </div>
@@ -138,4 +185,23 @@
     (onSubmit)="onCarPartSubmit($event)"
   >
   </app-car-part-dialog>
+
+  <app-edit-car-part-dialog
+    [(visible)]="editCarPartDialogVisible"
+    [cars]="carsForDropdown"
+    [selectedCarId]="carId"
+    [loading]="editCarPartDialogLoading"
+    [editingCarPart]="editingCarPartData"
+    (onSubmit)="onEditCarPartSubmit($event)"
+  >
+  </app-edit-car-part-dialog>
+
+  <app-edit-car-dialog
+    [(visible)]="editCarDialogVisible"
+    [suppliers]="suppliers"
+    [loading]="editCarDialogLoading"
+    [editingCar]="editingCarData"
+    (onSubmit)="onEditCarSubmit($event)"
+  >
+  </app-edit-car-dialog>
 </div>

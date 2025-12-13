@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { defaultIfEmpty, firstValueFrom } from 'rxjs';
 import {
   ApiClient,
   CreateCustomerRequest,
@@ -22,14 +22,16 @@ export class CustomersService {
     return await firstValueFrom(this.apiClient.getCustomersCustomerId(id));
   }
 
-  async create(customer: Omit<Customer, 'id' | 'createdAt' | 'updatedAt'>): Promise<Customer> {
+  async create(
+    customer: Omit<Customer, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<Customer | null> {
     const request = new CreateCustomerRequest({
       name: customer.name!,
       email: customer.email!,
       phone: customer.phone!,
       address: customer.address,
     });
-    return await firstValueFrom(this.apiClient.postCustomers(request));
+    return await firstValueFrom(this.apiClient.postCustomers(request).pipe(defaultIfEmpty(null)));
   }
 
   async update(id: number, customer: Partial<Customer>): Promise<Customer> {

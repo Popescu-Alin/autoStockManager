@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AutoStockManageBackend.Controllers
 {
@@ -20,7 +21,7 @@ namespace AutoStockManageBackend.Controllers
         private readonly CarImageService CarImageService;
         private readonly CarPartImageService CarPartImageService;
         private readonly SupplierService SupplierService;
-        private readonly ClientService ClientService;
+        private readonly CustomerService CustomerService;
         private readonly IBlobStorageService BlobStorageService;
 
         public BaseController(
@@ -31,7 +32,7 @@ namespace AutoStockManageBackend.Controllers
             CarImageService carImageService,
             CarPartImageService carPartImageService,
             SupplierService supplierService,
-            ClientService clientService,
+            CustomerService customerService,
             IBlobStorageService blobStorageService)
         {
             AuthService = authService;
@@ -41,7 +42,7 @@ namespace AutoStockManageBackend.Controllers
             CarImageService = carImageService;
             CarPartImageService = carPartImageService;
             SupplierService = supplierService;
-            ClientService = clientService;
+            CustomerService = customerService;
             BlobStorageService = blobStorageService;
         }
 
@@ -51,6 +52,7 @@ namespace AutoStockManageBackend.Controllers
             var carImages = CarImageService.GetAll(img => img.CarId == carId).ToList();
             foreach (var image in carImages)
             {
+                await BlobStorageService.DeleteFileAsync(image.Image, "car-images");
                 CarImageService.Delete(image.Id);
             }
 
@@ -66,7 +68,7 @@ namespace AutoStockManageBackend.Controllers
         [Authorize]
         public override async Task<ActionResult<GenericResponse>> DeleteCustomersCustomerId(int customerId)
         {
-            var deleted = ClientService.Delete(customerId);
+            var deleted = CustomerService.Delete(customerId);
             if (!deleted)
             {
                 return BadRequest(new GenericResponse { Success = false });
@@ -80,6 +82,7 @@ namespace AutoStockManageBackend.Controllers
             var carPartImages = CarPartImageService.GetAll(img => img.CarPartId == partId).ToList();
             foreach (var image in carPartImages)
             {
+                await BlobStorageService.DeleteFileAsync(image.Image, "car-part-images");
                 CarPartImageService.Delete(image.Id);
             }
 
@@ -226,37 +229,19 @@ namespace AutoStockManageBackend.Controllers
         [Authorize]
         public override async Task<ActionResult<ICollection<Customer>>> GetCustomers()
         {
-            var clients = ClientService.GetAll(null).ToList();
-            return clients.Select(c => new Customer
-            {
-                Id = c.ClientId,
-                Name = c.Name,
-                Phone = c.Phone,
-                Email = "",
-                Address = "",
-                CreatedAt = DateTimeOffset.UtcNow,
-                UpdatedAt = DateTimeOffset.UtcNow
-            }).ToList();
+            var customer = CustomerService.GetAll(null).ToList();
+            return customer;
         }
 
         [Authorize]
         public override async Task<ActionResult<Customer>> GetCustomersCustomerId(int customerId)
         {
-            var client = ClientService.GetById(customerId);
-            if (client == null)
+            var customer = CustomerService.GetById(customerId);
+            if (customer == null)
             {
                 return NotFound($"Customer with ID {customerId} not found");
             }
-            return new Customer
-            {
-                Id = client.ClientId,
-                Name = client.Name,
-                Phone = client.Phone,
-                Email = "",
-                Address = "",
-                CreatedAt = DateTimeOffset.UtcNow,
-                UpdatedAt = DateTimeOffset.UtcNow
-            };
+            return customer;
         }
 
         [Authorize]
@@ -392,6 +377,7 @@ namespace AutoStockManageBackend.Controllers
         [Authorize]
         public override async Task<ActionResult<CarDto>> PatchCarsCarId([FromBody] UpdateCarRequest body, int carId)
         {
+
             var car = CarService.GetById(carId);
             if (car == null)
             {
@@ -411,13 +397,16 @@ namespace AutoStockManageBackend.Controllers
             if (body.Images != null && body.Images.Any())
             {
                 var existingImages = CarImageService.GetAll(img => img.CarId == carId).ToList();
-                foreach (var existingImage in existingImages)
+                foreach (var existingImage in existingImages.Where(x => !body.Images.Contains(x.Image)))
                 {
+                    await BlobStorageService.DeleteFileAsync(existingImage.Image, "car-images");
                     CarImageService.Delete(existingImage.Id);
                 }
-
-                foreach (var imagePath in body.Images)
+                
+                foreach (var image in body.Images.Where(x => !x.Contains(".")))
                 {
+                    var imagePath = await BlobStorageService.UploadFileFromBase64Async(image, Guid.NewGuid().ToString(), "car-images"); ;
+
                     var carImage = new AutoStockManageBackend.CarImage
                     {
                         CarId = updatedCar.Id,
@@ -451,28 +440,18 @@ namespace AutoStockManageBackend.Controllers
         [Authorize]
         public override async Task<ActionResult<Customer>> PatchCustomersCustomerId([FromBody] UpdateCustomerRequest body, int customerId)
         {
-            var client = ClientService.GetById(customerId);
-            if (client == null)
+            var customer = CustomerService.GetById(customerId);
+            if (customer == null)
             {
                 return NotFound($"Customer with ID {customerId} not found");
             }
 
             if (!string.IsNullOrEmpty(body.Name))
-                client.Name = body.Name;
+                customer.Name = body.Name;
             if (!string.IsNullOrEmpty(body.Phone))
-                client.Phone = body.Phone;
+                customer.Phone = body.Phone;
 
-            var updatedClient = ClientService.Update(client);
-            return new Customer
-            {
-                Id = updatedClient.ClientId,
-                Name = updatedClient.Name,
-                Phone = updatedClient.Phone,
-                Email = body.Email ?? "",
-                Address = body.Address ?? "",
-                CreatedAt = DateTimeOffset.UtcNow,
-                UpdatedAt = DateTimeOffset.UtcNow
-            };
+            return CustomerService.Update(customer);
         }
 
         [Authorize]
@@ -498,13 +477,15 @@ namespace AutoStockManageBackend.Controllers
             if (body.Images != null && body.Images.Any())
             {
                 var existingImages = CarPartImageService.GetAll(img => img.CarPartId == partId).ToList();
-                foreach (var existingImage in existingImages)
+                foreach (var existingImage in existingImages.Where(x => !body.Images.Contains(x.Image)))
                 {
+                    await BlobStorageService.DeleteFileAsync(existingImage.Image, "car-part-images");
                     CarPartImageService.Delete(existingImage.Id);
                 }
 
-                foreach (var imagePath in body.Images)
+                foreach (var image in body.Images.Where(x => !x.Contains(".")))
                 {
+                    var imagePath = await BlobStorageService.UploadFileFromBase64Async(image, Guid.NewGuid().ToString(), "car-part-images"); ;
                     var carPartImage = new AutoStockManageBackend.CarPartImage
                     {
                         CarPartId = updatedCarPart.Id,
@@ -665,23 +646,16 @@ namespace AutoStockManageBackend.Controllers
                 return BadRequest("Missing required information");
             }
 
-            var client = new AutoStockManageBackend.Client
+            var customer = new AutoStockManageBackend.Customer
             {
                 Name = body.Name,
-                Phone = body.Phone
+                Phone = body.Phone,
+                Address = body.Address,
+                Email = body.Email,
+
             };
 
-            var createdClient = ClientService.Create(client);
-            return new Customer
-            {
-                Id = createdClient.ClientId,
-                Name = createdClient.Name,
-                Phone = createdClient.Phone,
-                Email = body.Email,
-                Address = body.Address ?? "",
-                CreatedAt = DateTimeOffset.UtcNow,
-                UpdatedAt = DateTimeOffset.UtcNow
-            };
+            return CustomerService.Create(customer);
         }
 
         public override async Task<ActionResult<LoginResponse>> PostLogin([FromBody] AuthRequest body)

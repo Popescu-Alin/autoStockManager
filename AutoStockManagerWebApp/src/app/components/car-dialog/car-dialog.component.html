@@ -2,11 +2,11 @@
   [(visible)]="visible"
   (visibleChange)="onDialogHide()"
   [modal]="true"
-  [style]="{ width: '600px' }"
+  [style]="{ width: '90vw', maxWidth: '600px' }"
   [draggable]="false"
   [resizable]="false"
-  header="Add Car">
-
+  header="Add Car"
+>
   <div *ngIf="loading" class="loading-container">
     <div class="spinner"></div>
     <p>Creating car...</p>
@@ -25,11 +25,13 @@
         [clearable]="true"
         [class.ng-invalid]="carForm.get('supplier')?.invalid && carForm.get('supplier')?.touched"
         [class.ng-dirty]="carForm.get('supplier')?.dirty"
-        [attr.autofocus]="false">
+        [attr.autofocus]="false"
+      >
       </ng-select>
       <small
         class="error-message"
-        *ngIf="carForm.get('supplier')?.invalid && carForm.get('supplier')?.touched">
+        *ngIf="carForm.get('supplier')?.invalid && carForm.get('supplier')?.touched"
+      >
         Supplier is required
       </small>
     </div>
@@ -42,12 +44,16 @@
         pInputText
         formControlName="purchaseDate"
         [max]="maxDateString"
-        [class.ng-invalid]="carForm.get('purchaseDate')?.invalid && carForm.get('purchaseDate')?.touched"
+        [class.ng-invalid]="
+          carForm.get('purchaseDate')?.invalid && carForm.get('purchaseDate')?.touched
+        "
         [class.ng-dirty]="carForm.get('purchaseDate')?.dirty"
-        [attr.autofocus]="false" />
+        [attr.autofocus]="false"
+      />
       <small
         class="error-message"
-        *ngIf="carForm.get('purchaseDate')?.invalid && carForm.get('purchaseDate')?.touched">
+        *ngIf="carForm.get('purchaseDate')?.invalid && carForm.get('purchaseDate')?.touched"
+      >
         Purchase date is required
       </small>
     </div>
@@ -63,12 +69,16 @@
           placeholder="Enter brand"
           [class.ng-invalid]="carForm.get('brand')?.invalid && carForm.get('brand')?.touched"
           [class.ng-dirty]="carForm.get('brand')?.dirty"
-          [attr.autofocus]="false" />
+          [attr.autofocus]="false"
+        />
         <small
           class="error-message"
-          *ngIf="carForm.get('brand')?.invalid && carForm.get('brand')?.touched">
+          *ngIf="carForm.get('brand')?.invalid && carForm.get('brand')?.touched"
+        >
           <span *ngIf="carForm.get('brand')?.errors?.['required']">Brand is required</span>
-          <span *ngIf="carForm.get('brand')?.errors?.['minlength']">Brand must be at least 2 characters</span>
+          <span *ngIf="carForm.get('brand')?.errors?.['minlength']"
+            >Brand must be at least 2 characters</span
+          >
         </small>
       </div>
 
@@ -82,12 +92,16 @@
           placeholder="Enter model"
           [class.ng-invalid]="carForm.get('model')?.invalid && carForm.get('model')?.touched"
           [class.ng-dirty]="carForm.get('model')?.dirty"
-          [attr.autofocus]="false" />
+          [attr.autofocus]="false"
+        />
         <small
           class="error-message"
-          *ngIf="carForm.get('model')?.invalid && carForm.get('model')?.touched">
+          *ngIf="carForm.get('model')?.invalid && carForm.get('model')?.touched"
+        >
           <span *ngIf="carForm.get('model')?.errors?.['required']">Model is required</span>
-          <span *ngIf="carForm.get('model')?.errors?.['minlength']">Model must be at least 2 characters</span>
+          <span *ngIf="carForm.get('model')?.errors?.['minlength']"
+            >Model must be at least 2 characters</span
+          >
         </small>
       </div>
     </div>
@@ -100,14 +114,22 @@
         pInputText
         formControlName="manufactureYear"
         placeholder="Enter manufacture year"
-        [class.ng-invalid]="carForm.get('manufactureYear')?.invalid && carForm.get('manufactureYear')?.touched"
+        [class.ng-invalid]="
+          carForm.get('manufactureYear')?.invalid && carForm.get('manufactureYear')?.touched
+        "
         [class.ng-dirty]="carForm.get('manufactureYear')?.dirty"
-        [attr.autofocus]="false" />
+        [attr.autofocus]="false"
+      />
       <small
         class="error-message"
-        *ngIf="carForm.get('manufactureYear')?.invalid && carForm.get('manufactureYear')?.touched">
-        <span *ngIf="carForm.get('manufactureYear')?.errors?.['required']">Manufacture year is required</span>
-        <span *ngIf="carForm.get('manufactureYear')?.errors?.['min'] || carForm.get('manufactureYear')?.errors?.['max']">
+        *ngIf="carForm.get('manufactureYear')?.invalid && carForm.get('manufactureYear')?.touched"
+      >
+        <span *ngIf="carForm.get('manufactureYear')?.errors?.['required']"
+          >Manufacture year is required</span
+        >
+        <span
+          *ngIf="carForm.get('manufactureYear')?.errors?.['min'] || carForm.get('manufactureYear')?.errors?.['max']"
+        >
           Year must be between 1900 and {{ currentYear + 1 }}
         </span>
       </small>
@@ -123,17 +145,23 @@
         placeholder="Enter price"
         [class.ng-invalid]="carForm.get('price')?.invalid && carForm.get('price')?.touched"
         [class.ng-dirty]="carForm.get('price')?.dirty"
-        [attr.autofocus]="false" />
+        [attr.autofocus]="false"
+      />
       <small
         class="error-message"
-        *ngIf="carForm.get('price')?.invalid && carForm.get('price')?.touched">
+        *ngIf="carForm.get('price')?.invalid && carForm.get('price')?.touched"
+      >
         <span *ngIf="carForm.get('price')?.errors?.['required']">Price is required</span>
-        <span *ngIf="carForm.get('price')?.errors?.['pattern']">Price must be a decimal number</span>
+        <span *ngIf="carForm.get('price')?.errors?.['pattern']"
+          >Price must be a decimal number</span
+        >
       </small>
     </div>
 
     <div class="form-group">
-      <label for="registrationCertificate">Registration Certificate <span class="required">*</span></label>
+      <label for="registrationCertificate"
+        >Registration Certificate <span class="required">*</span></label
+      >
       <div class="file-input-wrapper">
         <input
           id="registrationCertificate"
@@ -142,15 +170,16 @@
           (change)="onRegistrationFileSelect($event)"
           [class.ng-invalid]="!registrationFile && carForm.get('registrationCertificate')?.touched"
           [class.ng-dirty]="registrationFile !== null"
-          style="display: none;" />
+          style="display: none"
+        />
         <button
           type="button"
           pButton
           label="Choose File"
           icon="pi pi-upload"
           (click)="triggerFileInput('registrationCertificate')"
-          class="p-button-outlined file-upload-button">
-        </button>
+          class="p-button-outlined file-upload-button"
+        ></button>
         <button
           type="button"
           pButton
@@ -158,23 +187,22 @@
           (click)="onRegistrationFileRemove()"
           *ngIf="registrationFile"
           class="p-button-text p-button-danger remove-file-button"
-          [title]="'Remove ' + registrationFile.name">
-        </button>
+          [title]="'Remove ' + registrationFile.name"
+        ></button>
       </div>
       <small
         class="error-message"
-        *ngIf="!registrationFile && carForm.get('registrationCertificate')?.touched">
+        *ngIf="!registrationFile && carForm.get('registrationCertificate')?.touched"
+      >
         Registration certificate is required (PDF or Image)
       </small>
-      <small
-        class="file-info"
-        *ngIf="registrationFile">
+      <small class="file-info" *ngIf="registrationFile">
         Selected: {{ registrationFile.name }} ({{ (registrationFile.size / 1024).toFixed(2) }} KB)
       </small>
     </div>
 
     <div class="form-group">
-      <label for="images">Images</label>
+      <label for="images">Images <span class="required">*</span></label>
       <div class="file-input-wrapper">
         <input
           id="images"
@@ -182,40 +210,42 @@
           accept="image/*"
           multiple
           (change)="onImageFilesSelect($event)"
-          [class.ng-invalid]="imageFiles.length === 0 && carForm.get('images')?.touched"
           [class.ng-dirty]="imageFiles.length > 0"
-          style="display: none;" />
+          style="display: none"
+        />
         <button
           type="button"
           pButton
-          label="Choose Images"
+          label="Add Images"
           icon="pi pi-upload"
           (click)="triggerFileInput('images')"
-          class="p-button-outlined file-upload-button">
-        </button>
-        <button
-          type="button"
-          pButton
-          icon="pi pi-times"
-          (click)="onImageFilesRemove()"
-          *ngIf="imageFiles.length > 0"
-          class="p-button-text p-button-danger remove-file-button"
-          title="Clear all images">
-        </button>
+          class="p-button-outlined file-upload-button"
+        ></button>
       </div>
       <small
         class="error-message"
-        *ngIf="imageFiles.length === 0 && carForm.get('images')?.touched">
+        *ngIf="imageFiles.length === 0 && carForm.get('images')?.touched"
+      >
         At least one image is required
       </small>
-      <small
-        class="file-info"
-        *ngIf="imageFiles.length > 0">
-        Selected: {{ imageFiles.length }} file(s)
-        <span *ngFor="let file of imageFiles">
-          <br />- {{ file.name }} ({{ (file.size / 1024).toFixed(2) }} KB)
-        </span>
-      </small>
+
+      <!-- Images Preview -->
+      <div *ngIf="imageFiles.length > 0" class="image-preview-container">
+        <div class="image-preview-grid">
+          <div *ngFor="let file of imageFiles; let i = index" class="image-preview-item">
+            <img [src]="getImagePreview(file)" alt="Image {{ i + 1 }}" />
+            <button
+              type="button"
+              pButton
+              icon="pi pi-times"
+              (click)="removeImage(i)"
+              class="p-button-text p-button-danger image-remove-btn"
+              title="Remove image"
+            ></button>
+            <small class="image-name">{{ file.name }}</small>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="form-actions">
@@ -225,15 +255,17 @@
         label="Cancel"
         icon="pi pi-times"
         (click)="handleCancel()"
-        class="p-button-danger p-button-text cancel-button"></button>
+        class="p-button-danger p-button-text cancel-button"
+      ></button>
       <button
         type="submit"
         pButton
         label="Add Car"
         icon="pi pi-check"
         [disabled]="carForm.invalid || !registrationFile || imageFiles.length === 0 || loading"
-        class="p-button-primary"></button>
+        label="Add Car"
+        class="p-button-primary"
+      ></button>
     </div>
   </form>
 </p-dialog>
-

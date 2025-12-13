@@ -15,6 +15,7 @@ export interface CarFormData {
   price: string; // Now string for text input
   registrationCertificate: File | null;
   images: File[];
+  existingImages?: string[]; // Base64 strings of existing images to keep
 }
 
 @Component({
@@ -88,6 +89,14 @@ export class CarDialogComponent {
 
   onImageFilesRemove() {
     this.imageFiles = [];
+    const input = document.getElementById('images') as HTMLInputElement;
+    if (input) {
+      input.value = '';
+    }
+  }
+
+  removeImage(index: number) {
+    this.imageFiles.splice(index, 1);
   }
 
   triggerFileInput(inputId: string) {
@@ -98,7 +107,12 @@ export class CarDialogComponent {
   }
 
   handleSubmit() {
-    if (this.carForm.valid && this.registrationFile && this.imageFiles.length > 0 && !this.loading) {
+    if (
+      this.carForm.valid &&
+      this.registrationFile &&
+      this.imageFiles.length > 0 &&
+      !this.loading
+    ) {
       const formData: CarFormData = {
         supplier: this.carForm.value.supplier,
         purchaseDate: this.carForm.value.purchaseDate,
@@ -128,5 +142,9 @@ export class CarDialogComponent {
 
   get currentYear(): number {
     return new Date().getFullYear();
+  }
+
+  getImagePreview(file: File): string {
+    return URL.createObjectURL(file);
   }
 }

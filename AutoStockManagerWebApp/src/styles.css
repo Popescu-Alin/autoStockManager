@@ -77,3 +77,52 @@ html, body {
   font-size: 0.875rem;
   margin-top: 0.5rem;
 }
+
+/* Global Responsive Styles */
+@media (max-width: 768px) {
+  /* Ensure dialogs are responsive */
+  ::ng-deep .p-dialog {
+    width: 90vw !important;
+    max-width: 600px !important;
+    margin: 1rem auto !important;
+  }
+
+  /* Make tables horizontally scrollable on mobile */
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Ensure buttons stack on mobile */
+  .p-button-group,
+  .button-group {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .p-button-group .p-button,
+  .button-group button {
+    width: 100%;
+    margin: 0.25rem 0;
+  }
+}
+
+@media (max-width: 480px) {
+  ::ng-deep .p-dialog {
+    width: 95vw !important;
+    margin: 0.5rem auto !important;
+  }
+
+  /* Smaller font sizes on very small screens */
+  h1 {
+    font-size: 1.5rem !important;
+  }
+
+  h2 {
+    font-size: 1.25rem !important;
+  }
+
+  h3 {
+    font-size: 1.125rem !important;
+  }
+}

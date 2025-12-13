@@ -20,7 +20,7 @@
         <a routerLink="/cars" routerLinkActive="active">
           Cars
         </a>
-        <a routerLink="/users" routerLinkActive="active">
+        <a routerLink="/users" routerLinkActive="active" *ngIf="isAdmin">
           Users
         </a>
         <a routerLink="/suppliers" routerLinkActive="active">
@@ -64,7 +64,8 @@
       <a
         routerLink="/users"
         routerLinkActive="active"
-        (click)="closeSideNav()">
+        (click)="closeSideNav()"
+        *ngIf="isAdmin">
         <i class="pi pi-users"></i>
         <span>Users</span>
       </a>

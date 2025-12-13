@@ -160,8 +160,16 @@
     padding: 1rem;
   }
 
+  .header-content {
+    flex-wrap: wrap;
+  }
+
   .app-title {
     font-size: 1.25rem;
+  }
+
+  .main-nav {
+    display: none;
   }
 
   .layout-main {
@@ -170,6 +178,21 @@
 
   .layout-footer {
     padding: 1rem;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .layout-header {
+    padding: 0.75rem;
+  }
+
+  .app-title {
+    font-size: 1rem;
+  }
+
+  .layout-main {
+    padding: 0.75rem;
   }
 }
 

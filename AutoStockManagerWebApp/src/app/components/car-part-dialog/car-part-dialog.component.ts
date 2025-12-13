@@ -1,18 +1,19 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { ButtonModule } from 'primeng/button';
-import { NgSelectModule } from '@ng-select/ng-select';
 
 export interface CarPartFormData {
-  car: string;
-  price: number | null;
+  carId: number;
+  price: number;
   name: string;
-  status: string;
-  buyer: string;
+  status: 'available' | 'sold';
+  clientId?: number;
   images: File[];
+  existingImages?: string[];
 }
 
 @Component({
@@ -24,10 +25,10 @@ export interface CarPartFormData {
     DialogModule,
     InputTextModule,
     NgSelectModule,
-    ButtonModule
+    ButtonModule,
   ],
   templateUrl: './car-part-dialog.component.html',
-  styleUrl: './car-part-dialog.component.css'
+  styleUrl: './car-part-dialog.component.css',
 })
 export class CarPartDialogComponent implements OnChanges {
   @Input() visible: boolean = false;
@@ -42,22 +43,35 @@ export class CarPartDialogComponent implements OnChanges {
 
   statusOptions = [
     { label: 'Available', value: 'available' },
-    { label: 'Sold', value: 'sold' }
+    { label: 'Sold', value: 'sold' },
   ];
 
   constructor(private fb: FormBuilder) {
     this.carPartForm = this.fb.group({
-      car: ['', [Validators.required]],
+      carId: ['', [Validators.required]],
       price: [null, [Validators.required, Validators.min(0)]],
       name: ['', [Validators.required, Validators.minLength(2)]],
       status: ['', [Validators.required]],
-      buyer: ['', []]
+      clientId: [null, []],
     });
   }
 
-  ngOnChanges() {
-    if (this.visible && this.selectedCarId && this.carPartForm) {
-      this.carPartForm.patchValue({ car: this.selectedCarId });
+  ngOnChanges(changes: SimpleChanges) {
+    // Only populate form when dialog becomes visible
+    if (changes['visible']?.currentValue === true) {
+      // Use setTimeout to ensure form is ready
+      setTimeout(() => {
+        if (this.visible && this.carPartForm && this.selectedCarId) {
+          // New car part - set carId
+          this.carPartForm.patchValue({ carId: this.selectedCarId });
+        }
+      }, 0);
+    }
+
+    // Reset form when dialog closes
+    if (changes['visible']?.currentValue === false && changes['visible']?.previousValue === true) {
+      this.carPartForm.reset();
+      this.imageFiles = [];
     }
   }
 
@@ -69,15 +83,15 @@ export class CarPartDialogComponent implements OnChanges {
 
   onStatusChange() {
     const status = this.carPartForm.get('status')?.value;
-    const buyerControl = this.carPartForm.get('buyer');
-    
+    const clientIdControl = this.carPartForm.get('clientId');
+
     if (status === 'sold') {
-      buyerControl?.setValidators([Validators.required]);
+      clientIdControl?.setValidators([Validators.required]);
     } else {
-      buyerControl?.clearValidators();
-      buyerControl?.setValue('');
+      clientIdControl?.clearValidators();
+      clientIdControl?.setValue(null);
     }
-    buyerControl?.updateValueAndValidity();
+    clientIdControl?.updateValueAndValidity();
   }
 
   onImageFilesSelect(event: Event) {
@@ -95,6 +109,14 @@ export class CarPartDialogComponent implements OnChanges {
     }
   }
 
+  removeImage(index: number) {
+    this.imageFiles.splice(index, 1);
+  }
+
+  getImagePreview(file: File): string {
+    return URL.createObjectURL(file);
+  }
+
   triggerFileInput(inputId: string) {
     const input = document.getElementById(inputId) as HTMLInputElement;
     if (input) {
@@ -105,18 +127,17 @@ export class CarPartDialogComponent implements OnChanges {
   handleSubmit() {
     if (this.carPartForm.valid && !this.loading) {
       const formData: CarPartFormData = {
-        car: this.carPartForm.value.car,
+        carId: parseInt(this.carPartForm.value.carId, 10),
         price: this.carPartForm.value.price,
         name: this.carPartForm.value.name,
         status: this.carPartForm.value.status,
-        buyer: this.carPartForm.value.buyer || '',
-        images: this.imageFiles
+        clientId: this.carPartForm.value.clientId || undefined,
+        images: this.imageFiles,
       };
-      
+
       this.onSubmit.emit(formData);
     } else {
-      // Mark all fields as touched to show validation errors
-      Object.keys(this.carPartForm.controls).forEach(key => {
+      Object.keys(this.carPartForm.controls).forEach((key) => {
         this.carPartForm.get(key)?.markAsTouched();
       });
     }
@@ -128,4 +149,3 @@ export class CarPartDialogComponent implements OnChanges {
     this.visibleChange.emit(false);
   }
 }
-

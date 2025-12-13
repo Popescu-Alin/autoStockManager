@@ -13,7 +13,7 @@ import { UsersComponent } from './pages/users/users.component';
 export const routes: Routes = [
   {
     path: 'auth',
-    children: authRoutes
+    children: authRoutes,
   },
   {
     path: '',
@@ -23,43 +23,43 @@ export const routes: Routes = [
       {
         path: '',
         component: HomeComponent,
-        title: 'Home'
+        title: 'Home',
       },
       {
         path: 'home',
         component: HomeComponent,
-        title: 'Home'
+        title: 'Home',
       },
       {
         path: 'cars',
         component: CarsComponent,
-        title: 'Cars'
+        title: 'Cars',
       },
       {
         path: 'users',
         component: UsersComponent,
         title: 'Users',
-        // canActivate: [AdminGuard]
+        canActivate: [AdminGuard],
       },
       {
         path: 'suppliers',
         component: SuppliersComponent,
-        title: 'Suppliers'
+        title: 'Suppliers',
       },
       {
         path: 'customers',
         component: CustomersComponent,
-        title: 'Customers'
+        title: 'Customers',
       },
       {
         path: 'cars/:id',
         component: CarDetailsComponent,
-        title: 'Car Details'
+        title: 'Car Details',
       },
       {
         path: '**',
-        redirectTo: '/auth'
-      }
-    ]
-  }
+        redirectTo: '/auth',
+      },
+    ],
+  },
 ];

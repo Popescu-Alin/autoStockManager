@@ -71,9 +71,13 @@
 }
 
 @media (max-width: 768px) {
+  .page-container {
+    padding: 1rem;
+  }
+
   .page-header {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 1rem;
   }
 
@@ -81,7 +85,25 @@
     font-size: 1.5rem;
   }
 
+  .page-header button {
+    width: 100%;
+  }
+
   .search-field {
     max-width: 100%;
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .suppliers-table {
+    min-width: 600px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-container {
+    padding: 0.75rem;
   }
 }

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-layout',
@@ -15,14 +16,23 @@ export class LayoutComponent implements OnInit, OnDestroy {
   protected readonly currentYear = new Date().getFullYear();
   protected isMobile: boolean = false;
   protected sideNavOpen: boolean = false;
+  protected isAdmin = false;
 
   @HostListener('window:resize')
   onResize() {
     this.checkScreenSize();
   }
 
+  constructor(private authService: AuthService) {}
+
   ngOnInit() {
     this.checkScreenSize();
+    this.checkAdminStatus();
+  }
+
+  private checkAdminStatus(): void {
+    const currentUser = this.authService.getCurrentUser();
+    this.isAdmin = currentUser?.role === 0;
   }
 
   ngOnDestroy() {

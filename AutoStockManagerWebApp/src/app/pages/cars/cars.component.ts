@@ -7,6 +7,7 @@ import {
   CarCardItemComponent,
 } from '../../components/car-card-item/car-card-item.component';
 import { CarDialogComponent, CarFormData } from '../../components/car-dialog/car-dialog.component';
+import { AuthService } from '../../services/auth.service';
 import { CarPartsService } from '../../services/car-parts.service';
 import { CarsService } from '../../services/cars.service';
 import { SnackbarService } from '../../services/snakbar.service';
@@ -27,16 +28,24 @@ export class CarsComponent implements OnInit {
   protected carCards: CarCardData[] = [];
   protected suppliers: { label: string; value: string }[] = [];
   protected isLoading = false;
+  protected isAdmin = false;
 
   constructor(
     private carsService: CarsService,
     private suppliersService: SuppliersService,
     private carPartsService: CarPartsService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private authService: AuthService
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.checkAdminStatus();
     await this.loadData();
+  }
+
+  private checkAdminStatus(): void {
+    const currentUser = this.authService.getCurrentUser();
+    this.isAdmin = currentUser?.role === 0;
   }
 
   async loadData(): Promise<void> {
