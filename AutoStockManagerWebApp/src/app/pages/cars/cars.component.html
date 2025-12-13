@@ -3,9 +3,7 @@
     <div>
       <p class="eyebrow">Inventory</p>
       <h1>{{ title }}</h1>
-      <p class="subtitle">
-        Manage your fleet, add new vehicles, and keep parts organized.
-      </p>
+      <p class="subtitle">Manage your fleet, add new vehicles, and keep parts organized.</p>
     </div>
     <div class="actions">
       <button
@@ -15,14 +13,6 @@
         icon="pi pi-car"
         (click)="openAddCarDialog()"
         class="p-button-primary"
-      ></button>
-      <button
-        pButton
-        type="button"
-        label="Add Car Part"
-        icon="pi pi-cog"
-        (click)="openAddCarPartDialog()"
-        class="p-button-secondary"
       ></button>
     </div>
   </header>
@@ -44,16 +34,8 @@
   <app-car-dialog
     [(visible)]="carDialogVisible"
     [suppliers]="suppliers"
+    [loading]="carDialogLoading"
     (onSubmit)="onCarSubmit($event)"
   >
   </app-car-dialog>
-
-  <app-car-part-dialog
-    [(visible)]="carPartDialogVisible"
-    [cars]="cars"
-    (onSubmit)="onCarPartSubmit($event)"
-  >
-  </app-car-part-dialog>
 </div>
-
-

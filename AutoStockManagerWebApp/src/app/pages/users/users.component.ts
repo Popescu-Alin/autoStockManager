@@ -14,10 +14,13 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { User } from '../../../api/src/api/api-client';
 import {
   UserDialogComponent,
   UserFormData,
 } from '../../components/user-dialog/user-dialog.component';
+import { SnackbarService } from '../../services/snakbar.service';
+import { UsersService } from '../../services/users.service';
 
 export interface UserTableData {
   id: string;
@@ -61,49 +64,48 @@ export class UsersComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<UserTableData>();
   searchValue: string = '';
   userDialogVisible = false;
+  userDialogLoading = false;
+  isLoading = false;
 
-  // Mock users data - in real app, this would come from a service
-  private users: UserTableData[] = [
-    {
-      id: '1',
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@example.com',
-      role: 'admin',
-      status: 'active',
-      createdAt: new Date('2024-01-15'),
-    },
-    {
-      id: '2',
-      firstName: 'Jane',
-      lastName: 'Smith',
-      email: 'jane.smith@example.com',
-      role: 'user',
-      status: 'active',
-      createdAt: new Date('2024-02-20'),
-    },
-    {
-      id: '3',
-      firstName: 'Bob',
-      lastName: 'Johnson',
-      email: 'bob.johnson@example.com',
-      role: 'user',
-      status: 'pending',
-      createdAt: new Date('2024-03-10'),
-    },
-    {
-      id: '4',
-      firstName: 'Alice',
-      lastName: 'Williams',
-      email: 'alice.williams@example.com',
-      role: 'user',
-      status: 'disabled',
-      createdAt: new Date('2024-01-05'),
-    },
-  ];
+  private users: UserTableData[] = [];
 
-  ngOnInit() {
-    this.dataSource.data = this.users;
+  constructor(private usersService: UsersService, private snackbarService: SnackbarService) {}
+
+  async ngOnInit() {
+    await this.loadUsers();
+  }
+
+  async loadUsers() {
+    this.isLoading = true;
+    try {
+      const users = await this.usersService.getAll();
+      this.users = users.map((user) => this.mapUserToTableData(user));
+      this.dataSource.data = this.users;
+    } catch (error) {
+      console.error('Error loading users:', error);
+      this.snackbarService.genericError();
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  private mapUserToTableData(user: User): UserTableData {
+    return {
+      id: user.id?.toString() || '',
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
+      email: user.email || '',
+      role: user.role === 1 ? 'admin' : 'user',
+      status: this.mapStatus(user.status),
+      createdAt: user.createDate,
+    };
+  }
+
+  private mapStatus(status?: number): 'active' | 'disabled' | 'pending' {
+    // Assuming: 0 = active, 1 = disabled, 2 = pending
+    if (status === 0) return 'active';
+    if (status === 1) return 'disabled';
+    return 'pending';
   }
 
   ngAfterViewInit() {
@@ -136,41 +138,78 @@ export class UsersComponent implements OnInit, AfterViewInit {
     this.userDialogVisible = true;
   }
 
-  onUserSubmit(userData: UserFormData) {
-    console.log('User added:', userData);
-    // Parse name into firstName and lastName
-    const nameParts = userData.name.trim().split(/\s+/);
-    const firstName = nameParts[0] || '';
-    const lastName = nameParts.slice(1).join(' ') || '';
+  async onUserSubmit(userData: UserFormData) {
+    this.userDialogLoading = true;
+    try {
+      const newUser: User = new User({
+        firstName: '',
+        lastName: '',
+        name: userData.name,
+        email: userData.email,
+        role: userData.role === 'admin' ? 1 : 0,
+        status: 2,
+      });
 
-    const newUser: UserTableData = {
-      id: String(this.users.length + 1),
-      firstName,
-      lastName,
-      email: userData.email,
-      role: userData.role,
-      status: 'pending',
-      createdAt: new Date(),
-    };
-
-    this.users.push(newUser);
-    this.dataSource.data = [...this.users];
-    this.userDialogVisible = false;
-  }
-
-  deleteUser(user: UserTableData) {
-    if (confirm(`Are you sure you want to delete ${user.firstName} ${user.lastName}?`)) {
-      this.users = this.users.filter((u) => u.id !== user.id);
-      this.dataSource.data = [...this.users];
+      const createdUser = await this.usersService.create(newUser);
+      await this.loadUsers();
+      this.userDialogVisible = false;
+      this.userDialogLoading = false;
+      this.snackbarService.successCreate('User');
+    } catch (error: any) {
+      console.error('Error creating user:', error);
+      this.userDialogLoading = false;
+      if (error?.status === 409 || error?.message?.includes('Email Already Taken')) {
+        this.snackbarService.emailAlreadyTaken();
+      } else {
+        this.snackbarService.genericError();
+      }
     }
   }
 
-  disableUser(user: UserTableData) {
-    const newStatus = user.status === 'disabled' ? 'active' : 'disabled';
-    const index = this.users.findIndex((u) => u.id === user.id);
-    if (index !== -1) {
-      this.users[index].status = newStatus;
-      this.dataSource.data = [...this.users];
+  async deleteUser(user: UserTableData) {
+    if (confirm(`Are you sure you want to delete ${user.firstName} ${user.lastName}?`)) {
+      try {
+        const response = await this.usersService.delete(parseInt(user.id, 10));
+        if (response.success) {
+          await this.loadUsers();
+          this.snackbarService.successDelete('User');
+        } else {
+          this.snackbarService.genericError();
+        }
+      } catch (error) {
+        console.error('Error deleting user:', error);
+        this.snackbarService.genericError();
+      }
+    }
+  }
+
+  async disableUser(user: UserTableData) {
+    try {
+      const currentUser = await this.usersService.getById(user.id);
+
+      const newStatus = user.status === 'disabled' ? 0 : 1; // 0 = active, 1 = disabled
+      const updatedUser: User = new User({
+        id: currentUser.id,
+        email: currentUser.email,
+        firstName: currentUser.firstName,
+        lastName: currentUser.lastName,
+        role: currentUser.role,
+        createDate: currentUser.createDate,
+        identityUserId: currentUser.identityUserId,
+        status: newStatus,
+      });
+
+      await this.usersService.update(user.id, updatedUser);
+      await this.loadUsers();
+      const statusMessage = newStatus === 0 ? 'enabled' : 'disabled';
+      this.snackbarService.success(`User ${statusMessage} successfully!`);
+    } catch (error: any) {
+      console.error('Error updating user:', error);
+      if (error?.status === 409 || error?.message?.includes('Email Already Taken')) {
+        this.snackbarService.emailAlreadyTaken();
+      } else {
+        this.snackbarService.genericError();
+      }
     }
   }
 
@@ -185,5 +224,4 @@ export class UsersComponent implements OnInit, AfterViewInit {
     console.log('Resend invite to:', user.email);
     alert(`Invitation will be resent to ${user.email}`);
   }
-
 }

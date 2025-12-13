@@ -4,9 +4,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { AuthRequest } from '../../../../api/src/api/api-client';
 import { AuthService } from '../../../services/auth.service';
 import { SnackbarService } from '../../../services/snakbar.service';
-import { AuthRequest } from '../../../../api/src/api/api-client';
 
 @Component({
   selector: 'app-login',
@@ -32,8 +32,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  async ngOnInit(): Promise<void> {
-  }
+  async ngOnInit(): Promise<void> {}
 
   async onSubmit(): Promise<void> {
     if (this.loginForm.invalid) {

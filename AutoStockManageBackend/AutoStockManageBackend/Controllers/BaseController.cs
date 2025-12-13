@@ -1,8 +1,11 @@
-﻿using AutoStockManageBackend.Services;
+﻿using AutoStockManageBackend.IdentityModels;
+using AutoStockManageBackend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace AutoStockManageBackend.Controllers
@@ -18,6 +21,7 @@ namespace AutoStockManageBackend.Controllers
         private readonly CarPartImageService CarPartImageService;
         private readonly SupplierService SupplierService;
         private readonly ClientService ClientService;
+        private readonly IBlobStorageService BlobStorageService;
 
         public BaseController(
             AuthService authService,
@@ -27,7 +31,8 @@ namespace AutoStockManageBackend.Controllers
             CarImageService carImageService,
             CarPartImageService carPartImageService,
             SupplierService supplierService,
-            ClientService clientService)
+            ClientService clientService,
+            IBlobStorageService blobStorageService)
         {
             AuthService = authService;
             UserService = userService;
@@ -37,10 +42,11 @@ namespace AutoStockManageBackend.Controllers
             CarPartImageService = carPartImageService;
             SupplierService = supplierService;
             ClientService = clientService;
+            BlobStorageService = blobStorageService;
         }
 
         [Authorize]
-        public override async Task<IActionResult> DeleteCarsCarId(int carId)
+        public override async Task<ActionResult<GenericResponse>> DeleteCarsCarId(int carId)
         {
             var carImages = CarImageService.GetAll(img => img.CarId == carId).ToList();
             foreach (var image in carImages)
@@ -51,25 +57,25 @@ namespace AutoStockManageBackend.Controllers
             var deleted = CarService.Delete(carId);
             if (!deleted)
             {
-                return BadRequest($"Car with ID {carId} not found");
+                return BadRequest(new GenericResponse { Success = false });
             }
-            return Ok();
+            return Ok(new GenericResponse { Success = true });
 
         }
 
         [Authorize]
-        public override async Task<IActionResult> DeleteCustomersCustomerId(int customerId)
+        public override async Task<ActionResult<GenericResponse>> DeleteCustomersCustomerId(int customerId)
         {
             var deleted = ClientService.Delete(customerId);
             if (!deleted)
             {
-                return BadRequest();
+                return BadRequest(new GenericResponse { Success = false });
             }
-            return Ok();
+            return Ok(new GenericResponse { Success = true });
         }
 
         [Authorize]
-        public override async Task<IActionResult> DeletePartsPartId(int partId)
+        public override async Task<ActionResult<GenericResponse>> DeletePartsPartId(int partId)
         {
             var carPartImages = CarPartImageService.GetAll(img => img.CarPartId == partId).ToList();
             foreach (var image in carPartImages)
@@ -80,31 +86,31 @@ namespace AutoStockManageBackend.Controllers
             var deleted = CarPartService.Delete(partId);
             if (!deleted)
             {
-                return BadRequest();
+                return BadRequest(new GenericResponse { Success = false });
             }
-            return Ok();
+            return Ok(new GenericResponse { Success = true });
         }
 
         [Authorize]
-        public override async Task<IActionResult> DeleteSuppliersSupplierId(int supplierId)
+        public override async Task<ActionResult<GenericResponse>> DeleteSuppliersSupplierId(int supplierId)
         {
             var deleted = SupplierService.Delete(supplierId);
             if (!deleted)
             {
-                return BadRequest();
+                return BadRequest(new GenericResponse { Success = false });
             }
-            return Ok();
+            return Ok(new GenericResponse { Success = true });
         }
 
         [Authorize]
-        public override async Task<IActionResult> DeleteUsersUserId(int userId)
+        public override async Task<ActionResult<GenericResponse>> DeleteUsersUserId(int userId)
         {
             var deleted = UserService.Delete(userId);
             if (!deleted)
             {
-                return BadRequest();
+                return BadRequest(new GenericResponse { Success = false });
             }
-            return Ok();
+            return Ok(new GenericResponse { Success = true });
         }
 
         [Authorize]
@@ -148,31 +154,42 @@ namespace AutoStockManageBackend.Controllers
         [Authorize]
         public override async Task<ActionResult<CarDto>> GetCarsCarId(int carId)
         {
-            var car = CarService.GetById(carId);
-            if (car == null)
+            try
             {
-                return NotFound();
-            }
+                var car = CarService.GetAll()
+                    .Include(x => x.Supplier)
+                    .FirstOrDefault(x => x.Id == carId);
 
-            var images = CarImageService.GetAll(img => img.CarId == carId)
-                .Select(img => img.Image)
-                .ToList();
-
-            return new CarDto
-            {
-                Car = new Car
+                if (car == null)
                 {
-                    Id = car.Id,
-                    SupplierId = car.SupplierId,
-                    PurchaseDate = car.PurchaseDate,
-                    Brand = car.Brand,
-                    Model = car.Model,
-                    ManufactureYear = car.ManufactureYear,
-                    VehicleRegistrationCertificate = car.VehicleRegistrationCertificate,
-                    PurchasePrice = car.PurchasePrice
-                },
-                Images = images
-            };
+                    return NotFound();
+                }
+
+                var images = CarImageService.GetAll(img => img.CarId == carId)
+                    .Select(img => img.Image)
+                    .ToList();
+
+                return new CarDto
+                {
+                    Car = new Car
+                    {
+                        Id = car.Id,
+                        SupplierId = car.SupplierId,
+                        PurchaseDate = car.PurchaseDate,
+                        Brand = car.Brand,
+                        Model = car.Model,
+                        ManufactureYear = car.ManufactureYear,
+                        VehicleRegistrationCertificate = car.VehicleRegistrationCertificate,
+                        PurchasePrice = car.PurchasePrice
+                    },
+                    SupplierName = car.Supplier?.Name ?? "",
+                    Images = images
+                };
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new GenericResponse { Success = false });
+            }
         }
 
         [Authorize]
@@ -197,7 +214,7 @@ namespace AutoStockManageBackend.Controllers
                         Price = carPart.Price,
                         Name = carPart.Name,
                         Status = carPart.Status,
-                        ClientId = carPart.ClientId
+                        CustomerId = carPart.CustomerId
                     },
                     Images = images
                 });
@@ -264,7 +281,7 @@ namespace AutoStockManageBackend.Controllers
                         Price = carPart.Price,
                         Name = carPart.Name,
                         Status = carPart.Status,
-                        ClientId = carPart.ClientId
+                        CustomerId = carPart.CustomerId
                     },
                     Images = images
                 });
@@ -296,7 +313,7 @@ namespace AutoStockManageBackend.Controllers
                     Price = carPart.Price,
                     Name = carPart.Name,
                     Status = carPart.Status,
-                    ClientId = carPart.ClientId
+                    CustomerId = carPart.CustomerId
                 },
                 Images = images
             };
@@ -308,7 +325,7 @@ namespace AutoStockManageBackend.Controllers
             var suppliers = SupplierService.GetAll(null).ToList();
             return suppliers.Select(s => new Supplier
             {
-                Id = s.Id.ToString(),
+                Id = s.Id,
                 Name = s.Name,
                 Ssn = s.Ssn,
                 Phone = s.Phone,
@@ -327,7 +344,7 @@ namespace AutoStockManageBackend.Controllers
             }
             return new Supplier
             {
-                Id = supplier.Id.ToString(),
+                Id = supplier.Id,
                 Name = supplier.Name,
                 Ssn = supplier.Ssn,
                 Phone = supplier.Phone,
@@ -474,7 +491,7 @@ namespace AutoStockManageBackend.Controllers
                 carPart.Name = body.Name;
             carPart.Status = body.Status;
 
-            carPart.ClientId = body.ClientId;
+            carPart.CustomerId = body.ClientId;
 
             var updatedCarPart = CarPartService.Update(carPart);
 
@@ -511,7 +528,7 @@ namespace AutoStockManageBackend.Controllers
                     Price = updatedCarPart.Price,
                     Name = updatedCarPart.Name,
                     Status = updatedCarPart.Status,
-                    ClientId = updatedCarPart.ClientId
+                    CustomerId = updatedCarPart.CustomerId
                 },
                 Images = images
             };
@@ -538,7 +555,6 @@ namespace AutoStockManageBackend.Controllers
             var updatedSupplier = SupplierService.Update(supplier);
             return new Supplier
             {
-                Id = updatedSupplier.Id.ToString(),
                 Name = updatedSupplier.Name,
                 Ssn = updatedSupplier.Ssn,
                 Phone = updatedSupplier.Phone,
@@ -589,7 +605,7 @@ namespace AutoStockManageBackend.Controllers
         [Authorize]
         public override async Task<ActionResult<CarDto>> PostCars(int? supplierId, DateTimeOffset? purchaseDate, string brand, string model, int? manufactureYear, double? purchasePrice, string vehicleRegistrationCertificate, IEnumerable<string> images)
         {
-            if (!supplierId.HasValue || !purchaseDate.HasValue || string.IsNullOrEmpty(brand) ||
+            if (!purchaseDate.HasValue || string.IsNullOrEmpty(brand) ||
                 string.IsNullOrEmpty(model) || !manufactureYear.HasValue || !purchasePrice.HasValue)
             {
                 return BadRequest("Missing required information");
@@ -608,13 +624,12 @@ namespace AutoStockManageBackend.Controllers
             };
 
             var createdCar = CarService.Create(car);
-
             var imagePaths = new List<string>();
             if (images != null)
             {
                 foreach (var image in images)
                 {
-                    var imagePath = "";
+                    var imagePath = await BlobStorageService.UploadFileFromBase64Async(image, Guid.NewGuid().ToString(), "car-images"); ;
                     var carImage = new AutoStockManageBackend.CarImage
                     {
                         CarId = createdCar.Id,
@@ -675,9 +690,57 @@ namespace AutoStockManageBackend.Controllers
         }
 
         [Authorize]
-        public override Task<ActionResult<CarPartDto>> PostParts(int? carId, double? price, string name, int? status, string buyer, int? clientId, IEnumerable<string> images)
+        public override async Task<ActionResult<CarPartDto>> PostParts(int? carId, double? price, string name, int? status, IEnumerable<string> images)
         {
-            throw new NotImplementedException();
+            if (!carId.HasValue || !price.HasValue || string.IsNullOrEmpty(name) || !status.HasValue)
+            {
+                return BadRequest("Missing required information");
+            }
+
+            var carPart = new AutoStockManageBackend.CarPart
+            {
+                CarId = carId.Value,
+                PurchaseDate = DateTimeOffset.UtcNow,
+                Price = price.Value,
+                Name = name,
+                Status = status.Value,
+                CustomerId = null,
+                CreatedAt = DateTimeOffset.UtcNow,
+                UpdatedAt = DateTimeOffset.UtcNow
+            };
+
+            var createdCarPart = CarPartService.Create(carPart);
+            var imagePaths = new List<string>();
+            
+            if (images != null)
+            {
+                foreach (var image in images)
+                {
+                    var imagePath = await BlobStorageService.UploadFileFromBase64Async(image, Guid.NewGuid().ToString(), "car-part-images");
+                    var carPartImage = new AutoStockManageBackend.CarPartImage
+                    {
+                        CarPartId = createdCarPart.Id,
+                        Image = imagePath
+                    };
+                    CarPartImageService.Create(carPartImage);
+                    imagePaths.Add(imagePath);
+                }
+            }
+
+            return new CarPartDto
+            {
+                CarPart = new CarPart
+                {
+                    Id = createdCarPart.Id,
+                    CarId = createdCarPart.CarId,
+                    PurchaseDate = createdCarPart.PurchaseDate,
+                    Price = createdCarPart.Price,
+                    Name = createdCarPart.Name,
+                    Status = createdCarPart.Status,
+                    CustomerId = createdCarPart.CustomerId
+                },
+                Images = imagePaths
+            };
         }
 
         [Authorize]
@@ -699,7 +762,7 @@ namespace AutoStockManageBackend.Controllers
             var createdSupplier = SupplierService.Create(supplier);
             return new Supplier
             {
-                Id = createdSupplier.Id.ToString(),
+                Id = createdSupplier.Id,
                 Name = createdSupplier.Name,
                 Ssn = createdSupplier.Ssn,
                 Phone = createdSupplier.Phone,
@@ -722,7 +785,11 @@ namespace AutoStockManageBackend.Controllers
                 return Conflict("Email already taken");
             }
 
-            return StatusCode(500);
+            return await AuthService.RegisterWithoutPassword(new CreateUserAccountRequest() { 
+                FullName = body.Name,
+                Email = body.Email,
+                Role = body.Role
+            });
         }
     }
 }

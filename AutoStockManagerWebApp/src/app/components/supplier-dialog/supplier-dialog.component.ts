@@ -22,6 +22,7 @@ export class SupplierDialogComponent implements OnChanges {
   @Input() visible: boolean = false;
   @Input() editMode: boolean = false;
   @Input() supplierData: SupplierFormData | null = null;
+  @Input() loading: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() onSubmit = new EventEmitter<SupplierFormData>();
 
@@ -83,11 +84,9 @@ export class SupplierDialogComponent implements OnChanges {
   }
 
   handleSubmit() {
-    if (this.supplierForm.valid) {
+    if (this.supplierForm.valid && !this.loading) {
       this.onSubmit.emit(this.supplierForm.value);
-      this.supplierForm.reset();
-      this.visibleChange.emit(false);
-    } else {
+    } else if (!this.supplierForm.valid) {
       // Mark all fields as touched to show validation errors
       Object.keys(this.supplierForm.controls).forEach((key) => {
         this.supplierForm.get(key)?.markAsTouched();

@@ -14,7 +14,7 @@ namespace AutoStockManageBackend.Services
 
         public T? GetById(int id) => _repository.GetByIdAsync(id);
 
-        public IQueryable<T> GetAll(Expression<Func<T, bool>>? filter) => _repository.GetAllAsync(filter);
+        public IQueryable<T> GetAll(Expression<Func<T, bool>>? filter = null) => _repository.GetAllAsync(filter);
 
         public T Create(T entity) => _repository.AddAsync(entity);
 

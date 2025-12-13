@@ -90,6 +90,6 @@
     </mat-paginator>
   </div>
 
-  <app-user-dialog [(visible)]="userDialogVisible" (onSubmit)="onUserSubmit($event)">
+  <app-user-dialog [(visible)]="userDialogVisible" [loading]="userDialogLoading" (onSubmit)="onUserSubmit($event)">
   </app-user-dialog>
 </div>

@@ -23,7 +23,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -141,7 +158,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -259,7 +293,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -377,7 +428,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -495,7 +563,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -944,21 +1029,6 @@
             }
           },
           {
-            "name": "buyer",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "clientId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
             "name": "images",
             "in": "query",
             "schema": {
@@ -1242,14 +1312,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "supplier": {
-            "type": "string",
-            "nullable": true
-          },
-          "supplierName": {
-            "type": "string",
-            "nullable": true
-          },
           "purchaseDate": {
             "type": "string",
             "format": "date-time"
@@ -1285,6 +1347,16 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "supplier": {
+            "$ref": "#/components/schemas/Supplier"
+          },
+          "carImages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CarImage"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1302,9 +1374,31 @@
             },
             "nullable": true
           },
+          "supplierName": {
+            "type": "string",
+            "nullable": true
+          },
           "additionalProperties": {
             "type": "object",
             "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CarImage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "carId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "image": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -1337,16 +1431,9 @@
             "type": "integer",
             "format": "int32"
           },
-          "clientId": {
+          "customerId": {
             "type": "integer",
-            "format": "int32"
-          },
-          "buyer": {
-            "type": "string",
-            "nullable": true
-          },
-          "carName": {
-            "type": "string",
+            "format": "int32",
             "nullable": true
           },
           "createdAt": {
@@ -1473,6 +1560,20 @@
         },
         "additionalProperties": false
       },
+      "GenericResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "LoginResponse": {
         "type": "object",
         "properties": {
@@ -1499,8 +1600,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "nullable": true
+            "type": "integer",
+            "format": "int32"
           },
           "name": {
             "type": "string",

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AutoStockManageBackend.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20251210191811_ModelsUpdates")]
-    partial class ModelsUpdates
+    [Migration("20251213123616_Models")]
+    partial class Models
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -283,8 +283,11 @@ namespace AutoStockManageBackend.Migrations
 
             modelBuilder.Entity("AutoStockManageBackend.Supplier", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");

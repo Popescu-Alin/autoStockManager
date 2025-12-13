@@ -1,45 +1,52 @@
 import { Injectable } from '@angular/core';
-// import { ApiClient } from '../../api/src/api/api-client';
-
-export interface Supplier {
-  id: string;
-  name: string;
-  phone: string;
-  ssn: string;
-  email?: string;
-  address?: string;
-}
+import { defaultIfEmpty, firstValueFrom } from 'rxjs';
+import {
+  ApiClient,
+  CreateSupplierRequest,
+  GenericResponse,
+  Supplier,
+  UpdateSupplierRequest,
+} from '../../api/src/api/api-client';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SuppliersService {
-  // constructor(private apiClient: ApiClient) {}
-  constructor() {}
+  constructor(private apiClient: ApiClient) {}
 
-  getAll(): Promise<Supplier[]> {
-    // TODO: Implement when API endpoint is available
-    // The API client does not currently have supplier endpoints
-    return Promise.resolve([]);
+  async getAll(): Promise<Supplier[]> {
+    return await firstValueFrom(this.apiClient.getSuppliers());
   }
 
-  getById(id: string): Promise<Supplier | null> {
-    // TODO: Implement when API endpoint is available
-    return Promise.resolve(null);
+  async getById(id: string): Promise<Supplier> {
+    return await firstValueFrom(this.apiClient.getSuppliersSupplierId(parseInt(id, 10)));
   }
 
-  create(supplier: Omit<Supplier, 'id'>): Promise<Supplier> {
-    // TODO: Implement when API endpoint is available
-    throw new Error('Create supplier endpoint not available in API client');
+  async create(supplier: Omit<Supplier, 'id' | 'phoneNumber'>): Promise<Supplier> {
+    const request = new CreateSupplierRequest({
+      name: supplier.name!,
+      phone: supplier.phone!,
+      ssn: supplier.ssn!,
+      email: supplier.email,
+    });
+    return await firstValueFrom(this.apiClient.postSuppliers(request));
   }
 
-  update(id: string, supplier: Partial<Supplier>): Promise<Supplier> {
-    // TODO: Implement when API endpoint is available
-    throw new Error('Update supplier endpoint not available in API client');
+  async update(id: number, supplier: Partial<Supplier>): Promise<Supplier> {
+    const request = new UpdateSupplierRequest({
+      name: supplier.name,
+      phone: supplier.phone,
+      ssn: supplier.ssn,
+      email: supplier.email,
+    });
+    return await firstValueFrom(this.apiClient.patchSuppliersSupplierId(request, id));
   }
 
-  delete(id: string): Promise<boolean> {
-    // TODO: Implement when API endpoint is available
-    throw new Error('Delete supplier endpoint not available in API client');
+  async delete(id: number): Promise<GenericResponse> {
+    return await firstValueFrom(
+      this.apiClient
+        .deleteSuppliersSupplierId(id)
+        .pipe(defaultIfEmpty(new GenericResponse({ success: true })))
+    );
   }
 }

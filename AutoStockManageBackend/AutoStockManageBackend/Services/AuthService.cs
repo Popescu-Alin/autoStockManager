@@ -48,17 +48,17 @@ namespace AutoStockManageBackend.Services
             };
         }
 
-        public bool RegisterWithoutPassword(CreateUserAccountRequest body)
+        public async Task<User> RegisterWithoutPassword(CreateUserAccountRequest body)
         {
             User? user = _userService.FindByCondition(x => x.Email == body.Email);
             if (user != null) {
-                return false;
+                return null;
             }
 
-            AspNetUser identityUser = CreateIdentityUser(body.Email);
+            AspNetUser identityUser = await CreateIdentityUser(body.Email);
             if(identityUser == null)
             {
-                return false;
+                return null;
             }
 
             string token = _userManager.GeneratePasswordResetTokenAsync(identityUser).Result;
@@ -74,11 +74,10 @@ namespace AutoStockManageBackend.Services
                 InviteExpirationDate = DateTime.UtcNow.AddDays(1),
                 Status = (int)Constants.Constants.AccountStatus.Pending
             };
-             _userService.Create(user);
-            return true;
+            return _userService.Create(user);
         }
 
-        private  AspNetUser CreateIdentityUser(string email)
+        private async Task<AspNetUser> CreateIdentityUser(string email)
         {
             var userEmailExists = _userManager.FindByEmailAsync(email).Result;
             if (userEmailExists != null)
@@ -88,15 +87,25 @@ namespace AutoStockManageBackend.Services
 
             AspNetUser aspNetUser = new AspNetUser()
             {
+                Id = Guid.NewGuid().ToString(),
+                UserName = email,
                 Email = email,
+                EmailConfirmed = true,
             };
 
-            var result = _userManager.CreateAsync(aspNetUser).Result;
-
-            if (result.Succeeded)
+            try
             {
-                return _userManager.FindByEmailAsync(email).Result;
+                var result = await _userManager.CreateAsync(aspNetUser);
+                if (result.Succeeded)
+                {
+                    return _userManager.FindByEmailAsync(email).Result;
+                }
             }
+            catch(Exception ex)
+            {
+
+            }
+           
 
             return null;
         }

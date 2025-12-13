@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
@@ -29,9 +29,11 @@ export interface CarPartFormData {
   templateUrl: './car-part-dialog.component.html',
   styleUrl: './car-part-dialog.component.css'
 })
-export class CarPartDialogComponent {
+export class CarPartDialogComponent implements OnChanges {
   @Input() visible: boolean = false;
   @Input() cars: { label: string; value: string }[] = [];
+  @Input() selectedCarId: string | null = null;
+  @Input() loading: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() onSubmit = new EventEmitter<CarPartFormData>();
 
@@ -51,6 +53,12 @@ export class CarPartDialogComponent {
       status: ['', [Validators.required]],
       buyer: ['', []]
     });
+  }
+
+  ngOnChanges() {
+    if (this.visible && this.selectedCarId && this.carPartForm) {
+      this.carPartForm.patchValue({ car: this.selectedCarId });
+    }
   }
 
   onDialogHide() {
@@ -95,7 +103,7 @@ export class CarPartDialogComponent {
   }
 
   handleSubmit() {
-    if (this.carPartForm.valid) {
+    if (this.carPartForm.valid && !this.loading) {
       const formData: CarPartFormData = {
         car: this.carPartForm.value.car,
         price: this.carPartForm.value.price,
@@ -106,9 +114,6 @@ export class CarPartDialogComponent {
       };
       
       this.onSubmit.emit(formData);
-      this.carPartForm.reset();
-      this.imageFiles = [];
-      this.visibleChange.emit(false);
     } else {
       // Mark all fields as touched to show validation errors
       Object.keys(this.carPartForm.controls).forEach(key => {

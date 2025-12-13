@@ -7,62 +7,31 @@
   [resizable]="false"
   header="Add Car">
 
-  <form [formGroup]="carForm" (ngSubmit)="handleSubmit()">
-    <div class="form-group" style="display: flex; align-items: center;">
-      <div style="flex: 1;">
-        <div style="display: flex; align-items: center;">
-        <label for="supplier" class="text-align-center mb-0">Supplier <span class="required">*</span></label>
-        <button type="button" pButton icon="pi pi-undo" class="p-button-text" *ngIf="showAddSupplier" (click)="onAddSupplierDialogHide()" ></button>
-        </div> 
-        <ng-container *ngIf="!showAddSupplier; else showSupplierFormInline">
-          <div style="display: flex; align-items: center;">
-          <ng-select
-            id="supplier"
-            formControlName="supplier"
-            [items]="suppliers"
-            bindLabel="label"
-            bindValue="value"
-            placeholder="Select a supplier"
-            [clearable]="true"
-            [class.ng-invalid]="carForm.get('supplier')?.invalid && carForm.get('supplier')?.touched"
-            [class.ng-dirty]="carForm.get('supplier')?.dirty"
-            [attr.autofocus]="false">
-          </ng-select>
-          <button type="button" pButton icon="pi pi-plus" class="p-button-text" *ngIf="!showAddSupplier" (click)="onAddSupplierClick()" title="Add supplier"></button>
-          </div>
-          <small
-            class="error-message"
-            *ngIf="carForm.get('supplier')?.invalid && carForm.get('supplier')?.touched">
-            Supplier is required
-          </small>
-        </ng-container>
-        <ng-template #showSupplierFormInline>
-            <div class="form-group">
-              <label for="supplierName">Supplier Name <span class="required">*</span></label>
-              <input id="supplierName" type="text" pInputText formControlName="name" placeholder="Enter supplier name" [class.ng-invalid]="carForm.get('name')?.invalid && carForm.get('name')?.touched" [class.ng-dirty]="carForm.get('name')?.dirty" />
-              <small class="error-message" *ngIf=" carForm.get('name')?.invalid && carForm.get('name')?.touched">
-                <span *ngIf="carForm.get('name')?.errors?.['required']">Name is required</span>
-                <span *ngIf="carForm.get('name')?.errors?.['minlength']">Name must be at least 2 characters</span>
-              </small>
-            </div>
-            <div class="form-group">
-              <label for="supplierPhone">Supplier Phone <span class="required">*</span></label>
-                <input id="supplierPhone" type="tel" pInputText formControlName="phone" placeholder="(123) 456-7890" (input)="formatPhoneInline($event)" [class.ng-invalid]="carForm.get('phone')?.invalid && carForm.get('phone')?.touched" [class.ng-dirty]="carForm.get('phone')?.dirty" />
-              <small class="error-message" *ngIf="carForm.get('phone')?.invalid && carForm.get('phone')?.touched">
-                <span *ngIf="carForm.get('phone')?.errors?.['required']">Phone is required</span>
-                <span *ngIf="carForm.get('phone')?.errors?.['pattern']">Please enter a valid phone number</span>
-              </small>
-            </div>
-            <div class="form-group">
-              <label for="supplierCnp">Supplier SSN <span class="required">*</span></label>
-              <input id="supplierCnp" type="text" pInputText formControlName="ssn" placeholder="1981231123456" maxlength="13" (input)="formatCnpInline($event)" [class.ng-invalid]="carForm.get('ssn')?.invalid && carForm.get('ssn')?.touched" [class.ng-dirty]="carForm.get('ssn')?.dirty" />
-              <small class="error-message" *ngIf="carForm.get('ssn')?.invalid && carForm.get('ssn')?.touched">
-                <span *ngIf="carForm.get('ssn')?.errors?.['required']">SSN is required</span>
-                <span *ngIf="carForm.get('ssn')?.errors?.['pattern']">CNP must be 13 digits and start with 1-8</span>
-              </small>
-            </div>
-        </ng-template>
-      </div>
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Creating car...</p>
+  </div>
+
+  <form *ngIf="!loading" [formGroup]="carForm" (ngSubmit)="handleSubmit()">
+    <div class="form-group">
+      <label for="supplier">Supplier <span class="required">*</span></label>
+      <ng-select
+        id="supplier"
+        formControlName="supplier"
+        [items]="suppliers"
+        bindLabel="label"
+        bindValue="value"
+        placeholder="Select a supplier"
+        [clearable]="true"
+        [class.ng-invalid]="carForm.get('supplier')?.invalid && carForm.get('supplier')?.touched"
+        [class.ng-dirty]="carForm.get('supplier')?.dirty"
+        [attr.autofocus]="false">
+      </ng-select>
+      <small
+        class="error-message"
+        *ngIf="carForm.get('supplier')?.invalid && carForm.get('supplier')?.touched">
+        Supplier is required
+      </small>
     </div>
 
     <div class="form-group">
@@ -262,7 +231,7 @@
         pButton
         label="Add Car"
         icon="pi pi-check"
-        [disabled]="carForm.invalid || !registrationFile || imageFiles.length === 0"
+        [disabled]="carForm.invalid || !registrationFile || imageFiles.length === 0 || loading"
         class="p-button-primary"></button>
     </div>
   </form>

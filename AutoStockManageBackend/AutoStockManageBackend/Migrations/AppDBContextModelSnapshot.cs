@@ -51,14 +51,8 @@ namespace AutoStockManageBackend.Migrations
                     b.Property<double>("PurchasePrice")
                         .HasColumnType("float");
 
-                    b.Property<string>("Supplier")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("SupplierId")
                         .HasColumnType("int");
-
-                    b.Property<string>("SupplierName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("datetimeoffset");
@@ -67,6 +61,8 @@ namespace AutoStockManageBackend.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SupplierId");
 
                     b.ToTable("Cars");
                 });
@@ -87,6 +83,8 @@ namespace AutoStockManageBackend.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CarId");
+
                     b.ToTable("CarImages");
                 });
 
@@ -98,20 +96,14 @@ namespace AutoStockManageBackend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Buyer")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("CarId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CarName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ClientId")
                         .HasColumnType("int");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("CustomerId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -280,8 +272,11 @@ namespace AutoStockManageBackend.Migrations
 
             modelBuilder.Entity("AutoStockManageBackend.Supplier", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -437,6 +432,26 @@ namespace AutoStockManageBackend.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("AutoStockManageBackend.Car", b =>
+                {
+                    b.HasOne("AutoStockManageBackend.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("AutoStockManageBackend.CarImage", b =>
+                {
+                    b.HasOne("AutoStockManageBackend.Car", null)
+                        .WithMany("CarImages")
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("AutoStockManageBackend.IdentityModels.AspNetUserRole", b =>
                 {
                     b.HasOne("AutoStockManageBackend.IdentityModels.AspNetRole", null)
@@ -486,6 +501,11 @@ namespace AutoStockManageBackend.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AutoStockManageBackend.Car", b =>
+                {
+                    b.Navigation("CarImages");
                 });
 #pragma warning restore 612, 618
         }

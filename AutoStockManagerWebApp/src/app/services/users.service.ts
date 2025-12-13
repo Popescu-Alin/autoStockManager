@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
-import { ApiClient, User } from '../../api/src/api/api-client';
+import { defaultIfEmpty, firstValueFrom } from 'rxjs';
+import { ApiClient, GenericResponse, User } from '../../api/src/api/api-client';
 
 
 @Injectable({
@@ -13,7 +13,7 @@ export class UsersService {
     return await firstValueFrom(this.apiClient.getUsers());
   }
 
-  async getById(id: string): Promise<User | null> {
+  async getById(id: string): Promise<User> {
     return await firstValueFrom(this.apiClient.getUsersUserId(parseInt(id, 10)));
   }
 
@@ -25,8 +25,12 @@ export class UsersService {
     return await firstValueFrom(this.apiClient.patchUsersUserId(user, parseInt(id, 10)));
   }
 
-  async delete(id: number): Promise<void> {
-     await firstValueFrom(this.apiClient.deleteUsersUserId(id));
+  async delete(id: number): Promise<GenericResponse> {
+    return await firstValueFrom(
+      this.apiClient.deleteUsersUserId(id).pipe(
+        defaultIfEmpty(new GenericResponse({ success: true }))
+      )
+    );
   }
 
 

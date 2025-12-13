@@ -85,6 +85,7 @@
   <app-supplier-dialog
     [(visible)]="supplierDialogVisible"
     [editMode]="editMode"
+    [loading]="supplierDialogLoading"
     [supplierData]="
       selectedSupplier
         ? { name: selectedSupplier.name, phone: selectedSupplier.phone, ssn: selectedSupplier.ssn }

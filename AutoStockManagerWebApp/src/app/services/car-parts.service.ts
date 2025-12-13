@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { ApiClient, CarPartDto } from '../../api/src/api/api-client';
+import {
+  ApiClient,
+  CarPartDto,
+  GenericResponse,
+  UpdateCarPartRequest,
+} from '../../api/src/api/api-client';
 
 export interface CarPart {
   id: string;
@@ -22,32 +27,44 @@ export class CarPartsService {
   constructor(private apiClient: ApiClient) {}
 
   async getAll(): Promise<CarPartDto[]> {
-     return await firstValueFrom(this.apiClient.getParts());
+    return await firstValueFrom(this.apiClient.getParts());
   }
 
-  async getById(id: string): Promise<CarPartDto | null> {
-    throw new Error('Create car part endpoint not available in API client');
-
+  async getById(id: string): Promise<CarPartDto> {
+    return await firstValueFrom(this.apiClient.getPartsPartId(parseInt(id, 10)));
   }
 
   async getByCarId(carId: number): Promise<CarPartDto[]> {
     return await firstValueFrom(this.apiClient.getCarsCarIdParts(carId));
-
   }
 
-  create(carPart: Omit<CarPart, 'id'>): Promise<CarPart> {
-    // TODO: Implement when API endpoint is available
-    throw new Error('Create car part endpoint not available in API client');
+  async create(
+    carId: number,
+    price: number,
+    name: string,
+    status: number,
+    buyer?: string,
+    clientId?: number,
+    images?: string[]
+  ): Promise<CarPartDto> {
+    return await firstValueFrom(
+      this.apiClient.postParts(carId, price, name, status, images)
+    );
   }
 
-  update(id: string, carPart: Partial<CarPart>): Promise<CarPart> {
-    // TODO: Implement when API endpoint is available
-    throw new Error('Update car part endpoint not available in API client');
+  async update(id: string, carPart: Partial<CarPart>): Promise<CarPartDto> {
+    const request = new UpdateCarPartRequest({
+      carId: carPart.car ? parseInt(carPart.car, 10) : undefined,
+      price: carPart.price,
+      name: carPart.name,
+      status: carPart.status === 'available' ? 0 : carPart.status === 'sold' ? 1 : undefined,
+      buyer: carPart.buyer,
+      images: carPart.images,
+    });
+    return await firstValueFrom(this.apiClient.patchPartsPartId(request, parseInt(id, 10)));
   }
 
-  delete(id: string): Promise<boolean> {
-    // TODO: Implement when API endpoint is available
-    throw new Error('Delete car part endpoint not available in API client');
+  async delete(id: number): Promise<GenericResponse> {
+    return await firstValueFrom(this.apiClient.deletePartsPartId(id));
   }
-
 }

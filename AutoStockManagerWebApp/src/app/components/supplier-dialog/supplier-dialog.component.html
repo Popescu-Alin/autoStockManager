@@ -7,7 +7,12 @@
   [resizable]="false"
   [header]="editMode ? 'Edit Supplier' : 'Add Supplier'"
 >
-  <form [formGroup]="supplierForm" (ngSubmit)="handleSubmit()">
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>{{ editMode ? 'Updating supplier...' : 'Creating supplier...' }}</p>
+  </div>
+  
+  <form *ngIf="!loading" [formGroup]="supplierForm" (ngSubmit)="handleSubmit()">
     <div class="form-group">
       <label for="name">Name <span class="required">*</span></label>
       <input
@@ -93,7 +98,7 @@
         pButton
         [label]="editMode ? 'Update Supplier' : 'Add Supplier'"
         icon="pi pi-check"
-        [disabled]="supplierForm.invalid"
+        [disabled]="supplierForm.invalid || loading"
         class="p-button-primary"
       ></button>
     </div>

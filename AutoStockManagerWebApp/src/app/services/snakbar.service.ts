@@ -27,4 +27,39 @@ export class SnackbarService {
       panelClass: 'snackbar-success',
     });
   }
+
+  success(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      panelClass: 'snackbar-success',
+    });
+  }
+
+  successCreate(entity: string) {
+    this.snackBar.open(`${entity} created successfully!`, 'Close', {
+      duration: 3000,
+      panelClass: 'snackbar-success',
+    });
+  }
+
+  successUpdate(entity: string) {
+    this.snackBar.open(`${entity} updated successfully!`, 'Close', {
+      duration: 3000,
+      panelClass: 'snackbar-success',
+    });
+  }
+
+  successDelete(entity: string) {
+    this.snackBar.open(`${entity} deleted successfully!`, 'Close', {
+      duration: 3000,
+      panelClass: 'snackbar-success',
+    });
+  }
+
+  emailAlreadyTaken() {
+    this.snackBar.open('Email already taken', 'Close', {
+      duration: 3000,
+      panelClass: 'snackbar-error',
+    });
+  }
 }

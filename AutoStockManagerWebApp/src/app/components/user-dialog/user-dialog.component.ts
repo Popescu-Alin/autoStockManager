@@ -28,6 +28,7 @@ export interface UserFormData {
 })
 export class UserDialogComponent {
   @Input() visible: boolean = false;
+  @Input() loading: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() onSubmit = new EventEmitter<UserFormData>();
 
@@ -52,11 +53,9 @@ export class UserDialogComponent {
   }
 
   handleSubmit() {
-    if (this.userForm.valid) {
+    if (this.userForm.valid && !this.loading) {
       this.onSubmit.emit(this.userForm.value);
-      this.userForm.reset();
-      this.visibleChange.emit(false);
-    } else {
+    } else if (!this.userForm.valid) {
       // Mark all fields as touched to show validation errors
       Object.keys(this.userForm.controls).forEach(key => {
         this.userForm.get(key)?.markAsTouched();

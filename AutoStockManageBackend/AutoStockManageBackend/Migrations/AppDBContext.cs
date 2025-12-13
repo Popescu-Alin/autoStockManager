@@ -33,6 +33,63 @@ namespace AutoStockManageBackend.DBContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Configure Id as Primary Key with Auto-Generation for all entities
+            modelBuilder.Entity<Car>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();
+                
+                // Configure relationship with Supplier
+                entity.HasOne(c => c.Supplier)
+                    .WithMany()
+                    .HasForeignKey(c => c.SupplierId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<CarPart>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<CarImage>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<CarPartImage>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<Supplier>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();
+            });
+
+            // Client uses ClientId instead of Id, so configure it separately
+            modelBuilder.Entity<Client>(entity =>
+            {
+                entity.HasKey(e => e.ClientId);
+                entity.Property(e => e.ClientId)
+                    .ValueGeneratedOnAdd();
+            });
         }
 
     }   

@@ -68,10 +68,22 @@ builder.Services.AddTransient<ClientService>();
 builder.Services.AddTransient<SupplierService>();
 builder.Services.AddTransient<AuthService>();
 builder.Services.AddTransient<EmailService>();
+builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
 
 builder.Services.AddIdentity<AspNetUser, AspNetRole>()
     .AddEntityFrameworkStores<AppDBContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
 
 builder.Services.AddAuthentication(auth =>
 {
@@ -105,11 +117,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors();
+
 app.UseHttpsRedirection();
 
-app.UseCors(action => action.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

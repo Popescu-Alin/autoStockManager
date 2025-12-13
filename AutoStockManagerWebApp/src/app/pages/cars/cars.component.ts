@@ -1,121 +1,124 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
+import { CreateCarRequest } from '../../../api/src/api/api-client';
 import {
   CarCardData,
   CarCardItemComponent,
 } from '../../components/car-card-item/car-card-item.component';
 import { CarDialogComponent, CarFormData } from '../../components/car-dialog/car-dialog.component';
-import {
-  CarPartDialogComponent,
-  CarPartFormData,
-} from '../../components/car-part-dialog/car-part-dialog.component';
+import { CarPartsService } from '../../services/car-parts.service';
+import { CarsService } from '../../services/cars.service';
+import { SnackbarService } from '../../services/snakbar.service';
+import { SuppliersService } from '../../services/suppliers.service';
+import { fileToBase64String, filesToBase64String } from '../../utils/image.util';
 
 @Component({
   selector: 'app-cars',
   standalone: true,
-  imports: [
-    CommonModule,
-    CarDialogComponent,
-    CarPartDialogComponent,
-    CarCardItemComponent,
-    ButtonModule,
-  ],
+  imports: [CommonModule, CarDialogComponent, CarCardItemComponent, ButtonModule],
   templateUrl: './cars.component.html',
   styleUrl: './cars.component.css',
 })
-export class CarsComponent {
+export class CarsComponent implements OnInit {
   protected readonly title = 'Cars';
   protected carDialogVisible = false;
-  protected carPartDialogVisible = false;
+  protected carDialogLoading = false;
+  protected carCards: CarCardData[] = [];
+  protected suppliers: { label: string; value: string }[] = [];
+  protected isLoading = false;
 
-  // Mock suppliers data - in real app, this would come from a service
-  protected suppliers = [
-    { label: 'Supplier 1', value: 'supplier1' },
-    { label: 'Supplier 2', value: 'supplier2' },
-    { label: 'Supplier 3', value: 'supplier3' },
-  ];
+  constructor(
+    private carsService: CarsService,
+    private suppliersService: SuppliersService,
+    private carPartsService: CarPartsService,
+    private snackbarService: SnackbarService
+  ) {}
 
-  // Mock cars data - in real app, this would come from a service
-  protected cars = [
-    { label: 'Car 1 - Brand Model 2020', value: 'car1' },
-    { label: 'Car 2 - Brand Model 2021', value: 'car2' },
-    { label: 'Car 3 - Brand Model 2022', value: 'car3' },
-  ];
+  async ngOnInit(): Promise<void> {
+    await this.loadData();
+  }
 
-  // Mock car cards data with images for carousel display
-  protected carCards: CarCardData[] = [
-    {
-      id: 1,
-      brand: 'Toyota',
-      model: 'Camry',
-      manufactureYear: 2020,
-      price: 25000,
-      supplierName: 'Supplier 1',
-      images: [
-        'https://via.placeholder.com/400x300/4CAF50/FFFFFF?text=Toyota+Camry+1',
-        'https://via.placeholder.com/400x300/2196F3/FFFFFF?text=Toyota+Camry+2',
-        'https://via.placeholder.com/400x300/FF9800/FFFFFF?text=Toyota+Camry+3',
-      ],
-    },
-    {
-      id: 2,
-      brand: 'Honda',
-      model: 'Accord',
-      manufactureYear: 2021,
-      price: 28000,
-      supplierName: 'Supplier 2',
-      images: [
-        'https://via.placeholder.com/400x300/F44336/FFFFFF?text=Honda+Accord+1',
-        'https://via.placeholder.com/400x300/9C27B0/FFFFFF?text=Honda+Accord+2',
-        'https://via.placeholder.com/400x300/00BCD4/FFFFFF?text=Honda+Accord+3',
-      ],
-    },
-    {
-      id: 3,
-      brand: 'Ford',
-      model: 'Mustang',
-      manufactureYear: 2022,
-      price: 35000,
-      supplierName: 'Supplier 3',
-      images: [
-        'https://via.placeholder.com/400x300/E91E63/FFFFFF?text=Ford+Mustang+1',
-        'https://via.placeholder.com/400x300/795548/FFFFFF?text=Ford+Mustang+2',
-        'https://via.placeholder.com/400x300/607D8B/FFFFFF?text=Ford+Mustang+3',
-      ],
-    },
-  ];
+  async loadData(): Promise<void> {
+    this.isLoading = true;
+    try {
+      const [carsData, suppliersData] = await Promise.all([
+        this.carsService.getAll(),
+        this.suppliersService.getAll(),
+      ]);
+
+      // Map suppliers for dropdown
+      this.suppliers = suppliersData.map((s) => ({
+        label: s.name || '',
+        value: s.id?.toString() || '',
+      }));
+
+      // Map cars to car cards
+      this.carCards = carsData.map((carDto) => {
+        const car = carDto.car;
+        return {
+          id: car?.id || 0,
+          brand: car?.brand || '',
+          model: car?.model || '',
+          manufactureYear: car?.manufactureYear || 0,
+          price: car?.purchasePrice || car?.price || 0,
+          images: carDto.images || [],
+        };
+      });
+    } catch (error) {
+      console.error('Error loading data:', error);
+      this.snackbarService.genericError();
+    } finally {
+      this.isLoading = false;
+    }
+  }
 
   openAddCarDialog() {
     this.carDialogVisible = true;
   }
 
-  openAddCarPartDialog() {
-    this.carPartDialogVisible = true;
-  }
+  async onCarSubmit(carData: CarFormData) {
+    this.carDialogLoading = true;
+    try {
+      // Convert files to base64 strings
+      const registrationCertificateBase64 = carData.registrationCertificate
+        ? await fileToBase64String(carData.registrationCertificate)
+        : '';
 
-  onCarSubmit(carData: CarFormData) {
-    console.log('Car added:', carData);
-    // TODO: Handle car data submission (e.g., send to API, add to list, etc.)
-    const fileNames = carData.images.map((img) => img.name).join(', ');
-    alert(
-      `Car added successfully!\nBrand: ${carData.brand}\nModel: ${carData.model}\nYear: ${carData.manufactureYear}\nSupplier: ${carData.supplier}\nPurchase Date: ${carData.purchaseDate}\nRegistration: ${carData.registrationCertificate?.name}\nImages: ${fileNames}`
-    );
-  }
+      const imagesBase64 =
+        carData.images.length > 0 ? await filesToBase64String(carData.images) : [];
 
-  onCarPartSubmit(carPartData: CarPartFormData) {
-    console.log('Car part added:', carPartData);
-    // TODO: Handle car part data submission (e.g., send to API, add to list, etc.)
-    const imageNames =
-      carPartData.images.length > 0
-        ? carPartData.images.map((img) => img.name).join(', ')
-        : 'No images';
-    alert(
-      `Car part added successfully!\nName: ${carPartData.name}\nCar: ${carPartData.car}\nPrice: $${carPartData.price}\nStatus: ${carPartData.status}\nBuyer: ${
-        carPartData.buyer || 'N/A'
-      }\nImages: ${imageNames}`
-    );
+      // Convert purchaseDate to Date object if it's a string
+      let purchaseDate: Date;
+      if (carData.purchaseDate instanceof Date) {
+        purchaseDate = carData.purchaseDate;
+      } else if (typeof carData.purchaseDate === 'string') {
+        purchaseDate = new Date(carData.purchaseDate);
+      } else {
+        purchaseDate = new Date();
+      }
+
+      // Create the request object
+      const createCarRequest = new CreateCarRequest({
+        supplierId: parseInt(carData.supplier, 10),
+        purchaseDate: purchaseDate,
+        brand: carData.brand,
+        model: carData.model,
+        manufactureYear: carData.manufactureYear || 0,
+        purchasePrice: parseFloat(carData.price),
+        vehicleRegistrationCertificate: registrationCertificateBase64,
+        images: imagesBase64,
+      });
+
+      await this.carsService.create(createCarRequest);
+      this.snackbarService.successCreate('Car');
+      this.carDialogVisible = false;
+      this.carDialogLoading = false;
+      await this.loadData();
+    } catch (error) {
+      console.error('Error adding car:', error);
+      this.carDialogLoading = false;
+      this.snackbarService.genericError();
+    }
   }
 }
-
-

@@ -12,6 +12,24 @@
         <i class="pi pi-arrow-left"></i>
         Back
       </a>
+      <div class="action-buttons">
+        <button
+          pButton
+          type="button"
+          label="Add Car Part"
+          icon="pi pi-cog"
+          (click)="openAddCarPartDialog()"
+          class="p-button-primary"
+        ></button>
+        <button
+          pButton
+          type="button"
+          label="Delete Car"
+          icon="pi pi-trash"
+          (click)="deleteCar()"
+          class="p-button-danger"
+        ></button>
+      </div>
     </div>
 
     <div class="car-header">
@@ -58,7 +76,7 @@
             </div>
             <div class="info-item">
               <span class="info-label">Supplier:</span>
-              <span class="info-value">{{ car?.car?.supplierName || car?.car?.supplier }}</span>
+              <span class="info-value">{{ car?.supplierName || car?.car?.supplierId }}</span>
             </div>
           </div>
         </div>
@@ -66,7 +84,11 @@
         <div *ngIf="car?.car?.vehicleRegistrationCertificate" class="info-card">
           <h2>Registration Certificate</h2>
           <div class="certificate-info">
-            <a [href]="car?.car?.vehicleRegistrationCertificate" target="_blank" class="certificate-link">
+            <a
+              [href]="car?.car?.vehicleRegistrationCertificate"
+              target="_blank"
+              class="certificate-link"
+            >
               <i class="pi pi-file-pdf"></i>
               View Registration Certificate
             </a>
@@ -84,7 +106,11 @@
         <div *ngFor="let part of carParts" class="part-card">
           <div class="part-header">
             <h3>{{ part?.carPart?.name }}</h3>
-            <span class="part-status" [class.available]="part?.carPart?.status === 0" [class.sold]="part?.carPart?.status === 1">
+            <span
+              class="part-status"
+              [class.available]="part?.carPart?.status === 0"
+              [class.sold]="part?.carPart?.status === 1"
+            >
               {{ part?.carPart?.status }}
             </span>
           </div>
@@ -93,11 +119,23 @@
             <p *ngIf="part?.carPart?.buyer" class="part-buyer">Buyer: {{ part?.carPart?.buyer }}</p>
           </div>
           <div *ngIf="part?.images && (part?.images?.length ?? 0) > 0" class="part-images">
-            <img *ngFor="let image of part?.images?.slice(0, 3)" [src]="image" [alt]="part?.carPart?.name" />
+            <img
+              *ngFor="let image of part?.images?.slice(0, 3)"
+              [src]="image"
+              [alt]="part?.carPart?.name"
+            />
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
+  <app-car-part-dialog
+    [(visible)]="carPartDialogVisible"
+    [cars]="carsForDropdown"
+    [selectedCarId]="carId"
+    [loading]="carPartDialogLoading"
+    (onSubmit)="onCarPartSubmit($event)"
+  >
+  </app-car-part-dialog>
+</div>

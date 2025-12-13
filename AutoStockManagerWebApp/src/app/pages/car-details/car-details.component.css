@@ -13,6 +13,14 @@
 
 .header-actions {
   margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
 }
 
 .back-button {

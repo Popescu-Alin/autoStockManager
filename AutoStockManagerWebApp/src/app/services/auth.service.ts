@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, defaultIfEmpty, firstValueFrom, map, of } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import {
   ApiClient,
   LoginResponse as ApiLoginResponse,
@@ -22,14 +22,8 @@ export class AuthService {
     return await firstValueFrom(this.apiClient.postLogin(loginData));
   }
 
-  async checkAuth(): Promise<boolean> {
-    return await firstValueFrom(
-      this.apiClient.getAuthCheck().pipe(
-        map(_ => true),
-        catchError(_ => of(false)), // returns false if API call fails
-        defaultIfEmpty(false)       // avoids EmptyError
-      )
-    );
+  checkAuth() {
+    return this.apiClient.getAuthCheck();
   }
 
   getCurrentUser(): User | undefined {

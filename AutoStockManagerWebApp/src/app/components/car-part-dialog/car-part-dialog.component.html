@@ -7,7 +7,12 @@
   [resizable]="false"
   header="Add Car Part">
   
-  <form [formGroup]="carPartForm" (ngSubmit)="handleSubmit()">
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Creating car part...</p>
+  </div>
+  
+  <form *ngIf="!loading" [formGroup]="carPartForm" (ngSubmit)="handleSubmit()">
     <div class="form-group">
       <label for="car">Car <span class="required">*</span></label>
       <ng-select
@@ -156,7 +161,7 @@
         pButton
         label="Add"
         icon="pi pi-check"
-        [disabled]="carPartForm.invalid"
+        [disabled]="carPartForm.invalid || loading"
         class="p-button-primary"></button>
     </div>
   </form>

@@ -1,5 +1,6 @@
 using AutoStockManageBackend;
 using AutoStockManageBackend.Services.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace AutoStockManageBackend.Services
 {
