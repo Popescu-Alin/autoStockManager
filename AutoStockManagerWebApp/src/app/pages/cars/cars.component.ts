@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 import { CreateCarRequest } from '../../../api/src/api/api-client';
 import {
   CarCardData,
@@ -17,7 +19,14 @@ import { fileToBase64String, filesToBase64String } from '../../utils/image.util'
 @Component({
   selector: 'app-cars',
   standalone: true,
-  imports: [CommonModule, CarDialogComponent, CarCardItemComponent, ButtonModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    CarDialogComponent,
+    CarCardItemComponent,
+    ButtonModule,
+    InputTextModule,
+  ],
   templateUrl: './cars.component.html',
   styleUrl: './cars.component.css',
 })
@@ -26,9 +35,11 @@ export class CarsComponent implements OnInit {
   protected carDialogVisible = false;
   protected carDialogLoading = false;
   protected carCards: CarCardData[] = [];
+  protected allCarCards: CarCardData[] = [];
   protected suppliers: { label: string; value: string }[] = [];
   protected isLoading = false;
   protected isAdmin = false;
+  protected searchValue: string = '';
 
   constructor(
     private carsService: CarsService,
@@ -63,7 +74,7 @@ export class CarsComponent implements OnInit {
       }));
 
       // Map cars to car cards
-      this.carCards = carsData.map((carDto) => {
+      this.allCarCards = carsData.map((carDto) => {
         const car = carDto.car;
         return {
           id: car?.id || 0,
@@ -74,6 +85,7 @@ export class CarsComponent implements OnInit {
           images: carDto.images || [],
         };
       });
+      this.applySearch();
     } catch (error) {
       console.error('Error loading data:', error);
       this.snackbarService.genericError();
@@ -129,5 +141,23 @@ export class CarsComponent implements OnInit {
       this.carDialogLoading = false;
       this.snackbarService.genericError();
     }
+  }
+
+  applySearch(): void {
+    if (!this.searchValue.trim()) {
+      this.carCards = [...this.allCarCards];
+      return;
+    }
+
+    const searchTerm = this.searchValue.toLowerCase().trim();
+    this.carCards = this.allCarCards.filter(
+      (car) =>
+        car.brand?.toLowerCase().includes(searchTerm) ||
+        car.model?.toLowerCase().includes(searchTerm)
+    );
+  }
+
+  onSearchChange(): void {
+    this.applySearch();
   }
 }

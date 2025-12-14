@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { CarDto, CarPartDto, UpdateCarRequest } from '../../../api/src/api/api-client';
+import { firstValueFrom } from 'rxjs';
+import { ApiClient, CarDto, CarPartDto, UpdateCarRequest } from '../../../api/src/api/api-client';
 import { CarFormData } from '../../components/car-dialog/car-dialog.component';
 import {
   CarPartDialogComponent,
@@ -60,7 +61,8 @@ export class CarDetailsComponent implements OnInit {
     private carPartsService: CarPartsService,
     private suppliersService: SuppliersService,
     private snackbarService: SnackbarService,
-    private authService: AuthService
+    private authService: AuthService,
+    private apiClient: ApiClient
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -117,16 +119,75 @@ export class CarDetailsComponent implements OnInit {
   }
 
   formatCurrency(amount: number | undefined): string {
-    if (amount === undefined) return 'N/A';
-    return new Intl.NumberFormat('en-US', {
+    if (amount === undefined || amount === null) return 'N/A';
+    return new Intl.NumberFormat('ro-RO', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'RON',
     }).format(amount);
   }
 
+  getAmountSold(): number {
+    if (!this.carParts || this.carParts.length === 0) return 0;
+    return this.carParts
+      .filter((part) => part.carPart?.status === 0) // Status 0 = Sold
+      .reduce((sum, part) => sum + (part.carPart?.price || 0), 0);
+  }
+
+  async downloadRegistrationCertificate(event: Event): Promise<void> {
+    event.preventDefault();
+
+    if (!this.car?.car?.vehicleRegistrationCertificate) {
+      this.snackbarService.error('Registration certificate not available');
+      return;
+    }
+
+    try {
+      // Extract image ID from the certificate string (could be just the ID or a URL)
+      const imageId = this.car.car.vehicleRegistrationCertificate;
+
+      // Call the API to get the image
+      const response = await firstValueFrom(this.apiClient.getImagesImageId(imageId));
+
+      const image = response.image;
+
+      // Extract MIME type from data URL prefix (e.g., "data:image/jpeg;base64," or "data:application/pdf;base64,")
+      let mimeType = 'application/pdf'; // Default to PDF
+      let base64Data = image;
+
+      if (image.includes(',')) {
+        const parts = image.split(',');
+        const prefix = parts[0];
+        base64Data = parts[1];
+
+        // Extract MIME type from prefix
+        if (prefix.startsWith('data:')) {
+          const mimeMatch = prefix.match(/data:([^;]+)/);
+          if (mimeMatch) {
+            mimeType = mimeMatch[1];
+          }
+        }
+      }
+
+      // Convert base64 to binary
+      const byteCharacters = atob(base64Data);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+
+      // Create blob with the extracted MIME type
+      const imageBlob = new Blob([byteArray], { type: mimeType });
+      const imageUrl = URL.createObjectURL(imageBlob);
+      window.open(imageUrl, '_blank');
+    } catch (error: any) {
+      this.snackbarService.error('Failed to download registration certificate');
+    }
+  }
+
   getStatusText(status: number | undefined): string {
-    if (status === 0) return 'Available';
-    if (status === 1) return 'Sold';
+    if (status === 0) return 'Sold';
+    if (status === 1) return 'Available';
     return 'Unknown';
   }
 
@@ -147,7 +208,7 @@ export class CarDetailsComponent implements OnInit {
   async onCarPartSubmit(carPartData: CarPartFormData) {
     this.carPartDialogLoading = true;
     try {
-      const status = carPartData.status === 'available' ? 0 : 1;
+      const status = carPartData.status === 'available' ? 1 : 0;
 
       // Convert new images to base64 strings
       const newImagesBase64 =
@@ -322,8 +383,8 @@ export class CarDetailsComponent implements OnInit {
         part.carPart?.name?.toLowerCase().includes(this.filterName.toLowerCase());
       const statusMatch =
         this.filterStatus === 'all' ||
-        (this.filterStatus === 'available' && part.carPart?.status === 0) ||
-        (this.filterStatus === 'sold' && part.carPart?.status === 1);
+        (this.filterStatus === 'available' && part.carPart?.status === 1) ||
+        (this.filterStatus === 'sold' && part.carPart?.status === 0);
       return nameMatch && statusMatch;
     });
   }
@@ -334,7 +395,7 @@ export class CarDetailsComponent implements OnInit {
       carId: this.editingCarPart.carPart?.carId || parseInt(this.carId || '0', 10),
       price: this.editingCarPart.carPart?.price || 0,
       name: this.editingCarPart.carPart?.name || '',
-      status: this.editingCarPart.carPart?.status === 0 ? 'available' : 'sold',
+      status: this.editingCarPart.carPart?.status === 1 ? 'available' : 'sold',
       clientId: this.editingCarPart.carPart?.customerId || undefined,
       images: [],
       existingImages: this.editingCarPart.images || [],

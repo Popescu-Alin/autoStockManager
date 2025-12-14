@@ -62,4 +62,18 @@ export class SnackbarService {
       panelClass: 'snackbar-error',
     });
   }
+
+  successAccountActivated() {
+    this.snackBar.open('Account activated successfully!', 'Close', {
+      duration: 3000,
+      panelClass: 'snackbar-success',
+    });
+  }
+
+  error(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      panelClass: 'snackbar-error',
+    });
+  }
 }

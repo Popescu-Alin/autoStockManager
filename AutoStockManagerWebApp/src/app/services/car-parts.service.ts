@@ -57,7 +57,7 @@ export class CarPartsService {
       carId: carPart.car ? parseInt(carPart.car, 10) : undefined,
       price: carPart.price,
       name: carPart.name,
-      status: carPart.status === 'available' ? 0 : carPart.status === 'sold' ? 1 : undefined,
+      status: carPart.status === 'available' ? 1 : carPart.status === 'sold' ? 0 : undefined,
       buyer: carPart.buyer,
       clientId: carPart.clientId,
       images: carPart.images,
@@ -67,5 +67,9 @@ export class CarPartsService {
 
   async delete(id: number): Promise<GenericResponse> {
     return await firstValueFrom(this.apiClient.deletePartsPartId(id));
+  }
+
+  async getSoldParts(startDate?: Date, endDate?: Date): Promise<CarPartDto[]> {
+    return await firstValueFrom(this.apiClient.getPartsSold(startDate, endDate));
   }
 }

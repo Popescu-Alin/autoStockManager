@@ -1,15 +1,15 @@
-<div class="reset-password-container">
-  <div class="reset-password-card">
+<div class="activate-account-container">
+  <div class="activate-account-card">
     <div *ngIf="isValidating" class="loading-state">
       <h1>Validating Token</h1>
-      <p>Please wait while we validate your reset token...</p>
+      <p>Please wait while we validate your activation token...</p>
     </div>
 
     <div *ngIf="!isValidating && tokenValid">
-      <h1>Reset Password</h1>
-      <p>Please set your new password below.</p>
+      <h1>Activate Account</h1>
+      <p>Please set your password to activate your account.</p>
 
-      <form [formGroup]="resetPasswordForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="activateAccountForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
           <label for="password">Password <span class="required">*</span></label>
           <input
@@ -56,9 +56,9 @@
           <button
             type="submit"
             pButton
-            label="Reset Password"
+            label="Activate Account"
             icon="pi pi-check"
-            [disabled]="resetPasswordForm.invalid || isSubmitting"
+            [disabled]="activateAccountForm.invalid || isSubmitting"
             [loading]="isSubmitting"
             class="p-button-primary"
           ></button>
@@ -71,4 +71,3 @@
     </div>
   </div>
 </div>
-

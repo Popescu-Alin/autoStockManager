@@ -15,23 +15,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { User } from '../../../api/src/api/api-client';
-import {
-  UserDialogComponent,
-  UserFormData,
-} from '../../components/user-dialog/user-dialog.component';
+import { EditUserDialogComponent } from '../../components/edit-user-dialog/edit-user-dialog.component';
+import { UserDialogComponent } from '../../components/user-dialog/user-dialog.component';
+import { AuthService } from '../../services/auth.service';
 import { SnackbarService } from '../../services/snakbar.service';
 import { UsersService } from '../../services/users.service';
-
-export interface UserTableData {
-  id: string;
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  email: string;
-  role: string;
-  status: 'active' | 'disabled' | 'pending';
-  createdAt?: Date;
-}
 
 @Component({
   selector: 'app-users',
@@ -53,6 +41,7 @@ export interface UserTableData {
     ButtonModule,
     InputTextModule,
     UserDialogComponent,
+    EditUserDialogComponent,
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
@@ -62,25 +51,32 @@ export class UsersComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   displayedColumns: string[] = ['user', 'fullName', 'status', 'actions'];
-  dataSource = new MatTableDataSource<UserTableData>();
+  dataSource = new MatTableDataSource<User>();
   searchValue: string = '';
   userDialogVisible = false;
   userDialogLoading = false;
+  editUserDialogVisible = false;
+  editUserDialogLoading = false;
+  editingUser: User | null = null;
   isLoading = false;
+  currentUser: User | undefined = undefined;
+  private users: User[] = [];
 
-  private users: UserTableData[] = [];
-
-  constructor(private usersService: UsersService, private snackbarService: SnackbarService) {}
+  constructor(
+    private usersService: UsersService,
+    private snackbarService: SnackbarService,
+    private authService: AuthService
+  ) {}
 
   async ngOnInit() {
     await this.loadUsers();
+    this.currentUser = this.authService.getCurrentUser();
   }
 
   async loadUsers() {
     this.isLoading = true;
     try {
-      const users = await this.usersService.getAll();
-      this.users = users.map((user) => this.mapUserToTableData(user));
+      this.users = await this.usersService.getAll();
       this.dataSource.data = this.users;
     } catch (error) {
       console.error('Error loading users:', error);
@@ -90,23 +86,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private mapUserToTableData(user: User): UserTableData {
-    const firstName = user.firstName || '';
-    const lastName = user.lastName || '';
-    const fullName = `${firstName} ${lastName}`.trim() || user.name || '';
-    return {
-      id: user.id?.toString() || '',
-      firstName: firstName,
-      lastName: lastName,
-      fullName: fullName,
-      email: user.email || '',
-      role: user.role === 1 ? 'admin' : 'user',
-      status: this.mapStatus(user.status),
-      createdAt: user.createDate,
-    };
-  }
-
-  private mapStatus(status?: number): 'active' | 'disabled' | 'pending' {
+  mapStatus(status?: number): 'active' | 'disabled' | 'pending' {
     // Assuming: 0 = active, 1 = disabled, 2 = pending
     if (status === 0) return 'active';
     if (status === 1) return 'disabled';
@@ -119,15 +99,13 @@ export class UsersComponent implements OnInit, AfterViewInit {
     this.dataSource.filterPredicate = this.customFilterPredicate;
   }
 
-  customFilterPredicate = (data: UserTableData, filter: string): boolean => {
+  customFilterPredicate = (data: User, filter: string): boolean => {
     const searchTerm = filter.toLowerCase();
     return (
-      data.firstName.toLowerCase().includes(searchTerm) ||
-      data.lastName.toLowerCase().includes(searchTerm) ||
-      data.fullName.toLowerCase().includes(searchTerm) ||
-      data.email.toLowerCase().includes(searchTerm) ||
-      data.role.toLowerCase().includes(searchTerm) ||
-      data.status.toLowerCase().includes(searchTerm)
+      data.name?.toLowerCase().includes(searchTerm) ||
+      data.email?.toLowerCase().includes(searchTerm) ||
+      data.role?.toString().toLowerCase().includes(searchTerm) ||
+      this.mapStatus(data.status).toLowerCase().includes(searchTerm)
     );
   };
 
@@ -144,7 +122,12 @@ export class UsersComponent implements OnInit, AfterViewInit {
     this.userDialogVisible = true;
   }
 
-  async onUserSubmit(userData: UserFormData) {
+  openEditUserDialog(userId: number) {
+    this.editingUser = this.users.find((user) => user.id === userId) || null;
+    this.editUserDialogVisible = true;
+  }
+
+  async onUserSubmit(userData: User) {
     this.userDialogLoading = true;
     try {
       const newUser: User = new User({
@@ -152,7 +135,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
         lastName: '',
         name: userData.name,
         email: userData.email,
-        role: userData.role === 'admin' ? 1 : 0,
+        role: userData.role,
         status: 2,
       });
 
@@ -172,10 +155,32 @@ export class UsersComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async deleteUser(user: UserTableData) {
-    if (confirm(`Are you sure you want to delete ${user.firstName} ${user.lastName}?`)) {
+  async onEditUserSubmit(userData: User) {
+    if (!this.editingUser) return;
+
+    this.editUserDialogLoading = true;
+    try {
+      await this.usersService.update(this.editingUser.id!, userData);
+      this.snackbarService.successUpdate('User');
+      this.editUserDialogVisible = false;
+      this.editUserDialogLoading = false;
+      this.editingUser = null;
+      await this.loadUsers();
+    } catch (error: any) {
+      console.error('Error updating user:', error);
+      this.editUserDialogLoading = false;
+      if (error?.status === 409 || error?.message?.includes('Email Already Taken')) {
+        this.snackbarService.emailAlreadyTaken();
+      } else {
+        this.snackbarService.genericError();
+      }
+    }
+  }
+
+  async deleteUser(user: User) {
+    if (confirm(`Are you sure you want to delete ${user.name}?`)) {
       try {
-        const response = await this.usersService.delete(parseInt(user.id, 10));
+        const response = await this.usersService.delete(user.id!);
         if (response.success) {
           await this.loadUsers();
           this.snackbarService.successDelete('User');
@@ -189,45 +194,51 @@ export class UsersComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async disableUser(user: UserTableData) {
+  async changeUserStatus(user: User) {
     try {
-      const currentUser = await this.usersService.getById(user.id);
-
-      const newStatus = user.status === 'disabled' ? 0 : 1; // 0 = active, 1 = disabled
-      const updatedUser: User = new User({
-        id: currentUser.id,
-        email: currentUser.email,
-        firstName: currentUser.firstName,
-        lastName: currentUser.lastName,
-        role: currentUser.role,
-        createDate: currentUser.createDate,
-        identityUserId: currentUser.identityUserId,
-        status: newStatus,
-      });
-
-      await this.usersService.update(user.id, updatedUser);
+      const newStatus = user.status === 0 ? 1 : user.status === 1 ? 0 : 1; // Toggle between active and disabled
+      const updatedUser = await this.usersService.changeStatus(user.id!, newStatus);
       await this.loadUsers();
       const statusMessage = newStatus === 0 ? 'enabled' : 'disabled';
       this.snackbarService.success(`User ${statusMessage} successfully!`);
     } catch (error: any) {
-      console.error('Error updating user:', error);
-      if (error?.status === 409 || error?.message?.includes('Email Already Taken')) {
-        this.snackbarService.emailAlreadyTaken();
+      console.error('Error changing user status:', error);
+      this.snackbarService.genericError();
+    }
+  }
+
+  async sendChangePassword(userId: number) {
+    try {
+      const response = await this.usersService.sendChangePassword(userId);
+      if (response.success) {
+        this.snackbarService.success(
+          `Change password email sent to ${this.users.find((user) => user.id === userId)?.email}`
+        );
+      } else {
+        this.snackbarService.genericError();
+      }
+    } catch (error) {
+      console.error('Error sending change password email:', error);
+      this.snackbarService.genericError();
+    }
+  }
+
+  async resendInvite(userId: number) {
+    try {
+      const response = await this.usersService.resendInvite(userId);
+      if (response.success) {
+        const user = this.users.find((u) => u.id === userId);
+        this.snackbarService.success(`Invitation email sent to ${user?.email || 'user'}`);
+      } else {
+        this.snackbarService.genericError();
+      }
+    } catch (error: any) {
+      console.error('Error resending invite:', error);
+      if (error?.status === 400) {
+        this.snackbarService.error('User is not in pending status');
       } else {
         this.snackbarService.genericError();
       }
     }
-  }
-
-  sendChangePassword(user: UserTableData) {
-    // TODO: Implement send change password functionality
-    console.log('Send change password to:', user.email);
-    alert(`Change password email will be sent to ${user.email}`);
-  }
-
-  resendInvite(user: UserTableData) {
-    // TODO: Implement resend invite functionality
-    console.log('Resend invite to:', user.email);
-    alert(`Invitation will be resent to ${user.email}`);
   }
 }

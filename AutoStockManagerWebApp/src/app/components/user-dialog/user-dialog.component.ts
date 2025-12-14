@@ -5,12 +5,8 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { User } from '../../../api/src/api/api-client';
 
-export interface UserFormData {
-  name: string;
-  role: string;
-  email: string;
-}
 
 @Component({
   selector: 'app-user-dialog',
@@ -30,13 +26,13 @@ export class UserDialogComponent {
   @Input() visible: boolean = false;
   @Input() loading: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() onSubmit = new EventEmitter<UserFormData>();
+  @Output() onSubmit = new EventEmitter<User>();
 
   userForm: FormGroup;
   
   roleOptions = [
-    { label: 'Admin', value: 'admin' },
-    { label: 'User', value: 'user' },
+    { label: 'Admin', value: '0' },
+    { label: 'User', value: '1' },
   ];
 
   constructor(private fb: FormBuilder) {

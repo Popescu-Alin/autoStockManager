@@ -9,6 +9,7 @@ import { CustomersComponent } from './pages/customers/customers.component';
 import { HomeComponent } from './pages/home/home.component';
 import { SuppliersComponent } from './pages/suppliers/suppliers.component';
 import { UsersComponent } from './pages/users/users.component';
+import { StatisticsComponent } from './pages/statistics/statistics.component';
 
 export const routes: Routes = [
   {
@@ -39,6 +40,12 @@ export const routes: Routes = [
         path: 'users',
         component: UsersComponent,
         title: 'Users',
+        canActivate: [AdminGuard],
+      },
+      {
+        path: 'statistics',
+        component: StatisticsComponent,
+        title: 'Statistics',
         canActivate: [AdminGuard],
       },
       {

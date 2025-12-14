@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { firstValueFrom, Observable } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import {
+  ActivateAccountRequest,
   ApiClient,
   LoginResponse as ApiLoginResponse,
   AuthRequest,
+  GenericResponse,
+  SetPasswordRequest,
+  TokenValidationResponse,
   User,
 } from '../../api/src/api/api-client';
 
@@ -16,6 +20,18 @@ export class AuthService {
 
   validateResetToken(token: string): Promise<boolean> {
     return Promise.resolve(true);
+  }
+
+  async validateActivationToken(token: string): Promise<TokenValidationResponse> {
+    return await firstValueFrom(this.apiClient.getAuthValidateActivationToken(token));
+  }
+
+  async activateAccount(request: ActivateAccountRequest): Promise<GenericResponse> {
+    return await firstValueFrom(this.apiClient.postAuthActivateAccount(request));
+  }
+
+  async setPassword(request: SetPasswordRequest): Promise<GenericResponse> {
+    return await firstValueFrom(this.apiClient.postAuthSetPassword(request));
   }
 
   async login(loginData: AuthRequest): Promise<ApiLoginResponse> {

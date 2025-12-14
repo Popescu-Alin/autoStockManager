@@ -56,9 +56,20 @@ export class EditCarDialogComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['visible']?.currentValue === true && changes['visible']?.previousValue !== true) {
       if (this.visible && this.carForm && this.editingCar) {
+        // Convert Date to string format for date input (YYYY-MM-DD)
+        let purchaseDateString: string | null = null;
+        if (this.editingCar.purchaseDate) {
+          const date = this.editingCar.purchaseDate instanceof Date 
+            ? this.editingCar.purchaseDate 
+            : new Date(this.editingCar.purchaseDate);
+          if (!isNaN(date.getTime())) {
+            purchaseDateString = date.toISOString().split('T')[0];
+          }
+        }
+
         this.carForm.patchValue({
           supplier: this.editingCar.supplier,
-          purchaseDate: this.editingCar.purchaseDate,
+          purchaseDate: purchaseDateString,
           brand: this.editingCar.brand,
           model: this.editingCar.model,
           manufactureYear: this.editingCar.manufactureYear,

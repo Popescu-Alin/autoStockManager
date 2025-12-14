@@ -75,8 +75,12 @@
               <span class="info-value">{{ car?.car?.manufactureYear }}</span>
             </div>
             <div class="info-item">
-              <span class="info-label">Price:</span>
-              <span class="info-value">{{ formatCurrency(car?.car?.price) }}</span>
+              <span class="info-label">Purchase Price:</span>
+              <span class="info-value">{{ formatCurrency(car?.car?.purchasePrice || car?.car?.price) }}</span>
+            </div>
+            <div class="info-item" *ngIf="isAdmin">
+              <span class="info-label">Amount Sold:</span>
+              <span class="info-value">{{ formatCurrency(getAmountSold()) }}</span>
             </div>
             <div class="info-item">
               <span class="info-label">Purchase Date:</span>
@@ -93,12 +97,12 @@
           <h2>Registration Certificate</h2>
           <div class="certificate-info">
             <a
-              [href]="car?.car?.vehicleRegistrationCertificate"
-              target="_blank"
+              href="#"
+              (click)="downloadRegistrationCertificate($event)"
               class="certificate-link"
             >
               <i class="pi pi-file-pdf"></i>
-              View Registration Certificate
+              Download Registration Certificate
             </a>
           </div>
         </div>
@@ -137,8 +141,8 @@
             <h3>{{ part?.carPart?.name }}</h3>
             <span
               class="part-status"
-              [class.available]="part?.carPart?.status === 0"
-              [class.sold]="part?.carPart?.status === 1"
+              [class.available]="part?.carPart?.status === 1"
+              [class.sold]="part?.carPart?.status === 0"
             >
               {{ getStatusText(part?.carPart?.status) }}
             </span>
@@ -146,6 +150,9 @@
           <div class="part-info">
             <p class="part-price">{{ formatCurrency(part?.carPart?.price) }}</p>
             <p *ngIf="part?.buyer" class="part-buyer">Buyer: {{ part?.buyer }}</p>
+            <p *ngIf="part?.carPart?.status === 0 && part?.carPart?.purchaseDate" class="part-purchase-date">
+              Purchase Date: {{ formatDate(part?.carPart?.purchaseDate) }}
+            </p>
           </div>
           <div *ngIf="part?.images && (part?.images?.length ?? 0) > 0" class="part-images">
             <img

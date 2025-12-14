@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using AutoStockManageBackend.IdentityModels;
 using AutoStockManageBackend.Utils;
 using System.Threading.Tasks;
+using System.Text;
 
 
 namespace AutoStockManageBackend.Services
@@ -13,11 +14,13 @@ namespace AutoStockManageBackend.Services
 
         private readonly UserManager<AspNetUser> _userManager;
         private readonly UserService _userService;
+        private readonly EmailService EmailService;
 
-        public AuthService(UserManager<AspNetUser> userManager, UserService userService)
+        public AuthService(UserManager<AspNetUser> userManager, UserService userService, EmailService emailService)
         {
             _userManager = userManager;
             _userService = userService;
+            EmailService = emailService;
         }
 
 
@@ -62,6 +65,7 @@ namespace AutoStockManageBackend.Services
             }
 
             string token = _userManager.GeneratePasswordResetTokenAsync(identityUser).Result;
+            // Hash the ORIGINAL token before any encoding
             string hashToken = HashFunction.ComputeSha256(token);
             user = new User()
             {
@@ -74,7 +78,14 @@ namespace AutoStockManageBackend.Services
                 InviteExpirationDate = DateTime.UtcNow.AddDays(1),
                 Status = (int)Constants.Constants.AccountStatus.Pending
             };
-            return _userService.Create(user);
+            var newUser = _userService.Create(user);
+            
+            // Encode token for URL (for email link)
+            // Note: ASP.NET Identity tokens are base64, which may contain +, /, = that need encoding
+            var encodedToken = Uri.EscapeDataString(token);
+            EmailService.SendSetPasswordMail(user.Email, encodedToken);
+            return newUser;
+            
         }
 
         private async Task<AspNetUser> CreateIdentityUser(string email)
@@ -101,11 +112,10 @@ namespace AutoStockManageBackend.Services
                     return _userManager.FindByEmailAsync(email).Result;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-
+                return null;
             }
-           
 
             return null;
         }

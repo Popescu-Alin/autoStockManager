@@ -1,4 +1,4 @@
-.reset-password-container {
+.activate-account-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -7,7 +7,7 @@
   background: white;
 }
 
-.reset-password-card {
+.activate-account-card {
   width: 100%;
   max-width: 450px;
   padding: 2.5rem;
@@ -16,13 +16,13 @@
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
 
-.reset-password-card h1 {
+.activate-account-card h1 {
   margin-bottom: 0.5rem;
   color: #333;
   font-size: 1.75rem;
 }
 
-.reset-password-card p {
+.activate-account-card p {
   color: #666;
   margin-bottom: 1.5rem;
   font-size: 0.95rem;
@@ -122,15 +122,15 @@ input[pInputText].ng-invalid.ng-touched {
 }
 
 @media (max-width: 480px) {
-  .reset-password-container {
+  .activate-account-container {
     padding: 10px;
   }
 
-  .reset-password-card {
+  .activate-account-card {
     padding: 1.5rem;
   }
 
-  .reset-password-card h1 {
+  .activate-account-card h1 {
     font-size: 1.5rem;
   }
 }

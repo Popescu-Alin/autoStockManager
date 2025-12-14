@@ -26,8 +26,22 @@
       </div>
     </div>
 
-    <div class="cars-grid">
+    <div class="search-container">
+      <input
+        type="text"
+        pInputText
+        [(ngModel)]="searchValue"
+        (input)="onSearchChange()"
+        placeholder="Search by brand or model..."
+        class="search-input"
+      />
+    </div>
+
+    <div class="cars-grid" *ngIf="carCards.length > 0">
       <app-car-card-item *ngFor="let car of carCards" [car]="car"> </app-car-card-item>
+    </div>
+    <div class="no-results" *ngIf="carCards.length === 0 && !isLoading && searchValue.trim()">
+      <p>No cars found matching "{{ searchValue }}"</p>
     </div>
   </section>
 

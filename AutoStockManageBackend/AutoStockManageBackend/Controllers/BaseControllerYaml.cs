@@ -62,6 +62,39 @@ namespace AutoStockManageBackend
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<GenericResponse>> DeleteUsersUserId(int userId);
 
         /// <summary>
+        /// Send Change Password Email
+        /// </summary>
+        /// <remarks>
+        /// Send a change password email to the specified user.
+        /// </remarks>
+        /// <param name="userId">Id of an existing user.</param>
+        /// <returns>Change Password Email Sent</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("users/{userId}/send-change-password")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<GenericResponse>> PostUsersUserIdSendChangePassword(int userId);
+
+        /// <summary>
+        /// Resend Invitation Email
+        /// </summary>
+        /// <remarks>
+        /// Resend the activation/invitation email to a pending user. This is typically used for users with status 2 (pending) who haven't activated their account yet.
+        /// </remarks>
+        /// <param name="userId">Id of an existing user.</param>
+        /// <returns>Invitation Email Sent</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("users/{userId}/resend-invite")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<GenericResponse>> PostUsersUserIdResendInvite(int userId);
+
+        /// <summary>
+        /// Change User Status
+        /// </summary>
+        /// <remarks>
+        /// Update the status of a user (active, disabled, pending).
+        /// </remarks>
+        /// <param name="userId">Id of an existing user.</param>
+        /// <returns>User Status Updated</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPatch, Microsoft.AspNetCore.Mvc.Route("users/{userId}/status")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<User>> PatchUsersUserIdStatus([Microsoft.AspNetCore.Mvc.FromBody] ChangeUserStatusRequest body, int userId);
+
+        /// <summary>
         /// Create New User
         /// </summary>
         /// <remarks>
@@ -209,6 +242,29 @@ namespace AutoStockManageBackend
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<GenericResponse>> DeletePartsPartId(int partId);
 
         /// <summary>
+        /// Get Image by ID
+        /// </summary>
+        /// <remarks>
+        /// Retrieve an image by its ID and return it as a base64 encoded string.
+        /// </remarks>
+        /// <param name="imageId">Identifier of the image.</param>
+        /// <returns>Image Found</returns>
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("images/{imageId}")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<Response>> GetImagesImageId(string imageId);
+
+        /// <summary>
+        /// Get Sold Car Parts
+        /// </summary>
+        /// <remarks>
+        /// Retrieve a list of sold car parts within a date range. Returns car parts with status 1 (sold) that were sold between the start and end dates.
+        /// </remarks>
+        /// <param name="startDate">Start date for filtering sold parts (YYYY-MM-DD format)</param>
+        /// <param name="endDate">End date for filtering sold parts (YYYY-MM-DD format)</param>
+        /// <returns>List of Sold Car Parts</returns>
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("parts/sold")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<System.Collections.Generic.ICollection<CarPartDto>>> GetPartsSold([Microsoft.AspNetCore.Mvc.FromQuery] System.DateTimeOffset? startDate, [Microsoft.AspNetCore.Mvc.FromQuery] System.DateTimeOffset? endDate);
+
+        /// <summary>
         /// Get All Suppliers
         /// </summary>
         /// <remarks>
@@ -299,6 +355,37 @@ namespace AutoStockManageBackend
         /// <returns>Login Successful</returns>
         [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("login")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<LoginResponse>> PostLogin([Microsoft.AspNetCore.Mvc.FromBody] AuthRequest body);
+
+        /// <summary>
+        /// Set Password
+        /// </summary>
+        /// <remarks>
+        /// Set a new password using a token. Used for password reset or initial password setup. Requires strong password validation.
+        /// </remarks>
+        /// <returns>Password Set Successfully</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("auth/set-password")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<GenericResponse>> PostAuthSetPassword([Microsoft.AspNetCore.Mvc.FromBody] SetPasswordRequest body);
+
+        /// <summary>
+        /// Validate Activation Token
+        /// </summary>
+        /// <remarks>
+        /// Validate an activation token to check if it's valid and not expired. This is separate from the auth check endpoint.
+        /// </remarks>
+        /// <param name="token">Activation token to validate</param>
+        /// <returns>Token validation result</returns>
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("auth/validate-token")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<TokenValidationResponse>> GetAuthValidateActivationToken([Microsoft.AspNetCore.Mvc.FromQuery] string token);
+
+        /// <summary>
+        /// Activate Account
+        /// </summary>
+        /// <remarks>
+        /// Activate a new user account and set initial password. Requires strong password validation.
+        /// </remarks>
+        /// <returns>Account Activated Successfully</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("auth/activate-account")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<GenericResponse>> PostAuthActivateAccount([Microsoft.AspNetCore.Mvc.FromBody] ActivateAccountRequest body);
 
     }
 
@@ -414,12 +501,6 @@ namespace AutoStockManageBackend
 
         [Newtonsoft.Json.JsonProperty("address", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Address { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("createdAt", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset CreatedAt { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("updatedAt", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset UpdatedAt { get; set; }
 
     }
 
@@ -908,6 +989,162 @@ namespace AutoStockManageBackend
 
         [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool Success { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class ChangeUserStatusRequest
+    {
+
+        /// <summary>
+        /// User status (0 = active, 1 = disabled, 2 = pending)
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int Status { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class TokenValidationResponse
+    {
+
+        /// <summary>
+        /// Whether the token is valid
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool Success { get; set; }
+
+        /// <summary>
+        /// Whether the token is invalid
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("invalidToken", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool InvalidToken { get; set; }
+
+        /// <summary>
+        /// Whether the token has expired
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("expiredToken", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool ExpiredToken { get; set; }
+
+        /// <summary>
+        /// Current user if token is valid
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("user", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public User User { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class SetPasswordRequest
+    {
+
+        /// <summary>
+        /// Token received via email for password reset
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("token", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Token { get; set; }
+
+        /// <summary>
+        /// New password (must be at least 8 characters, contain uppercase, lowercase, number, and special character)
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("password", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.StringLength(int.MaxValue, MinimumLength = 8)]
+        public string Password { get; set; }
+
+        /// <summary>
+        /// Confirmation of the new password (must match password)
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("confirmPassword", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string ConfirmPassword { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class ActivateAccountRequest
+    {
+
+        /// <summary>
+        /// Activation token received via email
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("token", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Token { get; set; }
+
+        /// <summary>
+        /// Initial password (must be at least 8 characters, contain uppercase, lowercase, number, and special character)
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("password", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.StringLength(int.MaxValue, MinimumLength = 8)]
+        public string Password { get; set; }
+
+        /// <summary>
+        /// Confirmation of the password (must match password)
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("confirmPassword", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string ConfirmPassword { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class Response
+    {
+
+        /// <summary>
+        /// Base64 encoded image string
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("image", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Image { get; set; }
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
 

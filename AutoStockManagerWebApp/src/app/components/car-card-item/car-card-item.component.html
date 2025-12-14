@@ -25,8 +25,8 @@
         {{ car.manufactureYear }}
       </p>
       <p class="car-price">
-        <i class="pi pi-dollar"></i>
-        {{ car.price | number: '1.2-2' }}
+        <i class="pi pi-money-bill"></i>
+        {{ car.price | number: '1.2-2' }} RON
       </p>
     </div>
     <p-tag *ngIf="car.supplierName" [value]="car.supplierName" severity="info"></p-tag>

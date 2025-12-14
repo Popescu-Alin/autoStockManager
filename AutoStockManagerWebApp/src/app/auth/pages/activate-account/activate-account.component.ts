@@ -11,19 +11,19 @@ import {
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { SetPasswordRequest } from '../../../../api/src/api/api-client';
+import { ActivateAccountRequest } from '../../../../api/src/api/api-client';
 import { AuthService } from '../../../services/auth.service';
 import { SnackbarService } from '../../../services/snakbar.service';
 
 @Component({
-  selector: 'app-reset-password',
+  selector: 'app-activate-account',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink, InputTextModule, ButtonModule],
-  templateUrl: './reset-password.component.html',
-  styleUrl: './reset-password.component.css',
+  templateUrl: './activate-account.component.html',
+  styleUrl: './activate-account.component.css',
 })
-export class ResetPasswordComponent implements OnInit {
-  resetPasswordForm: FormGroup;
+export class ActivateAccountComponent implements OnInit {
+  activateAccountForm: FormGroup;
   token: string | null = null;
   isValidating: boolean = true;
   isSubmitting: boolean = false;
@@ -65,7 +65,7 @@ export class ResetPasswordComponent implements OnInit {
       return null;
     };
 
-    this.resetPasswordForm = this.fb.group(
+    this.activateAccountForm = this.fb.group(
       {
         password: ['', [Validators.required, Validators.minLength(8), strongPasswordValidator]],
         confirmPassword: ['', [Validators.required]],
@@ -99,14 +99,18 @@ export class ResetPasswordComponent implements OnInit {
     this.isValidating = true;
 
     try {
-      const response = await this.authService.validateResetToken(this.token!);
+      const response = await this.authService.validateActivationToken(this.token!);
       this.isValidating = false;
 
-      if (response) {
+      if (response.success && !response.invalidToken && !response.expiredToken) {
         this.tokenValid = true;
       } else {
         this.router.navigate(['/auth/login']);
-        this.snackbarService.invalidToken();
+        if (response.expiredToken) {
+          this.snackbarService.error('Activation token has expired');
+        } else {
+          this.snackbarService.invalidToken();
+        }
       }
     } catch (error) {
       this.isValidating = false;
@@ -116,28 +120,28 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   async onSubmit(): Promise<void> {
-    if (this.resetPasswordForm.invalid || !this.token || !this.tokenValid) {
-      Object.keys(this.resetPasswordForm.controls).forEach((key) => {
-        this.resetPasswordForm.get(key)?.markAsTouched();
+    if (this.activateAccountForm.invalid || !this.token || !this.tokenValid) {
+      Object.keys(this.activateAccountForm.controls).forEach((key) => {
+        this.activateAccountForm.get(key)?.markAsTouched();
       });
       return;
     }
 
     this.isSubmitting = true;
 
-    const formValue = this.resetPasswordForm.value;
-    const passwordResetData = new SetPasswordRequest({
+    const formValue = this.activateAccountForm.value;
+    const activateAccountData = new ActivateAccountRequest({
       token: this.token!,
       password: formValue.password,
       confirmPassword: formValue.confirmPassword,
     });
 
     try {
-      const response = await this.authService.setPassword(passwordResetData);
+      const response = await this.authService.activateAccount(activateAccountData);
       this.isSubmitting = false;
       if (response.success) {
         this.router.navigate(['/auth/login']);
-        this.snackbarService.successPasswordSet();
+        this.snackbarService.successAccountActivated();
       } else {
         this.snackbarService.genericError();
       }
@@ -155,15 +159,15 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   get password() {
-    return this.resetPasswordForm.get('password');
+    return this.activateAccountForm.get('password');
   }
 
   get confirmPassword() {
-    return this.resetPasswordForm.get('confirmPassword');
+    return this.activateAccountForm.get('confirmPassword');
   }
 
   get passwordMismatch() {
-    return this.resetPasswordForm.errors?.['passwordMismatch'] && this.confirmPassword?.touched;
+    return this.activateAccountForm.errors?.['passwordMismatch'] && this.confirmPassword?.touched;
   }
 
   get passwordErrors() {
