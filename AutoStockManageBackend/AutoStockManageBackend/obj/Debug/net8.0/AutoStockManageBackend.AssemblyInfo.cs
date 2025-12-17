@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AutoStockManageBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c473b8271a7b69fc0ab91957789ab88e750620e7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+88a7b373510d2be04b6ce7b08482c47452511fb9")]
 [assembly: System.Reflection.AssemblyProductAttribute("AutoStockManageBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AutoStockManageBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

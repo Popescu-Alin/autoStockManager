@@ -3,7 +3,6 @@
     <div>
       <p class="eyebrow">Inventory</p>
       <h1>{{ title }}</h1>
-      <p class="subtitle">Manage your fleet, add new vehicles, and keep parts organized.</p>
     </div>
     <div class="actions" *ngIf="isAdmin">
       <button
@@ -18,23 +17,20 @@
   </header>
 
   <section class="cars-section">
-    <div class="cars-section__header">
-      <div>
-        <p class="eyebrow">Highlights</p>
-        <h2>Featured Cars</h2>
-        <p class="subtitle">A quick look at vehicles currently in stock.</p>
-      </div>
-    </div>
+
 
     <div class="search-container">
-      <input
-        type="text"
-        pInputText
-        [(ngModel)]="searchValue"
-        (input)="onSearchChange()"
-        placeholder="Search by brand or model..."
-        class="search-input"
-      />
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search cars</mat-label>
+        <input
+          matInput
+          [(ngModel)]="searchValue"
+          (input)="onSearchChange()"
+          placeholder="Search by brand or model..."
+          #searchInput
+        />
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
     </div>
 
     <div class="cars-grid" *ngIf="carCards.length > 0">

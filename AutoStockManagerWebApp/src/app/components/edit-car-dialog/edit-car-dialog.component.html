@@ -160,6 +160,10 @@
 
     <div class="form-group">
       <label for="registrationCertificate">Registration Certificate</label>
+      <div class="registration-certificate-message" *ngIf="hasExistingRegistrationCertificate">
+        <i class="pi pi-info-circle"></i>
+        <span>There is already a registration certificate attached to this car, upload a new one if you want to change it</span>
+      </div>
       <div class="file-input-wrapper">
         <input
           id="registrationCertificate"

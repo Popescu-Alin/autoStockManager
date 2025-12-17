@@ -347,6 +347,17 @@ namespace AutoStockManageBackend
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<GenericResponse>> DeleteCustomersCustomerId(int customerId);
 
         /// <summary>
+        /// Get All Car Parts Bought by Customer
+        /// </summary>
+        /// <remarks>
+        /// Retrieve a list of all car parts that a customer has purchased.
+        /// </remarks>
+        /// <param name="customerId">Identifier of the customer.</param>
+        /// <returns>List of Car Parts</returns>
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("customers/{customerId}/parts")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<System.Collections.Generic.ICollection<CarPartDto>>> GetCustomersCustomerIdParts(int customerId);
+
+        /// <summary>
         /// User Login
         /// </summary>
         /// <remarks>

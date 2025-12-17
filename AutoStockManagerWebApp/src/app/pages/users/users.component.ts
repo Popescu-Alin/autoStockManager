@@ -87,7 +87,6 @@ export class UsersComponent implements OnInit, AfterViewInit {
   }
 
   mapStatus(status?: number): 'active' | 'disabled' | 'pending' {
-    // Assuming: 0 = active, 1 = disabled, 2 = pending
     if (status === 0) return 'active';
     if (status === 1) return 'disabled';
     return 'pending';
@@ -196,7 +195,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
 
   async changeUserStatus(user: User) {
     try {
-      const newStatus = user.status === 0 ? 1 : user.status === 1 ? 0 : 1; // Toggle between active and disabled
+      const newStatus = user.status === 0 ? 1 : user.status === 1 ? 0 : 1;
       const updatedUser = await this.usersService.changeStatus(user.id!, newStatus);
       await this.loadUsers();
       const statusMessage = newStatus === 0 ? 'enabled' : 'disabled';

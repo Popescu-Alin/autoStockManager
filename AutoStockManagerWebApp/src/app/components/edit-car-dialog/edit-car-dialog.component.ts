@@ -26,6 +26,7 @@ export class EditCarDialogComponent implements OnChanges {
   @Input() suppliers: { label: string; value: string }[] = [];
   @Input() loading: boolean = false;
   @Input() editingCar: CarFormData | null = null;
+  @Input() hasExistingRegistrationCertificate: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() onSubmit = new EventEmitter<CarFormData>();
 

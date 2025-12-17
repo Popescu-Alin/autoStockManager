@@ -408,6 +408,32 @@
   },
   {
     "ContainingType": "AutoStockManageBackend.Controllers.BaseController",
+    "Method": "GetCustomersCustomerIdParts",
+    "RelativePath": "customers/{customerId}/parts",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "customerId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.ICollection\u00601[[AutoStockManageBackend.CarPartDto, AutoStockManageBackend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "AutoStockManageBackend.Controllers.BaseController",
     "Method": "GetImagesImageId",
     "RelativePath": "images/{imageId}",
     "HttpMethod": "GET",

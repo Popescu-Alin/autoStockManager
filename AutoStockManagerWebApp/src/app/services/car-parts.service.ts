@@ -38,6 +38,10 @@ export class CarPartsService {
     return await firstValueFrom(this.apiClient.getCarsCarIdParts(carId));
   }
 
+  async getByCustomerId(customerId: number): Promise<CarPartDto[]> {
+    return await firstValueFrom(this.apiClient.getCustomersCustomerIdParts(customerId));
+  }
+
   async create(
     carId: number,
     price: number,

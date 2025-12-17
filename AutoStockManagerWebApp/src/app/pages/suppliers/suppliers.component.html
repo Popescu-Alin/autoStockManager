@@ -27,7 +27,6 @@
 
   <div class="table-container">
     <table mat-table [dataSource]="dataSource" matSort class="suppliers-table">
-      <!-- Name Column -->
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
         <td mat-cell *matCellDef="let supplier">
@@ -35,7 +34,6 @@
         </td>
       </ng-container>
 
-      <!-- Phone Column -->
       <ng-container matColumnDef="phone">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone</th>
         <td mat-cell *matCellDef="let supplier">
@@ -43,11 +41,11 @@
         </td>
       </ng-container>
 
-      <!-- Actions Column -->
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let supplier">
           <button
+            *ngIf="isAdmin"
             mat-icon-button
             matTooltip="Edit Supplier"
             (click)="openEditSupplierDialog(supplier)"
@@ -56,6 +54,7 @@
             <mat-icon>edit</mat-icon>
           </button>
           <button
+            *ngIf="isAdmin"
             mat-icon-button
             matTooltip="Delete Supplier"
             (click)="deleteSupplier(supplier)"
@@ -70,7 +69,6 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
-      <!-- No data row -->
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" [attr.colspan]="displayedColumns.length">
           <div class="no-data">No suppliers found</div>

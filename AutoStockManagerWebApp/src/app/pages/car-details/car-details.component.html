@@ -12,8 +12,9 @@
         <i class="pi pi-arrow-left"></i>
         Back
       </a>
-      <div class="action-buttons" *ngIf="isAdmin">
+      <div class="action-buttons">
         <button
+          *ngIf="isAdmin"
           pButton
           type="button"
           label="Edit Car"
@@ -30,6 +31,7 @@
           class="p-button-primary"
         ></button>
         <button
+          *ngIf="isAdmin"
           pButton
           type="button"
           label="Delete Car"
@@ -161,7 +163,7 @@
               [alt]="part?.carPart?.name"
             />
           </div>
-          <div class="part-actions" *ngIf="isAdmin">
+          <div class="part-actions">
             <button
               pButton
               type="button"
@@ -208,6 +210,7 @@
     [suppliers]="suppliers"
     [loading]="editCarDialogLoading"
     [editingCar]="editingCarData"
+    [hasExistingRegistrationCertificate]="!!car?.car?.vehicleRegistrationCertificate"
     (onSubmit)="onEditCarSubmit($event)"
   >
   </app-edit-car-dialog>

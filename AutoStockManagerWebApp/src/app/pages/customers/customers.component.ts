@@ -11,6 +11,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { Customer } from '../../../api/src/api/api-client';
@@ -19,6 +20,7 @@ import {
   CustomerFormData,
 } from '../../components/customer-dialog/customer-dialog.component';
 import { EditCustomerDialogComponent } from '../../components/edit-customer-dialog/edit-customer-dialog.component';
+import { AuthService } from '../../services/auth.service';
 import { CustomersService } from '../../services/customers.service';
 import { SnackbarService } from '../../services/snakbar.service';
 
@@ -68,16 +70,25 @@ export class CustomersComponent implements OnInit, AfterViewInit {
   editCustomerDialogVisible = false;
   editCustomerDialogLoading = false;
   editingCustomer: CustomerTableData | null = null;
+  isAdmin = false;
 
   private customers: CustomerTableData[] = [];
 
   constructor(
     private customersService: CustomersService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   async ngOnInit() {
+    this.checkAdminStatus();
     await this.loadCustomers();
+  }
+
+  private checkAdminStatus(): void {
+    const currentUser = this.authService.getCurrentUser();
+    this.isAdmin = currentUser?.role === 0;
   }
 
   async loadCustomers() {
@@ -143,12 +154,14 @@ export class CustomersComponent implements OnInit, AfterViewInit {
   async onCustomerSubmit(customerData: CustomerFormData) {
     this.customerDialogLoading = true;
     try {
-      const customer = await this.customersService.create(new Customer({
-        name: customerData.name,
-        email: customerData.email,
-        phone: customerData.phone,
-        address: customerData.address,
-      }));
+      const customer = await this.customersService.create(
+        new Customer({
+          name: customerData.name,
+          email: customerData.email,
+          phone: customerData.phone,
+          address: customerData.address,
+        })
+      );
       this.snackbarService.successCreate('Customer');
       this.customerDialogVisible = false;
       this.customerDialogLoading = false;
@@ -215,6 +228,12 @@ export class CustomersComponent implements OnInit, AfterViewInit {
         console.error('Error deleting customer:', error);
         this.snackbarService.genericError();
       }
+    }
+  }
+
+  navigateToCustomerPurchases(customer: CustomerTableData) {
+    if (this.isAdmin) {
+      this.router.navigate(['/customers', customer.id, 'purchases']);
     }
   }
 }

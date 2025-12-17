@@ -10,6 +10,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { SuppliersComponent } from './pages/suppliers/suppliers.component';
 import { UsersComponent } from './pages/users/users.component';
 import { StatisticsComponent } from './pages/statistics/statistics.component';
+import { CustomerPurchasesComponent } from './pages/customer-purchases/customer-purchases.component';
 
 export const routes: Routes = [
   {
@@ -62,6 +63,12 @@ export const routes: Routes = [
         path: 'cars/:id',
         component: CarDetailsComponent,
         title: 'Car Details',
+      },
+      {
+        path: 'customers/:id/purchases',
+        component: CustomerPurchasesComponent,
+        title: 'Customer Purchases',
+        canActivate: [AdminGuard],
       },
       {
         path: '**',

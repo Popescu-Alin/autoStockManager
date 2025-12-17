@@ -17,6 +17,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   protected isMobile: boolean = false;
   protected sideNavOpen: boolean = false;
   protected isAdmin = false;
+  protected currentUserEmail: string | undefined;
 
   @HostListener('window:resize')
   onResize() {
@@ -28,11 +29,17 @@ export class LayoutComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.checkScreenSize();
     this.checkAdminStatus();
+    this.loadCurrentUserEmail();
   }
 
   private checkAdminStatus(): void {
     const currentUser = this.authService.getCurrentUser();
     this.isAdmin = currentUser?.role === 0;
+  }
+
+  private loadCurrentUserEmail(): void {
+    const currentUser = this.authService.getCurrentUser();
+    this.currentUserEmail = currentUser?.email;
   }
 
   ngOnDestroy() {
@@ -52,5 +59,9 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   closeSideNav() {
     this.sideNavOpen = false;
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
 }

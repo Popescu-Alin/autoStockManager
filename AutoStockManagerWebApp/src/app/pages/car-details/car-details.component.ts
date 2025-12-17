@@ -100,7 +100,6 @@ export class CarDetailsComponent implements OnInit {
       this.carParts = await this.carPartsService.getByCarId(parseInt(this.carId!, 10));
       this.filteredCarParts = [...this.carParts];
 
-      // Map suppliers for dropdown
       this.suppliers = suppliersData.map((s) => ({
         label: s.name || '',
         value: s.id?.toString() || '',
@@ -129,7 +128,7 @@ export class CarDetailsComponent implements OnInit {
   getAmountSold(): number {
     if (!this.carParts || this.carParts.length === 0) return 0;
     return this.carParts
-      .filter((part) => part.carPart?.status === 0) // Status 0 = Sold
+      .filter((part) => part.carPart?.status === 0)
       .reduce((sum, part) => sum + (part.carPart?.price || 0), 0);
   }
 
@@ -142,16 +141,13 @@ export class CarDetailsComponent implements OnInit {
     }
 
     try {
-      // Extract image ID from the certificate string (could be just the ID or a URL)
       const imageId = this.car.car.vehicleRegistrationCertificate;
 
-      // Call the API to get the image
       const response = await firstValueFrom(this.apiClient.getImagesImageId(imageId));
 
       const image = response.image;
 
-      // Extract MIME type from data URL prefix (e.g., "data:image/jpeg;base64," or "data:application/pdf;base64,")
-      let mimeType = 'application/pdf'; // Default to PDF
+      let mimeType = 'application/pdf';
       let base64Data = image;
 
       if (image.includes(',')) {
@@ -159,7 +155,6 @@ export class CarDetailsComponent implements OnInit {
         const prefix = parts[0];
         base64Data = parts[1];
 
-        // Extract MIME type from prefix
         if (prefix.startsWith('data:')) {
           const mimeMatch = prefix.match(/data:([^;]+)/);
           if (mimeMatch) {
@@ -168,7 +163,6 @@ export class CarDetailsComponent implements OnInit {
         }
       }
 
-      // Convert base64 to binary
       const byteCharacters = atob(base64Data);
       const byteNumbers = new Array(byteCharacters.length);
       for (let i = 0; i < byteCharacters.length; i++) {
@@ -176,7 +170,6 @@ export class CarDetailsComponent implements OnInit {
       }
       const byteArray = new Uint8Array(byteNumbers);
 
-      // Create blob with the extracted MIME type
       const imageBlob = new Blob([byteArray], { type: mimeType });
       const imageUrl = URL.createObjectURL(imageBlob);
       window.open(imageUrl, '_blank');
@@ -210,7 +203,6 @@ export class CarDetailsComponent implements OnInit {
     try {
       const status = carPartData.status === 'available' ? 1 : 0;
 
-      // Convert new images to base64 strings
       const newImagesBase64 =
         carPartData.images.length > 0 ? await filesToBase64String(carPartData.images) : [];
 
@@ -238,15 +230,12 @@ export class CarDetailsComponent implements OnInit {
   async onEditCarPartSubmit(carPartData: CarPartFormData) {
     this.editCarPartDialogLoading = true;
     try {
-      // Convert new images to base64 strings
       const newImagesBase64 =
         carPartData.images.length > 0 ? await filesToBase64String(carPartData.images) : [];
 
-      // Update existing car part
       const statusValue: 'available' | 'sold' =
         carPartData.status === 'available' ? 'available' : 'sold';
 
-      // Combine existing images (that weren't removed) with new images
       const imagesBase64 = [...(carPartData.existingImages || []), ...newImagesBase64];
 
       await this.carPartsService.update(this.editingCarPart!.carPart?.id?.toString() || '', {
@@ -274,19 +263,15 @@ export class CarDetailsComponent implements OnInit {
   async onEditCarSubmit(carData: CarFormData) {
     this.editCarDialogLoading = true;
     try {
-      // Convert files to base64 strings
       const registrationCertificateBase64 = carData.registrationCertificate
         ? await fileToBase64String(carData.registrationCertificate)
         : this.car?.car?.vehicleRegistrationCertificate || '';
 
-      // Convert new images to base64 strings
       const newImagesBase64 =
         carData.images.length > 0 ? await filesToBase64String(carData.images) : [];
 
-      // Combine existing images (that weren't removed) with new images
       const imagesBase64 = [...(carData.existingImages || []), ...newImagesBase64];
 
-      // Ensure purchaseDate is a Date object
       const purchaseDate =
         carData.purchaseDate instanceof Date
           ? carData.purchaseDate
@@ -295,8 +280,6 @@ export class CarDetailsComponent implements OnInit {
           : this.car?.car?.purchaseDate
           ? new Date(this.car.car.purchaseDate)
           : new Date();
-
-      // Create the update request object
       const updateCarRequest = new UpdateCarRequest({
         supplierId: parseInt(carData.supplier, 10),
         purchaseDate: purchaseDate,

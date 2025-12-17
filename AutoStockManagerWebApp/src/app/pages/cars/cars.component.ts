@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CreateCarRequest } from '../../../api/src/api/api-client';
@@ -22,6 +25,9 @@ import { fileToBase64String, filesToBase64String } from '../../utils/image.util'
   imports: [
     CommonModule,
     FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
     CarDialogComponent,
     CarCardItemComponent,
     ButtonModule,
@@ -67,13 +73,11 @@ export class CarsComponent implements OnInit {
         this.suppliersService.getAll(),
       ]);
 
-      // Map suppliers for dropdown
       this.suppliers = suppliersData.map((s) => ({
         label: s.name || '',
         value: s.id?.toString() || '',
       }));
 
-      // Map cars to car cards
       this.allCarCards = carsData.map((carDto) => {
         const car = carDto.car;
         return {
@@ -101,7 +105,6 @@ export class CarsComponent implements OnInit {
   async onCarSubmit(carData: CarFormData) {
     this.carDialogLoading = true;
     try {
-      // Convert files to base64 strings
       const registrationCertificateBase64 = carData.registrationCertificate
         ? await fileToBase64String(carData.registrationCertificate)
         : '';
@@ -109,7 +112,6 @@ export class CarsComponent implements OnInit {
       const imagesBase64 =
         carData.images.length > 0 ? await filesToBase64String(carData.images) : [];
 
-      // Convert purchaseDate to Date object if it's a string
       let purchaseDate: Date;
       if (carData.purchaseDate instanceof Date) {
         purchaseDate = carData.purchaseDate;
@@ -119,7 +121,6 @@ export class CarsComponent implements OnInit {
         purchaseDate = new Date();
       }
 
-      // Create the request object
       const createCarRequest = new CreateCarRequest({
         supplierId: parseInt(carData.supplier, 10),
         purchaseDate: purchaseDate,

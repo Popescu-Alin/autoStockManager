@@ -65,7 +65,6 @@ namespace AutoStockManageBackend.Services
             }
 
             string token = _userManager.GeneratePasswordResetTokenAsync(identityUser).Result;
-            // Hash the ORIGINAL token before any encoding
             string hashToken = HashFunction.ComputeSha256(token);
             user = new User()
             {
@@ -79,9 +78,7 @@ namespace AutoStockManageBackend.Services
                 Status = (int)Constants.Constants.AccountStatus.Pending
             };
             var newUser = _userService.Create(user);
-            
-            // Encode token for URL (for email link)
-            // Note: ASP.NET Identity tokens are base64, which may contain +, /, = that need encoding
+
             var encodedToken = Uri.EscapeDataString(token);
             EmailService.SendSetPasswordMail(user.Email, encodedToken);
             return newUser;

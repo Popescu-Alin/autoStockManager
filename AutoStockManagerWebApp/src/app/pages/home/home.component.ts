@@ -13,5 +13,5 @@ import { ButtonModule } from 'primeng/button';
 export class HomeComponent {
   protected readonly title = 'Welcome to Auto Stock Manager';
   protected readonly subtitle =
-    'Track inventory, manage suppliers, and keep your fleet organized.';
+    'Track inventory, manage suppliers, and keep your data organized.';
 }

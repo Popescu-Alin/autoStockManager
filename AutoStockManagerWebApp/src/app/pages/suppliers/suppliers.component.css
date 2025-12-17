@@ -10,9 +10,8 @@
 }
 
 .page-header h1 {
-  margin: 0;
-  color: #333;
-  font-size: 2rem;
+  color: #1976d2 !important;
+  margin: 0.25rem 0 !important;
 }
 
 .search-container {

@@ -18,6 +18,7 @@ import {
   SupplierDialogComponent,
   SupplierFormData,
 } from '../../components/supplier-dialog/supplier-dialog.component';
+import { AuthService } from '../../services/auth.service';
 import { SnackbarService } from '../../services/snakbar.service';
 import { SuppliersService } from '../../services/suppliers.service';
 
@@ -64,16 +65,24 @@ export class SuppliersComponent implements OnInit, AfterViewInit {
   editMode = false;
   selectedSupplier: SupplierTableData | null = null;
   isLoading = false;
+  isAdmin = false;
 
   private suppliers: SupplierTableData[] = [];
 
   constructor(
     private suppliersService: SuppliersService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private authService: AuthService
   ) {}
 
   async ngOnInit() {
+    this.checkAdminStatus();
     await this.loadSuppliers();
+  }
+
+  private checkAdminStatus(): void {
+    const currentUser = this.authService.getCurrentUser();
+    this.isAdmin = currentUser?.role === 0;
   }
 
   async loadSuppliers() {
@@ -139,7 +148,6 @@ export class SuppliersComponent implements OnInit, AfterViewInit {
     this.supplierDialogLoading = true;
     try {
       if (this.editMode && this.selectedSupplier) {
-        // Update existing supplier
         await this.suppliersService.update(this.selectedSupplier.id, {
           name: supplierData.name,
           phone: supplierData.phone,

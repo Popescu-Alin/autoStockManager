@@ -33,6 +33,17 @@
           Customers
         </a>
       </nav>
+      <div class="header-right" *ngIf="!isMobile">
+        <span class="user-email">{{ currentUserEmail }}</span>
+        <button
+          pButton
+          type="button"
+          label="Logout"
+          icon="pi pi-sign-out"
+          (click)="logout()"
+          class="p-button-text p-button-plain logout-button">
+        </button>
+      </div>
     </div>
   </header>
 
@@ -94,6 +105,17 @@
         <i class="pi pi-user"></i>
         <span>Customers</span>
       </a>
+      <div class="side-nav-user-section">
+        <span class="side-nav-user-email">{{ currentUserEmail }}</span>
+        <button
+          pButton
+          type="button"
+          label="Logout"
+          icon="pi pi-sign-out"
+          (click)="logout(); closeSideNav()"
+          class="p-button-text p-button-plain side-nav-logout-button">
+        </button>
+      </div>
     </nav>
   </aside>
 

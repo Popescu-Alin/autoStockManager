@@ -1,0 +1,90 @@
+<div class="customer-purchases-container">
+  <div class="page-header">
+    <div class="header-content">
+      <a routerLink="/customers" class="back-button">
+        <i class="pi pi-arrow-left"></i>
+        Back
+      </a>
+      <div class="header-info" *ngIf="customer">
+        <h1>{{ customer.name }}'s Purchases</h1>
+        <p class="customer-details">
+          <span *ngIf="customer.email">{{ customer.email }}</span>
+          <span *ngIf="customer.phone"> • {{ customer.phone }}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="total-card" *ngIf="!isLoading && customer">
+    <div class="total-card-content">
+      <div class="total-icon">
+        <i class="pi pi-shopping-cart"></i>
+      </div>
+      <div class="total-info">
+        <h3>Total Spent</h3>
+        <p class="total-amount">{{ formatCurrency(totalSpent) }}</p>
+        <p class="total-count">
+          {{ allParts.length }} part{{ allParts.length !== 1 ? 's' : '' }} purchased
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-container" *ngIf="!isLoading && customer">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search parts</mat-label>
+      <input
+        matInput
+        [(ngModel)]="searchValue"
+        (input)="applyFilter($event)"
+        placeholder="Search by part name..."
+        #searchInput
+      />
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <div class="table-container" *ngIf="!isLoading && customer">
+    <table mat-table [dataSource]="dataSource" matSort class="purchases-table">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Part Name</th>
+        <td mat-cell *matCellDef="let part">{{ part.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
+        <td mat-cell *matCellDef="let part">{{ formatCurrency(part.price) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="purchaseDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Purchase Date</th>
+        <td mat-cell *matCellDef="let part">{{ formatDate(part.purchaseDate) }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        (click)="navigateToCar(row.carId)"
+        [class.clickable-row]="isAdmin"
+      ></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+          <div class="no-data">No purchases found for this customer</div>
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator
+      [pageSize]="10"
+      showFirstLastButtons
+      aria-label="Select page of purchased parts"
+    ></mat-paginator>
+  </div>
+
+  <div class="loading-container" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+    <span class="loading-text">Loading customer purchases...</span>
+  </div>
+</div>

@@ -54,7 +54,7 @@ namespace AutoStockManageBackend.Controllers
         [Authorize]
         public override async Task<ActionResult<GenericResponse>> DeleteCarsCarId(int carId)
         {
-            var adminCheck = ValidateUserIsAdmin();
+            var adminCheck = ValidateUserExists();
             if (adminCheck != null)
             {
                 return adminCheck;
@@ -172,7 +172,6 @@ namespace AutoStockManageBackend.Controllers
 
         public override async Task<ActionResult<TokenValidationResponse>> GetAuthValidateActivationToken([FromQuery] string token)
         {
-            // Decode the token (it was URL-encoded)
             var decodedToken = Uri.UnescapeDataString(token);
             string tokenHash = HashFunction.ComputeSha256(decodedToken);
             var user = UserService.FindByCondition(u => u.InviteTokenHash == tokenHash);
@@ -520,7 +519,7 @@ namespace AutoStockManageBackend.Controllers
         [Authorize]
         public override async Task<ActionResult<CarDto>> PatchCarsCarId([FromBody] UpdateCarRequest body, int carId)
         {
-            var adminCheck = ValidateUserIsAdmin();
+            var adminCheck = ValidateUserExists();
             if (adminCheck != null)
             {
                 return adminCheck;
@@ -539,7 +538,7 @@ namespace AutoStockManageBackend.Controllers
             car.ManufactureYear = body.ManufactureYear;
             car.PurchasePrice = body.PurchasePrice;
 
-            if (car.VehicleRegistrationCertificate != null && car.VehicleRegistrationCertificate!= body.VehicleRegistrationCertificate && int.TryParse(car.VehicleRegistrationCertificate, out var result))
+            if (car.VehicleRegistrationCertificate != null && car.VehicleRegistrationCertificate != body.VehicleRegistrationCertificate && int.TryParse(car.VehicleRegistrationCertificate, out var result))
             {
                 var carCertification = CarImageService.GetById(result);
                 if (carCertification != null)
@@ -792,7 +791,6 @@ namespace AutoStockManageBackend.Controllers
                 return NotFound($"User with ID {userId} not found");
             }
 
-            // Validate status value (0 = active, 1 = disabled, 2 = pending)
             if (body.Status < 0 || body.Status > 2)
             {
                 return BadRequest("Invalid status");
@@ -830,45 +828,37 @@ namespace AutoStockManageBackend.Controllers
                 return BadRequest("Password must be at least 8 characters and contain uppercase, lowercase, number, and special character");
             }
 
-            // Decode the token (it was URL-encoded for email)
             var decodedToken = Uri.UnescapeDataString(body.Token);
-            
-            // Hash the decoded token to match the stored hash
             string tokenHash = HashFunction.ComputeSha256(decodedToken);
             var user = UserService.FindByCondition(u => u.InviteTokenHash == tokenHash);
-            
+
             if (user == null)
             {
                 return Unauthorized("Invalid or expired token");
             }
 
-            // Check if token is expired
             if (user.InviteExpirationDate.HasValue && user.InviteExpirationDate.Value < DateTime.UtcNow)
             {
                 return Unauthorized("Invalid or expired token");
             }
 
-            // Get identity user
             var identityUser = await UserManager.FindByIdAsync(user.IdentityUserId);
             if (identityUser == null)
             {
                 return Unauthorized("Invalid or expired token");
             }
 
-            // Set password using the original decoded token
             var result = await UserManager.ResetPasswordAsync(identityUser, decodedToken, body.Password);
             if (!result.Succeeded)
             {
                 return BadRequest("Invalid password or token");
             }
 
-            // Activate account
             user.Status = (int)Constants.Constants.AccountStatus.Active;
             user.InviteTokenHash = null;
             user.InviteExpirationDate = null;
             UserService.Update(user);
 
-            // Send notification emails to all admins
             try
             {
                 var adminUsers = UserService.GetAll(u => u.Role == (int)Constants.Constants.Roles.Admin && u.Status == (int)Constants.Constants.AccountStatus.Active).ToList();
@@ -882,8 +872,6 @@ namespace AutoStockManageBackend.Controllers
             }
             catch (Exception ex)
             {
-                // Log error but don't fail the activation if email sending fails
-                // The account activation was successful, email notification is secondary
             }
 
             return Ok(new GenericResponse { Success = true });
@@ -905,44 +893,39 @@ namespace AutoStockManageBackend.Controllers
             {
                 return BadRequest("Password must be at least 8 characters and contain uppercase, lowercase, number, and special character");
             }
-            // Decode the token (it was URL-encoded for email)
             var decodedToken = Uri.UnescapeDataString(body.Token);
-            
-            // Hash the decoded token to match the stored hash
             string tokenHash = HashFunction.ComputeSha256(decodedToken);
             var user = UserService.FindByCondition(u => u.InviteTokenHash == tokenHash);
-            
+
             if (user == null)
             {
                 return Unauthorized("Invalid or expired token");
             }
 
-            // Check if token is expired
             if (user.InviteExpirationDate.HasValue && user.InviteExpirationDate.Value < DateTime.UtcNow)
             {
                 return Unauthorized("Invalid or expired token");
             }
-            
+
             var aspUser = await UserManager.FindByIdAsync(user.IdentityUserId);
-            if(aspUser == null)
+            if (aspUser == null)
             {
                 return Unauthorized("Invalid or expired token");
             }
-          
-            // Use the decoded token for password reset
+
             var result = await UserManager.ResetPasswordAsync(aspUser, decodedToken, body.Password);
 
             return new GenericResponse()
             {
                 Success = result.Succeeded
             };
-           
+
         }
 
         [Authorize]
         public override async Task<ActionResult<CarDto>> PostCars(int? supplierId, DateTimeOffset? purchaseDate, string brand, string model, int? manufactureYear, double? purchasePrice, string vehicleRegistrationCertificate, IEnumerable<string> images)
         {
-            var adminCheck = ValidateUserIsAdmin();
+            var adminCheck = ValidateUserExists();
             if (adminCheck != null)
             {
                 return adminCheck;
@@ -954,7 +937,7 @@ namespace AutoStockManageBackend.Controllers
                 return BadRequest("Missing required information");
             }
 
-        
+
             var car = new AutoStockManageBackend.Car
             {
                 SupplierId = supplierId.Value,
@@ -1070,7 +1053,7 @@ namespace AutoStockManageBackend.Controllers
 
             var createdCarPart = CarPartService.Create(carPart);
             var imagePaths = new List<string>();
-            
+
             if (images != null)
             {
                 foreach (var image in images)
@@ -1156,7 +1139,8 @@ namespace AutoStockManageBackend.Controllers
                 return Conflict("Email already taken");
             }
 
-            return await AuthService.RegisterWithoutPassword(new CreateUserAccountRequest() { 
+            return await AuthService.RegisterWithoutPassword(new CreateUserAccountRequest()
+            {
                 FullName = body.Name,
                 Email = body.Email,
                 Role = body.Role
@@ -1189,16 +1173,10 @@ namespace AutoStockManageBackend.Controllers
                 return NotFound($"User with ID {userId} not found");
             }
 
-            // Generate password reset token
             var token = await UserManager.GeneratePasswordResetTokenAsync(identityUser);
-
-            // Hash the ORIGINAL token before any encoding
             user.InviteTokenHash = HashFunction.ComputeSha256(token);
             user.InviteExpirationDate = DateTime.UtcNow.AddMinutes(15);
             UserService.Update(user);
-
-            // Encode token for URL (for email link)
-            // Note: ASP.NET Identity tokens are base64, which may contain +, /, = that need encoding
             var encodedToken = Uri.EscapeDataString(token);
             try
             {
@@ -1238,16 +1216,10 @@ namespace AutoStockManageBackend.Controllers
                 return NotFound($"User with ID {userId} not found");
             }
 
-            // Generate new invite token
             var token = await UserManager.GeneratePasswordResetTokenAsync(identityUser);
-
-            // Hash the ORIGINAL token before any encoding
             user.InviteTokenHash = HashFunction.ComputeSha256(token);
             user.InviteExpirationDate = DateTime.UtcNow.AddDays(1);
             UserService.Update(user);
-
-            // Encode token for URL (for email link)
-            // Note: ASP.NET Identity tokens are base64, which may contain +, /, = that need encoding
             var encodedToken = Uri.EscapeDataString(token);
             try
             {
@@ -1294,7 +1266,9 @@ namespace AutoStockManageBackend.Controllers
                 return null;
             }
 
-            var user = UserService.FindByCondition(u => u.IdentityUserId == identityUserId);
+            var user = UserService.FindByCondition(u =>
+                            u.IdentityUserId == identityUserId
+                            && u.Status == (int)Constants.Constants.AccountStatus.Active);
             return user;
         }
 
@@ -1314,7 +1288,7 @@ namespace AutoStockManageBackend.Controllers
             var user = GetCurrentUser();
             if (user == null)
             {
-                return Unauthorized("User not found or invalid token");
+                return Unauthorized();
             }
             return null;
         }
@@ -1343,34 +1317,27 @@ namespace AutoStockManageBackend.Controllers
                 return userCheck;
             }
 
-            // Parse imageId to int
             if (!int.TryParse(imageId, out int imageIdInt))
             {
                 return NotFound("Image not found");
             }
 
-            // Find the CarImage by ID
             var carImage = CarImageService.GetById(imageIdInt);
             if (carImage == null || string.IsNullOrEmpty(carImage.Image))
             {
                 return NotFound("Image not found");
             }
 
-            // Extract filename from the Image property (it might be just filename or full path)
             string fileName = carImage.Image;
-            // If it's a full URL, extract just the filename
             if (fileName.Contains("/"))
             {
                 fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
             }
 
-            // Try to download from car-images container first, then car-images-certifications
             Stream? imageStream = null;
             string containerName = "car-images";
-            
             imageStream = await BlobStorageService.DownloadFileAsync(fileName, containerName);
-            
-            // If not found in car-images, try car-images-certifications
+
             if (imageStream == null)
             {
                 containerName = "car-images-certifications";
@@ -1384,14 +1351,11 @@ namespace AutoStockManageBackend.Controllers
 
             try
             {
-                // Convert stream to byte array
                 using (imageStream)
                 using (var memoryStream = new MemoryStream())
                 {
                     await imageStream.CopyToAsync(memoryStream);
                     byte[] imageBytes = memoryStream.ToArray();
-
-                    // Convert to base64 string
                     string base64Image = Convert.ToBase64String(imageBytes);
 
                     return Ok(new Response { Image = base64Image });
@@ -1412,7 +1376,6 @@ namespace AutoStockManageBackend.Controllers
                 return userCheck;
             }
 
-            // Filter for sold car parts (Status = 0)
             var soldStatus = (int)Constants.Constants.CarPartStatus.Sold;
             var carParts = CarPartService.GetAll(cp => cp.Status == soldStatus).ToList();
 
@@ -1421,7 +1384,6 @@ namespace AutoStockManageBackend.Controllers
                 endDate = endDate.Value.AddDays(1);
             }
 
-            // Apply date range filter if provided
             if (startDate.HasValue || endDate.HasValue)
             {
                 if (startDate.HasValue && endDate.HasValue)
@@ -1459,6 +1421,34 @@ namespace AutoStockManageBackend.Controllers
                 });
             }
 
+            return carPartDtos;
+        }
+
+
+        [Authorize]
+        public override async Task<ActionResult<ICollection<CarPartDto>>> GetCustomersCustomerIdParts(int customerId)
+        {
+            var userCheck = ValidateUserExists();
+            if (userCheck != null)
+            {
+                return userCheck;
+            }
+
+            var carParts = CarPartService.GetAll(cp => cp.CustomerId == customerId).ToList();
+            var carPartDtos = new List<CarPartDto>();
+
+            foreach (var carPart in carParts)
+            {
+                var images = CarPartImageService.GetAll(img => img.CarPartId == carPart.Id)
+                    .Select(img => img.Image)
+                    .ToList();
+                carPartDtos.Add(new CarPartDto
+                {
+                    CarPart = carPart,
+                    Images = images
+
+                });
+            }
             return carPartDtos;
         }
     }

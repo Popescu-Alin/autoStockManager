@@ -9,22 +9,25 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { CarPartDto, Customer } from '../../../api/src/api/api-client';
+import { AuthService } from '../../services/auth.service';
 import { CarPartsService } from '../../services/car-parts.service';
+import { CustomersService } from '../../services/customers.service';
 import { SnackbarService } from '../../services/snakbar.service';
 
-export interface SoldPartTableData {
+export interface PurchasedPartTableData {
   id: number;
   name: string;
   price: number;
-  dateSold: Date | null;
+  purchaseDate: Date | null;
   carId: number;
 }
 
 @Component({
-  selector: 'app-statistics',
+  selector: 'app-customer-purchases',
   standalone: true,
   imports: [
     CommonModule,
@@ -39,39 +42,50 @@ export interface SoldPartTableData {
     MatTooltipModule,
     ButtonModule,
     InputTextModule,
+    RouterLink,
   ],
-  templateUrl: './statistics.component.html',
-  styleUrl: './statistics.component.css',
+  templateUrl: './customer-purchases.component.html',
+  styleUrl: './customer-purchases.component.css',
 })
-export class StatisticsComponent implements OnInit, AfterViewInit {
+export class CustomerPurchasesComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  displayedColumns: string[] = ['name', 'price', 'dateSold'];
-  dataSource = new MatTableDataSource<SoldPartTableData>();
+  displayedColumns: string[] = ['name', 'price', 'purchaseDate'];
+  dataSource = new MatTableDataSource<PurchasedPartTableData>();
   searchValue: string = '';
-  startDate: string = '';
-  endDate: string = '';
   isLoading = false;
-  totalRevenue: number = 0;
+  customerId: string | null = null;
+  customer: Customer | null = null;
+  totalSpent: number = 0;
+  isAdmin = false;
 
-  protected allParts: SoldPartTableData[] = [];
+  protected allParts: PurchasedPartTableData[] = [];
 
   constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private customersService: CustomersService,
     private carPartsService: CarPartsService,
     private snackbarService: SnackbarService,
-    private router: Router
+    private authService: AuthService
   ) {}
 
   async ngOnInit() {
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 30);
+    this.checkAdminStatus();
+    this.customerId = this.route.snapshot.paramMap.get('id');
 
-    this.endDate = endDate.toISOString().split('T')[0];
-    this.startDate = startDate.toISOString().split('T')[0];
+    if (!this.customerId) {
+      this.router.navigate(['/customers']);
+      return;
+    }
 
-    await this.loadSoldParts();
+    await this.loadCustomerAndParts();
+  }
+
+  private checkAdminStatus(): void {
+    const currentUser = this.authService.getCurrentUser();
+    this.isAdmin = currentUser?.role === 0;
   }
 
   ngAfterViewInit() {
@@ -80,7 +94,7 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
     this.dataSource.filterPredicate = this.customFilterPredicate;
   }
 
-  customFilterPredicate = (data: SoldPartTableData, filter: string): boolean => {
+  customFilterPredicate = (data: PurchasedPartTableData, filter: string): boolean => {
     const searchTerm = filter.toLowerCase();
     return data.name.toLowerCase().includes(searchTerm);
   };
@@ -94,53 +108,40 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async onDateRangeChange() {
-    if ((this.startDate && this.endDate) || (!this.startDate && !this.endDate)) {
-      await this.loadSoldParts();
-    }
-  }
-
-  async loadSoldParts() {
+  async loadCustomerAndParts() {
     this.isLoading = true;
     try {
-      const startDateObj = this.startDate ? new Date(this.startDate) : undefined;
-      const endDateObj = this.endDate ? new Date(this.endDate) : undefined;
+      const customerIdNum = parseInt(this.customerId!, 10);
+      
+      const [customer, parts] = await Promise.all([
+        this.customersService.getById(customerIdNum),
+        this.carPartsService.getByCustomerId(customerIdNum),
+      ]);
 
-      const parts = await this.carPartsService.getSoldParts(startDateObj, endDateObj);
-      if (!parts) {
-        this.allParts = [];
-        this.dataSource.data = [];
-        this.calculateTotal();
-        return;
-      }
-      this.allParts = parts
-        .filter((part) => part.carPart?.status === 0)
-        .map((part) => ({
-          id: part.carPart?.id || 0,
-          name: part.carPart?.name || '',
-          price: part.carPart?.price || 0,
-          dateSold: part.carPart?.purchaseDate ? new Date(part.carPart.purchaseDate) : null,
-          carId: part.carPart?.carId || 0,
-        }));
+      this.customer = customer;
+
+      this.allParts = parts.map((part) => ({
+        id: part.carPart?.id || 0,
+        name: part.carPart?.name || '',
+        price: part.carPart?.price || 0,
+        purchaseDate: part.carPart?.purchaseDate ? new Date(part.carPart.purchaseDate) : null,
+        carId: part.carPart?.carId || 0,
+      }));
 
       this.dataSource.data = this.allParts;
       this.calculateTotal();
     } catch (error: any) {
-      console.error('Error loading sold parts:', error);
-      const errorMessage = error?.message || error?.statusText || 'Failed to load sold parts';
+      console.error('Error loading customer purchases:', error);
+      const errorMessage = error?.message || error?.statusText || 'Failed to load customer purchases';
       const status = error?.status;
 
       if (status === 404) {
-        this.snackbarService.error(
-          'Endpoint not found. The /parts/sold endpoint may not be implemented on the backend yet.'
-        );
+        this.snackbarService.error('Customer not found or no purchases found.');
       } else if (status === 500) {
         this.snackbarService.error('Server error. Please check the backend logs and try again.');
-      } else if (status === 400) {
-        this.snackbarService.error('Invalid date format. Please check your date selections.');
       } else {
         this.snackbarService.error(
-          `Error loading statistics: ${errorMessage} (Status: ${status || 'Unknown'})`
+          `Error loading customer purchases: ${errorMessage} (Status: ${status || 'Unknown'})`
         );
       }
 
@@ -153,7 +154,7 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
   }
 
   calculateTotal() {
-    this.totalRevenue = this.allParts.reduce((sum, part) => sum + part.price, 0);
+    this.totalSpent = this.allParts.reduce((sum, part) => sum + part.price, 0);
   }
 
   formatCurrency(amount: number): string {
@@ -169,8 +170,9 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
   }
 
   navigateToCar(carId: number) {
-    if (carId) {
+    if (carId && this.isAdmin) {
       this.router.navigate(['/cars', carId]);
     }
   }
 }
+

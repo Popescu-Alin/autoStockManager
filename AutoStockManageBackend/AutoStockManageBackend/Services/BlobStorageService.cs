@@ -35,13 +35,11 @@ namespace AutoStockManageBackend.Services
             string mimeType = null;
             var base64Data = base64String;
 
-            // Extract MIME type and base64 data from data URL if present (e.g., "data:image/png;base64,")
             if (base64String.Contains(","))
             {
                 var parts = base64String.Split(',');
                 base64Data = parts[1];
                 
-                // Extract MIME type from data URL prefix
                 var prefix = parts[0];
                 if (prefix.Contains(":"))
                 {
@@ -57,22 +55,17 @@ namespace AutoStockManageBackend.Services
                 }
             }
 
-            // Decode base64 string to byte array
             byte[] fileBytes = Convert.FromBase64String(base64Data);
 
-            // Ensure filename has proper extension
             fileName = EnsureFileExtension(fileName, mimeType, fileBytes);
 
-            // Create memory stream from byte array
             using var memoryStream = new MemoryStream(fileBytes);
 
-            // Upload using existing method
             return await UploadFileAsync(memoryStream, fileName, containerName);
         }
 
         private string EnsureFileExtension(string fileName, string? mimeType, byte[] fileBytes)
         {
-            // Check if filename already has an extension
             if (Path.HasExtension(fileName))
             {
                 return fileName;
@@ -80,19 +73,16 @@ namespace AutoStockManageBackend.Services
 
             string extension = null;
 
-            // Try to get extension from MIME type
             if (!string.IsNullOrWhiteSpace(mimeType))
             {
                 extension = GetExtensionFromMimeType(mimeType);
             }
 
-            // If no extension from MIME type, try to detect from file bytes (magic bytes)
             if (string.IsNullOrEmpty(extension) && fileBytes != null && fileBytes.Length > 0)
             {
                 extension = DetectFileExtensionFromBytes(fileBytes);
             }
 
-            // Default to .bin if we can't determine the extension
             if (string.IsNullOrEmpty(extension))
             {
                 extension = ".bin";
@@ -135,28 +125,24 @@ namespace AutoStockManageBackend.Services
             if (fileBytes == null || fileBytes.Length < 4)
                 return null;
 
-            // Check magic bytes for common file types
-            // JPEG: FF D8 FF
+
             if (fileBytes.Length >= 3 && fileBytes[0] == 0xFF && fileBytes[1] == 0xD8 && fileBytes[2] == 0xFF)
                 return ".jpg";
 
-            // PNG: 89 50 4E 47
             if (fileBytes.Length >= 4 && fileBytes[0] == 0x89 && fileBytes[1] == 0x50 && fileBytes[2] == 0x4E && fileBytes[3] == 0x47)
                 return ".png";
 
-            // GIF: 47 49 46 38
             if (fileBytes.Length >= 4 && fileBytes[0] == 0x47 && fileBytes[1] == 0x49 && fileBytes[2] == 0x46 && fileBytes[3] == 0x38)
                 return ".gif";
 
-            // PDF: 25 50 44 46
             if (fileBytes.Length >= 4 && fileBytes[0] == 0x25 && fileBytes[1] == 0x50 && fileBytes[2] == 0x44 && fileBytes[3] == 0x46)
                 return ".pdf";
 
-            // BMP: 42 4D
+            
             if (fileBytes.Length >= 2 && fileBytes[0] == 0x42 && fileBytes[1] == 0x4D)
                 return ".bmp";
 
-            // ZIP: 50 4B 03 04
+          
             if (fileBytes.Length >= 4 && fileBytes[0] == 0x50 && fileBytes[1] == 0x4B && fileBytes[2] == 0x03 && fileBytes[3] == 0x04)
                 return ".zip";
 
@@ -232,7 +218,6 @@ namespace AutoStockManageBackend.Services
 
             var containerClient = _blobServiceClient.GetBlobContainerClient(containerName);
             
-            // Create container if it doesn't exist
             await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
             
             return containerClient;
